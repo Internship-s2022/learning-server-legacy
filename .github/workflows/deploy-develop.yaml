@@ -1,0 +1,61 @@
+name: Deploy Develop
+on:
+  push:
+    branches:
+      - develop
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-develop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: develop
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: | # ADD ALL ENV VARIABLES HERE
+          yarn
+          ENV=${{ secrets.ENV }} \
+          yarn build
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_NAME }}
+          PRODUCTION: false
+          BUILD_ENV: |
+            REACT_APP_SHOW_ENV=${{ secrets.REACT_APP_SHOW_ENV }}
+          ALIAS_DOMAINS: |
+            https://dev.${{ secrets.APP_DOMAIN }}
+  deploy-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: test
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: | # ADD ALL ENV VARIABLES HERE
+          yarn
+          ENV=${{ secrets.ENV }} \
+          yarn build
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_NAME }}
+          PRODUCTION: false
+          ALIAS_DOMAINS: |
+            https://test.${{ secrets.APP_DOMAIN }}
