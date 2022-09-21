@@ -1,4 +1,4 @@
-name: Deploy Develop
+name: Deploy Preview
 on:
   pull_request:
     branches: [develop]

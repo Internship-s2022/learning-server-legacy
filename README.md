@@ -2,10 +2,10 @@
 
 ## Domains
 
-- https://{url}.radiumrocket.com Production (master)
-- https://{url}.radiumrocket.com UAT (uat)
-- https://{url}.radiumrocket.com Test (test)
-- https://{url}.radiumrocket.com Develop (develop)
+- https://learning.server.radiumrocket.com Production (master)
+- https://uat.learning.server.radiumrocket.com UAT (uat)
+- https://test.learning.server.radiumrocket.com Test (test)
+- https://dev.learning.server.radiumrocket.com Develop (develop)
 
 ## Features
 
