@@ -1,4 +1,8 @@
-const userSchema = {
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
+
+const userSchema = new Schema({
   firstName: {
     required: true,
   },
@@ -11,6 +15,6 @@ const userSchema = {
   password: {
     required: true,
   },
-};
+});
 
-export default userSchema;
+export default mongoose.model('User', userSchema);
