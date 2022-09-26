@@ -1,7 +1,7 @@
 import { InferSchemaType, model, Schema } from 'mongoose';
 
 const superAdminSchema = new Schema({
-  firebaseUid: { type: String, required: true },
+  firebaseUid: { type: String, required: false },
   firstName: {
     type: String,
     required: true,
