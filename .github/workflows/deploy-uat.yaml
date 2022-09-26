@@ -20,7 +20,8 @@ jobs:
       - name: Build
         run: | # ADD ALL ENV VARIABLES HERE
           yarn
-          ENV=${{ secrets.ENV }} \
+          MONGO_URL="${{ secrets.MONGO_URL}}" \
+          ENV="${{ secrets.ENV }}" \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
@@ -31,8 +32,6 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_NAME }}
           PRODUCTION: false
-          BUILD_ENV: |
-            ENV=${{ secrets.ENV }}
           ALIAS_DOMAINS: |
             https://uat.${{ secrets.APP_DOMAIN }}
 
