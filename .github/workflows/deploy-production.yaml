@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: | # ADD ALL ENV VARIABLES HERE
           yarn
-          MONGO_URL=${{ secrets.ENV.MONGO_URL}} \
+          MONGO_URL=${{ secrets.MONGO_URL}} \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
