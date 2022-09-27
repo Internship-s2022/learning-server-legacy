@@ -25,6 +25,43 @@ const getAllSuperadmins = async (req: Request, res: Response) => {
     });
   }
 };
+const updateSuperadmin = async (req: Request, res: Response) => {
+  try {
+    if (!req.params) {
+      return res.status(400).json({
+        message: 'You must specify an id',
+        data: {},
+        error: true,
+      });
+    }
+    const { id } = req.params;
+    const updatedAdmin = await superAdminData.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedAdmin) {
+      return res.status(404).json({
+        message: `Superadmin with id:${req.params.id} not found`,
+        data: {},
+        error: true,
+      });
+    }
+    // if (updatedAdmin.firebaseUid) {
+    //   Firebase.auth().updateUser(updatedAdmin.firebaseUid, {
+    //     email: req.body.email,
+    //     password: req.body.password,
+    //   });
+    // }
+    return res.status(200).json({
+      message: 'The super admin has been updated successfully',
+      data: updatedAdmin,
+      error: false,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: [error, `Superadmin with id:${req.params.id} not found`],
+      data: {},
+      error: true,
+    });
+  }
+};
 const createSuperadmin = async (req: Request, res: Response) => {
   // let firebaseUid;
   try {
@@ -61,6 +98,6 @@ export default {
   getAllSuperadmins,
   // getSuperAdminById,
   createSuperadmin,
-  // updateSuperadmin,
+  updateSuperadmin,
   // deleteUser,
 };
