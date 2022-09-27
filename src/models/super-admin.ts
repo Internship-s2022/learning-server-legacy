@@ -1,7 +1,7 @@
 import { InferSchemaType, model, Schema } from 'mongoose';
 
 const superAdminSchema = new Schema({
-  firebaseUid: { type: String, required: false },
+  firebaseUid: { type: String, required: true },
   firstName: {
     type: String,
     required: true,
@@ -21,6 +21,6 @@ const superAdminSchema = new Schema({
   },
 });
 
-export type superAdmin = InferSchemaType<typeof superAdminSchema>;
+export type SuperAdminTypes = InferSchemaType<typeof superAdminSchema>;
 
 export default model('SuperAdmin', superAdminSchema);

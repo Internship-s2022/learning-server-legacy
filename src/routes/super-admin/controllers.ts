@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
-import superAdminData from 'src/models/super-admin';
+import superAdminData, { SuperAdminTypes } from 'src/models/super-admin';
 const getAllSuperAdmins = async (req: Request, res: Response) => {
   try {
     if (req.query.id) {
       const superAdmin = await superAdminData.find({ _id: req.query.id });
       return res.status(200).json({
-        message: 'Superadmin found',
+        message: 'Showing Super Admin.',
         data: superAdmin,
         error: false,
       });
@@ -14,7 +14,7 @@ const getAllSuperAdmins = async (req: Request, res: Response) => {
     if (req.query.isActive) {
       const superAdmin = await superAdminData.find({ isActive: req.query.isActive });
       return res.status(200).json({
-        message: `Superadmins ${req.query.isActive} types found`,
+        message: `Super Admins ${req.query.isActive} types found`,
         data: superAdmin,
         error: false,
       });
@@ -80,11 +80,11 @@ const createSuperadmin = async (req: Request, res: Response) => {
     // firebaseUid = newFirebaseEmployee.uid;
     // await Firebase.auth().setCustomUserClaims(newFirebaseEmployee.uid, { role: 'SUPERADMIN' });
 
-    const newSuperadmin = new superAdminData({
+    const newSuperadmin = new superAdminData<SuperAdminTypes>({
+      firebaseUid: req.body.firebaseUid,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      // firebaseUid,
       isActive: req.body.isActive,
     });
     const result = await newSuperadmin.save();
