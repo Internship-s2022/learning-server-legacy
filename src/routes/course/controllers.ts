@@ -28,13 +28,14 @@ const getAllCourses = async (req: Request, res: Response) => {
       });
     }
     return res.status(404).json({
-      message: 'Cannot show the list of courses.',
+      message: 'Cannot show the list of all courses.',
       data: undefined,
       error: true,
     });
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
+      data: undefined,
       error: true,
     });
   }
@@ -42,30 +43,23 @@ const getAllCourses = async (req: Request, res: Response) => {
 
 const getCourseById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      const course = await Course.find({ _id: req.params.id });
-      if (!course.length) {
-        return res.status(404).json({
-          message: `Could not found an course by the id of ${req.params.id}.`,
-          data: undefined,
-          error: true,
-        });
-      }
-      return res.status(200).json({
-        message: `Showing the specified course by the id of ${req.params.id}.`,
-        data: course,
-        error: false,
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+      return res.status(404).json({
+        message: `Course with id ${req.params.id} was not found.`,
+        data: undefined,
+        error: true,
       });
     }
-    return res.status(400).json({
-      message: 'Invalid format ID',
-      data: req.params.id,
-      error: true,
+    return res.status(200).json({
+      message: 'The course has been found successfully',
+      data: course,
+      error: false,
     });
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
+      data: undefined,
       error: true,
     });
   }
@@ -93,39 +87,33 @@ const createCourse = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
+      data: undefined,
       error: true,
     });
   }
 };
 
-const editCourse = async (req: Request, res: Response) => {
+const updateCourse = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      const result = await Course.findByIdAndUpdate(id, req.body, {
-        new: true,
-      });
-      if (!result) {
-        return res.status(404).json({
-          message: 'Course not found',
-          data: {},
-          error: true,
-        });
-      }
-      return res.status(200).json({
-        message: 'The course has been updated successfully',
-        data: result,
-        error: false,
+    const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updatedCourse) {
+      return res.status(404).json({
+        message: `Course with id ${req.params.id} was not found.`,
+        data: undefined,
+        error: true,
       });
     }
-    return res.status(400).json({
-      message: 'Invalid format ID',
-      data: req.params.id,
-      error: true,
+    return res.status(200).json({
+      message: 'The course has been updated successfully',
+      data: updatedCourse,
+      error: false,
     });
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
+      data: undefined,
       error: true,
     });
   }
@@ -133,39 +121,32 @@ const editCourse = async (req: Request, res: Response) => {
 
 const deleteCourse = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      const result = await Course.findByIdAndUpdate(
-        id,
-        { isActive: false },
-        {
-          new: true,
-        },
-      );
-      if (!result) {
-        return res.status(404).json({
-          message: 'Course not found',
-          data: {},
-          error: true,
-        });
-      }
-      return res.status(200).json({
-        message: 'The course has been deleted successfully',
-        data: result,
-        error: false,
+    const result = await Course.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      {
+        new: true,
+      },
+    );
+    if (!result) {
+      return res.status(404).json({
+        message: `Course with id ${req.params.id} was not found.`,
+        data: undefined,
+        error: true,
       });
     }
-    return res.status(400).json({
-      message: 'Invalid format ID',
-      data: req.params.id,
-      error: true,
+    return res.status(200).json({
+      message: 'The course has been deleted successfully',
+      data: result,
+      error: false,
     });
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
+      data: undefined,
       error: true,
     });
   }
 };
 
-export default { getAllCourses, getCourseById, createCourse, editCourse, deleteCourse };
+export default { getAllCourses, getCourseById, createCourse, updateCourse, deleteCourse };

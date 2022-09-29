@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-export const courseValidation = (req: Request, res: Response, next: NextFunction) => {
+const courseValidation = (req: Request, res: Response, next: NextFunction) => {
   const courseValidation = Joi.object({
     name: Joi.string().min(3).max(50).required().messages({
       'string.min': 'Invalid course name, it must contain more than 3 letters',
@@ -15,14 +15,17 @@ export const courseValidation = (req: Request, res: Response, next: NextFunction
         'string.pattern.base': 'Invalid description, it must contain at least 4 letters',
         'any.required': 'Description is a required field',
       }),
-    inscriptionStartDate: Joi.date().greater('now').messages({
+    inscriptionStartDate: Joi.date().greater('now').required().messages({
       'date.greater': 'Invalid inscription start date, it must be after the current date',
+      'any.required': 'Inscription start date is a required field',
     }),
-    inscriptionEndDate: Joi.date().greater(Joi.ref('inscriptionStartDate')).messages({
+    inscriptionEndDate: Joi.date().greater(Joi.ref('inscriptionStartDate')).required().messages({
       'date.greater': 'Invalid inscription end date, it must be after the inscription start date',
+      'any.required': 'Inscription end date is a required field',
     }),
-    startDate: Joi.date().greater(Joi.ref('inscriptionEndDate')).messages({
+    startDate: Joi.date().greater(Joi.ref('inscriptionEndDate')).required().messages({
       'date.greater': 'Invalid start date, it must be after the inscription end date',
+      'any.required': 'Start date is a required field',
     }),
     endDate: Joi.date().greater(Joi.ref('startDate')).messages({
       'date.greater': 'Invalid end date, it must be after the course start date',
@@ -30,8 +33,12 @@ export const courseValidation = (req: Request, res: Response, next: NextFunction
     type: Joi.string().max(15).messages({
       'string.max': 'Invalid type, it must not contain more than 15 letters',
     }),
-    isInternal: Joi.boolean().required(),
-    isActive: Joi.boolean().required(),
+    isInternal: Joi.boolean().required().messages({
+      'any.required': 'Is internal is a required field',
+    }),
+    isActive: Joi.boolean().required().messages({
+      'any.required': 'Is active is a required field',
+    }),
   });
 
   const validation = courseValidation.validate(req.body);
@@ -45,3 +52,5 @@ export const courseValidation = (req: Request, res: Response, next: NextFunction
   }
   return next();
 };
+
+export default { courseValidation };
