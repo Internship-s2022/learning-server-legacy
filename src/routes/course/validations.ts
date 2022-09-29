@@ -21,11 +21,14 @@ export const courseValidation = (req: Request, res: Response, next: NextFunction
     inscriptionEndDate: Joi.date().greater(Joi.ref('inscriptionStartDate')).messages({
       'date.greater': 'Invalid inscription end date, it must be after the inscription start date',
     }),
-    startDate: Joi.date().greater(Joi.ref('inscriptionEndDate')).optional().messages({
+    startDate: Joi.date().greater(Joi.ref('inscriptionEndDate')).messages({
       'date.greater': 'Invalid start date, it must be after the inscription end date',
     }),
-    endDate: Joi.date().greater(Joi.ref('startDate')).optional().messages({
+    endDate: Joi.date().greater(Joi.ref('startDate')).messages({
       'date.greater': 'Invalid end date, it must be after the course start date',
+    }),
+    type: Joi.string().max(15).messages({
+      'string.max': 'Invalid type, it must not contain more than 15 letters',
     }),
     isInternal: Joi.boolean().required(),
     isActive: Joi.boolean().required(),

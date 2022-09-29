@@ -6,7 +6,7 @@ const getAllCourses = async (req: Request, res: Response) => {
   try {
     if (req.query.isActive) {
       const allCourses = await Course.find({ isActive: req.query.isActive });
-      if (allCourses) {
+      if (allCourses.length) {
         return res.status(200).json({
           message: 'Showing the list of active courses',
           data: allCourses,
@@ -20,7 +20,7 @@ const getAllCourses = async (req: Request, res: Response) => {
       });
     }
     const allCourses = await Course.find({});
-    if (allCourses) {
+    if (allCourses.length) {
       return res.status(200).json({
         message: 'Showing all the courses',
         data: allCourses,
@@ -35,7 +35,6 @@ const getAllCourses = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
-      data: undefined,
       error: true,
     });
   }
@@ -67,7 +66,6 @@ const getCourseById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
-      data: undefined,
       error: true,
     });
   }
@@ -93,9 +91,8 @@ const createCourse = async (req: Request, res: Response) => {
       error: false,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    return res.status(500).json({
       message: `Something went wrong: ${error.message}`,
-      data: {},
       error: true,
     });
   }
@@ -127,9 +124,8 @@ const editCourse = async (req: Request, res: Response) => {
       error: true,
     });
   } catch (error: any) {
-    return res.json({
-      message: 'Error',
-      data: error.message,
+    return res.status(500).json({
+      message: `Something went wrong: ${error.message}`,
       error: true,
     });
   }
@@ -165,9 +161,8 @@ const deleteCourse = async (req: Request, res: Response) => {
       error: true,
     });
   } catch (error: any) {
-    return res.json({
-      message: 'Error',
-      data: error.message,
+    return res.status(500).json({
+      message: `Something went wrong: ${error.message}`,
       error: true,
     });
   }
