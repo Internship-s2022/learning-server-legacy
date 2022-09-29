@@ -47,4 +47,5 @@ const courseSchema = new Schema(
 );
 
 export type CourseTypes = InferSchemaType<typeof courseSchema>;
+
 export default mongoose.model('Course', courseSchema);
