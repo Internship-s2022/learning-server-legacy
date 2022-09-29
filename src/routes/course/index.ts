@@ -1,11 +1,12 @@
 import express from 'express';
 
 import controllers from './controllers';
+import { courseValidation } from './validations';
 
 const router = express.Router();
 
 router.get('/', controllers.getAllCourses);
-router.post('/', controllers.createCourse);
-router.put('/:id', controllers.editCourse);
+router.post('/', courseValidation, controllers.createCourse);
+router.put('/:id', courseValidation, controllers.editCourse);
 
 export default router;
