@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && yarn babel",
     "babel": "babel dist -d ./dist/",
-    "start:build": "ts-node -r tsconfig-paths/register ./dist/index.js",
+    "start:build": "node dist/index.js",
     "start": "nodemon",
     "test": "jest",
     "type-check": "tsc --noEmit",
@@ -14,8 +14,7 @@
     "format": "prettier --write './**/*.{ts,test.ts}' --config ./.prettierrc",
     "lint:fix": "eslint --fix && yarn format",
     "pre-commit": "yarn type-check && yarn lint && yarn test --watchAll=false",
-    "prepare": "husky install",
-    "vercel-build": "yarn && ts-node -r tsconfig-paths/register ./dist/index.js"
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +37,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
+    "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
