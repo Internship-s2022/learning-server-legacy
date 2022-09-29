@@ -14,7 +14,8 @@
     "format": "prettier --write './**/*.{ts,test.ts}' --config ./.prettierrc",
     "lint:fix": "eslint --fix && yarn format",
     "pre-commit": "yarn type-check && yarn lint && yarn test --watchAll=false",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "vercel-build": "yarn && ts-node -r tsconfig-paths/register ./dist/index.js"
   },
   "keywords": [],
   "author": "",
