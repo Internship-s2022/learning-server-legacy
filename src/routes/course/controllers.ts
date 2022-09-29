@@ -118,4 +118,42 @@ const editCourse = async (req: Request, res: Response) => {
   }
 };
 
-export default { getAllCourses, createCourse, editCourse };
+const deleteCourse = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const result = await Course.findByIdAndUpdate(
+        id,
+        { isActive: false },
+        {
+          new: true,
+        },
+      );
+      if (!result) {
+        return res.status(404).json({
+          message: 'Course not found',
+          data: {},
+          error: true,
+        });
+      }
+      return res.status(200).json({
+        message: 'The course has been deleted successfully',
+        data: result,
+        error: false,
+      });
+    }
+    return res.status(400).json({
+      message: 'Invalid format ID',
+      data: req.params.id,
+      error: true,
+    });
+  } catch (error: any) {
+    return res.json({
+      message: 'Error',
+      data: error.message,
+      error: true,
+    });
+  }
+};
+
+export default { getAllCourses, createCourse, editCourse, deleteCourse };

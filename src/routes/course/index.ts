@@ -8,5 +8,6 @@ const router = express.Router();
 router.get('/', controllers.getAllCourses);
 router.post('/', courseValidation, controllers.createCourse);
 router.put('/:id', courseValidation, controllers.editCourse);
+router.delete('/:id', controllers.deleteCourse);
 
 export default router;
