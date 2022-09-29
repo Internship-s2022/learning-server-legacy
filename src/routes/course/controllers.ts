@@ -4,32 +4,17 @@ import Course, { CourseTypes } from '../../models/course';
 
 const getAllCourses = async (req: Request, res: Response) => {
   try {
-    if (req.query.id) {
-      const course = await Course.find({ _id: req.query.id });
-      if (!course) {
-        return res.status(404).json({
-          message: `Could not found an course by the id of ${req.query.id}.`,
-          data: undefined,
-          error: true,
-        });
-      }
-      return res.status(200).json({
-        message: `Showing the specified course by the id of ${req.query.id}.`,
-        data: course,
-        error: false,
-      });
-    }
     if (req.query.isActive) {
       const allCourses = await Course.find({ isActive: req.query.isActive });
       if (allCourses) {
         return res.status(200).json({
-          message: 'Showing the list of courses',
+          message: 'Showing the list of active courses',
           data: allCourses,
           error: false,
         });
       }
       return res.status(404).json({
-        message: 'Cannot show the list of courses.',
+        message: 'Cannot find active courses.',
         data: undefined,
         error: true,
       });
@@ -45,6 +30,38 @@ const getAllCourses = async (req: Request, res: Response) => {
     return res.status(404).json({
       message: 'Cannot show the list of courses.',
       data: undefined,
+      error: true,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: `Something went wrong: ${error.message}`,
+      data: undefined,
+      error: true,
+    });
+  }
+};
+
+const getCourseById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const course = await Course.find({ _id: req.params.id });
+      if (!course.length) {
+        return res.status(404).json({
+          message: `Could not found an course by the id of ${req.params.id}.`,
+          data: undefined,
+          error: true,
+        });
+      }
+      return res.status(200).json({
+        message: `Showing the specified course by the id of ${req.params.id}.`,
+        data: course,
+        error: false,
+      });
+    }
+    return res.status(400).json({
+      message: 'Invalid format ID',
+      data: req.params.id,
       error: true,
     });
   } catch (error: any) {
@@ -156,4 +173,4 @@ const deleteCourse = async (req: Request, res: Response) => {
   }
 };
 
-export default { getAllCourses, createCourse, editCourse, deleteCourse };
+export default { getAllCourses, getCourseById, createCourse, editCourse, deleteCourse };

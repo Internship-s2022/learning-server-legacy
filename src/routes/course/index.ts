@@ -6,8 +6,9 @@ import { courseValidation } from './validations';
 const router = express.Router();
 
 router.get('/', controllers.getAllCourses);
+router.get('/:id', controllers.getCourseById);
 router.post('/', courseValidation, controllers.createCourse);
 router.put('/:id', courseValidation, controllers.editCourse);
-router.delete('/:id', controllers.deleteCourse);
+router.patch('/:id', controllers.deleteCourse);
 
 export default router;
