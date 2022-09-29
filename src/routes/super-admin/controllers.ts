@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import SuperAdmin, { SuperAdminTypes } from '../../models/super-admin';
+import SuperAdmin, { SuperAdminTypes } from 'src/models/super-admin';
 
 const getAllSuperAdmins = async (req: Request, res: Response) => {
   try {
