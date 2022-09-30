@@ -52,7 +52,7 @@ const getCourseById = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The course has been found successfully',
+      message: 'The course has been successfully found',
       data: course,
       error: false,
     });
@@ -80,7 +80,7 @@ const createCourse = async (req: Request, res: Response) => {
     });
     await course.save();
     return res.status(201).json({
-      message: 'Course created successfully.',
+      message: 'Course successfully created.',
       data: course,
       error: false,
     });
@@ -106,7 +106,7 @@ const updateCourse = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The course has been updated successfully',
+      message: 'The course has been successfully updated.',
       data: updatedCourse,
       error: false,
     });
@@ -136,7 +136,7 @@ const deleteCourse = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The course has been deleted successfully',
+      message: 'The course has been successfully deleted',
       data: result,
       error: false,
     });
