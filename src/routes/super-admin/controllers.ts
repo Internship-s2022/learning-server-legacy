@@ -52,7 +52,7 @@ const getSuperadminById = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The super admin has been found successfully',
+      message: 'The super admin has been successfully found',
       data: superAdmin,
       error: false,
     });
@@ -76,7 +76,7 @@ const createSuperAdmin = async (req: Request, res: Response) => {
     });
     await newSuperadmin.save();
     return res.status(201).json({
-      message: 'Super admin created successfully',
+      message: 'Super admin successfully created',
       data: newSuperadmin,
       error: false,
     });
@@ -103,7 +103,7 @@ const updateSuperAdmin = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The super admin has been updated successfully',
+      message: 'The super admin has been successfully updated',
       data: updatedSuperAdmin,
       error: false,
     });
