@@ -133,7 +133,7 @@ const deleteSuperAdmin = async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      message: 'The super admin has been deleted successfully',
+      message: 'The super admin has been successfully deleted',
       data: result,
       error: false,
     });
