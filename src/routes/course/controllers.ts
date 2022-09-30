@@ -4,17 +4,17 @@ import Course, { CourseTypes } from '../../models/course';
 
 const getAllCourses = async (req: Request, res: Response) => {
   try {
-    if (req.query.isActive) {
-      const allCourses = await Course.find({ isActive: req.query.isActive });
+    if (req.query) {
+      const allCourses = await Course.find(req.query);
       if (allCourses.length) {
         return res.status(200).json({
-          message: 'Showing the list of active courses',
+          message: 'Showing the list of courses',
           data: allCourses,
           error: false,
         });
       }
       return res.status(404).json({
-        message: 'Cannot find active courses.',
+        message: 'Cannot find the list of courses.',
         data: undefined,
         error: true,
       });
@@ -28,7 +28,7 @@ const getAllCourses = async (req: Request, res: Response) => {
       });
     }
     return res.status(404).json({
-      message: 'Cannot show the list of all courses.',
+      message: 'Cannot find the list of all courses.',
       data: undefined,
       error: true,
     });
