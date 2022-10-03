@@ -20,4 +20,6 @@ const validateMongoID = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
-export default { validateMongoID };
+export default {
+  validateMongoID,
+};

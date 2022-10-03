@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 
-import users from 'src/data/users';
-
+import users from '../../data/users';
 import { User } from './types';
 
 const getAllUsers = (req: Request, res: Response) => {
