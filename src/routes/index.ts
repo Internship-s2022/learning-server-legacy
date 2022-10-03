@@ -9,5 +9,6 @@ const router = express.Router();
 router.use('/user', userRouter);
 router.use('/course', courseRouter);
 router.use('/super-admin', superAdminRouter);
+router.use('user', userRouter);
 
 export default router;

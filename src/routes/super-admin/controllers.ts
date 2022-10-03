@@ -4,8 +4,8 @@ import SuperAdmin, { SuperAdminTypes } from 'src/models/super-admin';
 
 const getAllSuperAdmins = async (req: Request, res: Response) => {
   try {
-    if (req.query.isActive) {
-      const allSuperAdmins = await SuperAdmin.find({ isActive: req.query.isActive });
+    if (req.query) {
+      const allSuperAdmins = await SuperAdmin.find(req.query);
       if (allSuperAdmins.length) {
         return res.status(200).json({
           message: 'Showing the list of active super admins',
