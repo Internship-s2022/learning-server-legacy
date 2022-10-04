@@ -19,8 +19,10 @@ const registrationFormSchema = new Schema(
     },
     views: [
       {
-        id: { type: String, required: true },
-        name: { type: String, required: true },
+        name: {
+          type: String,
+          required: true,
+        },
       },
     ],
     isActive: {

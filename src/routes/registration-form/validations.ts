@@ -22,19 +22,11 @@ const registrationFormValidation = (req: Request, res: Response, next: NextFunct
         'string.pattern.base': 'Invalid description, it must contain at least 4 letters',
         'any.required': 'Description is a required field',
       }),
-    views: Joi.array()
-      .items(
-        Joi.object({
-          id: Joi.number().required(),
-          name: Joi.string().min(3).max(24).required(),
-        }),
-      )
-      .required()
-      .messages({
-        'string.max': 'Invalid type, it must not contain more than 24 characters',
-        'string.min': 'Invalid title, it must contain more than 3 characters',
-        'any.required': 'Missing required data',
-      }),
+    views: Joi.array().items(Joi.string().min(3).max(24).required()).required().messages({
+      'string.max': 'Invalid type, it must not contain more than 24 characters',
+      'string.min': 'Invalid title, it must contain more than 3 characters',
+      'any.required': 'Missing required data',
+    }),
     isActive: Joi.boolean().required().messages({
       'any.required': 'Is active is a required field',
     }),
