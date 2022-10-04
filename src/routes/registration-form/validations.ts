@@ -23,8 +23,8 @@ const registrationFormValidation = (req: Request, res: Response, next: NextFunct
         'any.required': 'Description is a required field',
       }),
     views: Joi.array().items(Joi.string().min(3).max(24).required()).required().messages({
-      'string.max': 'Invalid type, it must not contain more than 24 characters',
-      'string.min': 'Invalid title, it must contain more than 3 characters',
+      'string.max': 'Invalid view name, it must not contain more than 24 characters',
+      'string.min': 'Invalid view name, it must contain more than 3 characters',
       'any.required': 'Missing required data',
     }),
     isActive: Joi.boolean().required().messages({
