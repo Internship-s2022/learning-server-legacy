@@ -235,7 +235,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 7\",\n    \"description\": \"this is a description\",\n    \"views\": [\n        \"general\",\n        \"friends\",\n        \"university\"\n    ],\n    \"isActive\": true\n}",
+              "raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 7\",\n    \"description\": \"this is a description\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        },\n        {\n            \"name\": \"friends\"\n        },\n        {\n            \"name\": \"university\"\n        }\n    ],\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -270,7 +270,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 420\",\n    \"description\": \"this is a description\",\n    \"views\": [\n        {\n            \"id\": 1,\n            \"name\": \"general\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"friends\"\n        }\n    ],\n    \"isActive\": true\n}",
+              "raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 420\",\n    \"description\": \"this is a description\",\n    \"views\": [    \n    ],\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"

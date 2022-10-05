@@ -66,13 +66,12 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const views = req.body.views.map((view: string) => ({ name: view }));
   try {
     const registrationForm = new RegistrationForm<RegistrationFormTypes>({
       course_id: req.body.course_id,
       title: req.body.title,
       description: req.body.description,
-      views,
+      views: req.body.views,
       isActive: req.body.isActive,
     });
     await registrationForm.save();
