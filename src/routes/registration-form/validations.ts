@@ -8,7 +8,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
-          'string.pattern.base': 'Invalid ObjectId, it must be a valid MongoId',
+          'string.pattern.base': 'Invalid course id, ObjectId expected',
           'any.required': 'Course id is a required field',
         }),
       title: Joi.string().min(3).max(50).required().messages({
@@ -22,19 +22,20 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         'any.required': 'Description is a required field',
       }),
       views: Joi.array()
+        .min(1)
         .items(
           Joi.object({
-            name: Joi.string().required(),
-            _id: Joi.string()
-              .pattern(/^[0-9a-fA-F]{24}$/)
-              .when('$condition', {
-                is: Joi.boolean().valid(true).required(),
-                then: Joi.optional(),
-                otherwise: Joi.required(),
-              }),
+            name: Joi.string().min(3).required(),
+            _id:
+              requestType === 'post'
+                ? Joi.string()
+                    .pattern(/^[0-9a-fA-F]{24}$/)
+                    .optional()
+                : Joi.string()
+                    .pattern(/^[0-9a-fA-F]{24}$/)
+                    .required(),
           }),
         )
-        .min(1)
         .required()
         .messages({
           'string.max': 'Invalid view name, it must not contain more than 24 characters',
@@ -42,6 +43,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'array.min': 'At least one view is required',
           'array.required': 'Views is required',
           'string.required': 'Views name is required',
+          'string.pattern.base': 'Invalid view _id, ObjectId expected',
         }),
       isActive: Joi.boolean().required().messages({
         'any.required': 'Is active is required',
