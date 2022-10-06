@@ -50,9 +50,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
       }),
     });
 
-    const validation = registrationFormValidation.validate(req.body, {
-      context: { condition: requestType === 'post' },
-    });
+    const validation = registrationFormValidation.validate(req.body);
 
     if (validation.error) {
       return res.status(400).json({
