@@ -34,10 +34,12 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
               }),
           }),
         )
+        .min(1)
         .required()
         .messages({
           'string.max': 'Invalid view name, it must not contain more than 24 characters',
           'string.min': 'Invalid view name, it must contain more than 3 characters',
+          'array.min': 'At least one view is required',
           'array.required': 'Views is required',
           'string.required': 'Views name is required',
         }),
