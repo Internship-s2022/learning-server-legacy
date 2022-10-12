@@ -8,7 +8,7 @@ const errorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
-  let customError = new CustomError(500, err.message);
+  let customError = new CustomError(500, 'Something went wrong', { errorInfo: err.message });
 
   if (err instanceof CustomError) {
     customError = err;
