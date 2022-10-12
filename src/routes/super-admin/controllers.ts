@@ -12,7 +12,7 @@ const getAll = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, 'Cannot find super admins', undefined);
+  throw new CustomError(404, 'Cannot find super admins');
 };
 
 const getById = async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ const getById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Could not found the super admin with id ${req.params.id}`, undefined);
+  throw new CustomError(404, `Could not found the super admin with id ${req.params.id}`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -54,13 +54,13 @@ const update = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`, undefined);
+  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
   if (superAdmin?.isActive === false) {
-    throw new CustomError(404, 'Super Admin has already been deleted', undefined);
+    throw new CustomError(404, 'Super Admin has already been deleted');
   }
   const result = await SuperAdmin.findByIdAndUpdate(
     req.params.id,
@@ -76,7 +76,7 @@ const deleteById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`, undefined);
+  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`);
 };
 
 export default { getAll, update, deleteById, create, getById };

@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
-
-import RegistrationForm, { RegistrationFormTypes } from '../../models/registration-form';
+import RegistrationForm, { RegistrationFormTypes } from 'src/models/registration-form';
 
 const getAll = async (req: Request, res: Response) => {
   const registrationForms = await RegistrationForm.find(req.query);
@@ -13,7 +12,7 @@ const getAll = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, 'Cannot find the list of registration forms.', undefined);
+  throw new CustomError(404, 'Cannot find the list of registration forms.');
 };
 
 const getById = async (req: Request, res: Response) => {
@@ -25,11 +24,7 @@ const getById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(
-    404,
-    `Registration form with id ${req.params.id} was not found.`,
-    undefined,
-  );
+  throw new CustomError(404, `Registration form with id ${req.params.id} was not found.`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -63,17 +58,13 @@ const updateById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(
-    404,
-    `Registration form with id ${req.params.id} was not found.`,
-    undefined,
-  );
+  throw new CustomError(404, `Registration form with id ${req.params.id} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (registrationForm?.isActive === false) {
-    throw new CustomError(404, 'Registration form has already been deleted', undefined);
+    throw new CustomError(404, 'Registration form has already been deleted');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
@@ -90,11 +81,7 @@ const deleteById = async (req: Request, res: Response) => {
     });
   }
 
-  throw new CustomError(
-    404,
-    `Registration form with id ${req.params.id} was not found.`,
-    undefined,
-  );
+  throw new CustomError(404, `Registration form with id ${req.params.id} was not found.`);
 };
 
 export default { getAll, getById, create, updateById, deleteById };

@@ -55,7 +55,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
     const validation = registrationFormValidation.validate(req.body);
 
     if (validation.error) {
-      throw new CustomError(400, validation.error.details[0].message, undefined);
+      throw new CustomError(400, validation.error.details[0].message);
     }
     return next();
   };

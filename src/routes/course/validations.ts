@@ -46,7 +46,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
   const validation = courseValidation.validate(req.body);
 
   if (validation.error) {
-    throw new CustomError(400, validation.error.details[0].message, undefined);
+    throw new CustomError(400, validation.error.details[0].message);
   }
   return next();
 };

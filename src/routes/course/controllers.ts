@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 
+import Course, { CourseTypes } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
-
-import Course, { CourseTypes } from '../../models/course';
 
 const getAll = async (req: Request, res: Response) => {
   const courses = await Course.find(req.query);
@@ -13,7 +12,7 @@ const getAll = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, 'Cannot find the list of courses.', undefined);
+  throw new CustomError(404, 'Cannot find the list of courses.');
 };
 
 const getById = async (req: Request, res: Response) => {
@@ -25,7 +24,7 @@ const getById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`, undefined);
+  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -59,13 +58,13 @@ const update = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`, undefined);
+  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course?.isActive === false) {
-    throw new CustomError(404, 'Course has already been deleted', undefined);
+    throw new CustomError(404, 'Course has already been deleted');
   }
   const result = await Course.findByIdAndUpdate(
     req.params.id,
@@ -81,7 +80,7 @@ const deleteById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`, undefined);
+  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
 export default { getAll, getById, create, update, deleteById };
