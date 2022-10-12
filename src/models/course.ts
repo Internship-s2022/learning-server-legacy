@@ -1,8 +1,19 @@
-import mongoose, { InferSchemaType } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 
-const { Schema } = mongoose;
+export interface CourseType {
+  _id?: mongoose.Types.ObjectId;
+  name: string;
+  inscriptionStartDate: Date;
+  inscriptionEndDate: Date;
+  startDate: Date;
+  endDate: Date;
+  type: string;
+  description: string;
+  isInternal: boolean;
+  isActive: boolean;
+}
 
-const courseSchema = new Schema(
+const courseSchema = new Schema<CourseType, Model<CourseType>>(
   {
     name: {
       type: String,
@@ -45,7 +56,5 @@ const courseSchema = new Schema(
   },
   { timestamps: true },
 );
-
-export type CourseTypes = InferSchemaType<typeof courseSchema>;
 
 export default mongoose.model('Course', courseSchema);

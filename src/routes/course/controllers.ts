@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
-import Course, { CourseTypes } from 'src/models/course';
-import { CustomError } from 'src/models/custom-error';
+import Course, { CourseTypes } from '../../models/course';
 
 const getAll = async (req: Request, res: Response) => {
   const courses = await Course.find(req.query);

@@ -1,14 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 const { Schema } = mongoose;
 
-const registrationFormSchema = new Schema(
+type View = { name: string };
+
+export interface RegistrationFormType {
+  _id?: mongoose.Types.ObjectId;
+  course_id: string;
+  title: string;
+  description: string;
+  views: View[];
+  isActive: boolean;
+}
+
+const registrationFormSchema = new Schema<RegistrationFormType, Model<RegistrationFormType>>(
   {
     course_id: {
       type: String,
       required: true,
     },
-
     title: {
       type: String,
       required: true,
@@ -33,7 +43,5 @@ const registrationFormSchema = new Schema(
   },
   { timestamps: true },
 );
-
-export type RegistrationFormTypes = mongoose.InferSchemaType<typeof registrationFormSchema>;
 
 export default mongoose.model('RegistrationForm', registrationFormSchema);
