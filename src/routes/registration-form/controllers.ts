@@ -18,7 +18,7 @@ const getAll = async (req: Request, res: Response) => {
 
 const getById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
-  if (!registrationForm) {
+  if (registrationForm) {
     return res.status(200).json({
       message: 'The registration form has been successfully found',
       data: registrationForm,
@@ -71,6 +71,10 @@ const updateById = async (req: Request, res: Response) => {
 };
 
 const deleteById = async (req: Request, res: Response) => {
+  const registrationForm = await RegistrationForm.findById(req.params.id);
+  if (registrationForm?.isActive === false) {
+    throw new CustomError(404, 'Registration form has already been deleted', undefined);
+  }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
     { isActive: false },
@@ -78,13 +82,14 @@ const deleteById = async (req: Request, res: Response) => {
       new: true,
     },
   );
-  if (!result) {
+  if (result) {
     return res.status(200).json({
       message: 'The registration form has been successfully deleted',
       data: result,
       error: false,
     });
   }
+
   throw new CustomError(
     404,
     `Registration form with id ${req.params.id} was not found.`,
