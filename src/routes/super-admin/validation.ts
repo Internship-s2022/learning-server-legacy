@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { CustomError } from 'src/models/custom-error';
+
 const superAdminValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object({
     firebaseUid: Joi.string().required(),
@@ -37,11 +39,7 @@ const superAdminValidation = (req: Request, res: Response, next: NextFunction) =
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
-    return res.status(400).json({
-      message: validation.error.details[0].message,
-      data: undefined,
-      error: true,
-    });
+    throw new CustomError(400, validation.error.details[0].message, undefined);
   }
   return next();
 };
