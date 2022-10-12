@@ -1,20 +1,20 @@
 import express from 'express';
 
 import globalValidations from '../../middlewares/validations';
-import controllers from './controllers';
+import superAdminControllers from './controllers';
 import validations from './validation';
 
 const router = express.Router();
 
-router.get('/', controllers.getAllSuperAdmins);
-router.get('/:id', globalValidations.validateMongoID, controllers.getSuperadminById);
-router.post('/', validations.superAdminValidation, controllers.createSuperAdmin);
+router.get('/', superAdminControllers.getAll);
+router.get('/:id', globalValidations.validateMongoID, superAdminControllers.getById);
+router.post('/', validations.superAdminValidation, superAdminControllers.create);
 router.put(
   '/:id',
   globalValidations.validateMongoID,
   validations.superAdminValidation,
-  controllers.updateSuperAdmin,
+  superAdminControllers.update,
 );
-router.patch('/:id', globalValidations.validateMongoID, controllers.deleteSuperAdmin);
+router.patch('/:id', globalValidations.validateMongoID, superAdminControllers.deleteById);
 
 export default router;

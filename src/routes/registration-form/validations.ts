@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { CustomError } from 'src/models/custom-error';
+
 const registrationFormValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const registrationFormValidation = Joi.object({
@@ -53,11 +55,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
     const validation = registrationFormValidation.validate(req.body);
 
     if (validation.error) {
-      return res.status(400).json({
-        message: 'There has been an error in the validation',
-        data: validation.error.details[0].message,
-        error: true,
-      });
+      throw new CustomError(400, validation.error.details[0].message);
     }
     return next();
   };
