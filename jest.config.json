@@ -1,7 +1,6 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "setupFiles": ["<rootDir>/.jest/set-env-vars.ts"],
   "moduleNameMapper": {
     "src/(.*)$": "<rootDir>/src/$1"
   }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import Firebase from 'src/config/firebase';
+import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
 import SuperAdmin, { SuperAdminType } from 'src/models/super-admin';
 
@@ -29,33 +29,24 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  try {
-    const newFirebaseSuperAdmin = await Firebase.auth().createUser({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    const firebaseUid = newFirebaseSuperAdmin.uid;
-    await Firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { role: 'SUPERADMIN' });
-    const newSuperadmin = new SuperAdmin<SuperAdminType>({
-      firebaseUid,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      isActive: req.body.isActive,
-    });
-
-    await newSuperadmin.save();
-    return res.status(201).json({
-      message: 'Super admin successfully created',
-      data: newSuperadmin,
-      error: false,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: `Something went wrong: ${error.message}`,
-      data: undefined,
-      error: true,
-    });
-  }
+  const newFirebaseSuperAdmin = await firebase.auth().createUser({
+    email: req.body.email,
+    password: req.body.password,
+  });
+  const firebaseUid = newFirebaseSuperAdmin.uid;
+  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { role: 'SUPERADMIN' });
+  const newSuperadmin = new SuperAdmin<SuperAdminType>({
+    firebaseUid,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    isActive: req.body.isActive,
+  });
+  await newSuperadmin.save();
+  return res.status(201).json({
+    message: 'Super admin successfully created',
+    data: newSuperadmin,
+    error: false,
+  });
 };
 
 const update = async (req: Request, res: Response) => {
