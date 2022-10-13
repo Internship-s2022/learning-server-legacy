@@ -7,7 +7,7 @@ const daysDiff = 40;
 
 const courses: CourseType[] = [
   {
-    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
     name: `BASP ${today.getFullYear()}`,
     description: 'Be a software developer',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 1)),
@@ -19,7 +19,7 @@ const courses: CourseType[] = [
     isActive: true,
   },
   {
-    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
     name: 'React Native',
     description: 'Curso express de React Native',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 3)),
@@ -31,7 +31,7 @@ const courses: CourseType[] = [
     isActive: true,
   },
   {
-    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     name: 'Vue',
     description: 'Curso express de Vue',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 3)),
@@ -43,9 +43,9 @@ const courses: CourseType[] = [
     isActive: true,
   },
   {
-    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c004'),
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
     name: `QA ${today.getFullYear()}`,
-    description: 'Be a software developer',
+    description: 'Be a QA',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 1)),
     inscriptionEndDate: new Date(new Date().setDate(today.getDate() + daysDiff * 2)),
     startDate: new Date(new Date().setDate(today.getDate() + daysDiff * 2)),
@@ -55,7 +55,7 @@ const courses: CourseType[] = [
     isActive: true,
   },
   {
-    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c005'),
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c004'),
     name: 'Dev 2021',
     description: 'Become a Software Developer',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 1)),

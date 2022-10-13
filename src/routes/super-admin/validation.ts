@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
 import { CustomError } from 'src/models/custom-error';
+import { SuperAdminType } from 'src/models/super-admin';
 
 const superAdminValidation = (req: Request, res: Response, next: NextFunction) => {
-  const schema = Joi.object({
+  const schema = Joi.object<SuperAdminType>({
     firebaseUid: Joi.string().required(),
     firstName: Joi.string()
       .min(3)

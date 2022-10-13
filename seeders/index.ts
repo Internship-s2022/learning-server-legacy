@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import { FirebaseUser } from '../src/interfaces/firebase';
 import Course, { CourseType } from '../src/models/course';
+import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
 import config from './config';
 import allData from './data';
@@ -14,11 +15,12 @@ interface data {
   courses: CourseType[];
   firebaseUsers: FirebaseUser[];
   superAdmins: SuperAdminType[];
+  registrationForms: RegistrationFormType[];
 }
 
 const env = (process.env.ENV as keyof typeof allData | undefined) || 'develop';
 
-const { courses, firebaseUsers, superAdmins }: data = allData[env];
+const { courses, firebaseUsers, registrationForms, superAdmins }: data = allData[env];
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert({
@@ -92,6 +94,14 @@ firebaseAdmin.initializeApp({
           '|-------------------- ✅ Courses removed -------------------------|',
         );
       }
+
+      if (config.registrationForms.remove) {
+        promises.push(RegistrationForm.collection.deleteMany({}));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Registration Forms removed --------------|',
+        );
+      }
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -151,6 +161,14 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Courses added ---------------------------|',
+        );
+      }
+
+      if (config.registrationForms.create) {
+        promises.push(RegistrationForm.collection.insertMany(registrationForms));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Registration Forms added ----------------|',
         );
       }
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]

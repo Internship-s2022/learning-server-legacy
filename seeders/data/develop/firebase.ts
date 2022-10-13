@@ -7,6 +7,12 @@ const firebaseUsers: FirebaseUser[] = [
     password: process.env.SUPER_ADMIN_PASSWORD || 'Passw0rd1234',
     type: 'SUPER_ADMIN',
   },
+  {
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN11',
+    email: 'agustin.chazaretta@radiumrocket.com',
+    password: 'asdasd123',
+    type: 'NORMAL',
+  },
 ];
 
 export default firebaseUsers;

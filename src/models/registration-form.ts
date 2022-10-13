@@ -2,11 +2,14 @@ import mongoose, { Model } from 'mongoose';
 
 const { Schema } = mongoose;
 
-type View = { name: string };
+type View = {
+  _id?: mongoose.Types.ObjectId;
+  name: string;
+};
 
 export interface RegistrationFormType {
   _id?: mongoose.Types.ObjectId;
-  course_id: string;
+  courseId: string;
   title: string;
   description: string;
   views: View[];
@@ -15,7 +18,7 @@ export interface RegistrationFormType {
 
 const registrationFormSchema = new Schema<RegistrationFormType, Model<RegistrationFormType>>(
   {
-    course_id: {
+    courseId: {
       type: String,
       required: true,
     },

@@ -1,18 +1,22 @@
 export default {
-  remove: process.env.SEEDER_REMOVE === 'true',
-  create: process.env.SEEDER_CREATE === 'true',
+  remove: true,
+  create: true,
   // -- FIREBASE --
   firebaseUsers: {
-    remove: process.env.SEEDER_FIREBASE_USERS__REMOVE === 'true',
-    create: process.env.SEEDER_FIREBASE_USERS__CREATE === 'true',
+    remove: true,
+    create: true,
   },
   // -- MONGO --
   superAdmins: {
-    remove: process.env.SEEDER_SUPER_ADMINS__REMOVE === 'true',
-    create: process.env.SEEDER_SUPER_ADMINS__CREATE === 'true',
+    remove: true,
+    create: true,
   },
   courses: {
-    remove: process.env.SEEDER_COURSES__REMOVE === 'true',
-    create: process.env.SEEDER_COURSES__CREATE === 'true',
+    remove: true,
+    create: true,
+  },
+  registrationForms: {
+    remove: true,
+    create: true,
   },
 };
