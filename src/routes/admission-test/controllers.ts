@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import AdmissionTest, { AdmissionTestTypes } from 'src/models/admission-test';
+import AdmissionTest, { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
 
 const getAll = async (req: Request, res: Response) => {
@@ -28,7 +28,7 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const admissionTest = new AdmissionTest<AdmissionTestTypes>({
+  const admissionTest = new AdmissionTest<AdmissionTestType>({
     name: req.body.name,
     isActive: req.body.isActive,
   });

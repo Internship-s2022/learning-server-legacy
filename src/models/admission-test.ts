@@ -1,8 +1,13 @@
-import mongoose, { InferSchemaType } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
-const { Schema } = mongoose;
+export interface AdmissionTestType {
+  _id?: mongoose.Types.ObjectId;
+  name: string;
+  isActive: boolean;
+}
 
-const admissionTestSchema = new Schema(
+const admissionTestSchema = new Schema<AdmissionTestType, Model<AdmissionTestType>>(
   {
     name: {
       type: String,
@@ -17,6 +22,9 @@ const admissionTestSchema = new Schema(
   { timestamps: true },
 );
 
-export type AdmissionTestTypes = InferSchemaType<typeof admissionTestSchema>;
+admissionTestSchema.plugin(paginate);
 
-export default mongoose.model('AdmissionTest', admissionTestSchema);
+export default mongoose.model<AdmissionTestType, mongoose.PaginateModel<AdmissionTestType>>(
+  'AdmissionTest',
+  admissionTestSchema,
+);
