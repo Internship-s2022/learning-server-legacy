@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
-import SuperAdmin, { SuperAdminTypes } from 'src/models/super-admin';
+import SuperAdmin, { SuperAdminType } from 'src/models/super-admin';
 
 const getAll = async (req: Request, res: Response) => {
   const allSuperAdmins = await SuperAdmin.find(req.query);
@@ -28,7 +28,7 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const newSuperadmin = new SuperAdmin<SuperAdminTypes>({
+  const newSuperadmin = new SuperAdmin<SuperAdminType>({
     firebaseUid: req.body.firebaseUid,
     firstName: req.body.firstName,
     lastName: req.body.lastName,

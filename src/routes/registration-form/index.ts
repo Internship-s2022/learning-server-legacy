@@ -1,6 +1,7 @@
 import express from 'express';
 
-import globalValidations from '../../middlewares/validations';
+import globalValidations from 'src/middlewares/validations';
+
 import registrationFormControllers from './controllers';
 import validations from './validations';
 

@@ -1,26 +1,39 @@
-import { InferSchemaType, model, Schema } from 'mongoose';
+import mongoose, { Model, model, Schema } from 'mongoose';
 
-const superAdminSchema = new Schema({
-  firebaseUid: { type: String, required: true },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-    required: true,
-  },
-});
+export interface SuperAdminType {
+  _id?: mongoose.Types.ObjectId;
+  firebaseUid: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+}
 
-export type SuperAdminTypes = InferSchemaType<typeof superAdminSchema>;
+const superAdminSchema = new Schema<SuperAdminType, Model<SuperAdminType>>(
+  {
+    firebaseUid: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
 
 export default model('SuperAdmin', superAdminSchema);
