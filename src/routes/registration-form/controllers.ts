@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
-import RegistrationForm, { RegistrationFormTypes } from 'src/models/registration-form';
+import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
+import { filterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const registrationForms = await RegistrationForm.find(req.query);
+  const registrationForms = await RegistrationForm.find(filterByIncludes(req.query));
   if (registrationForms.length) {
     return res.status(200).json({
       message: 'Showing the list of registration forms',
@@ -28,8 +29,8 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const registrationForm = new RegistrationForm<RegistrationFormTypes>({
-    course_id: req.body.course_id,
+  const registrationForm = new RegistrationForm<RegistrationFormType>({
+    courseId: req.body.courseId,
     title: req.body.title,
     description: req.body.description,
     views: req.body.views,

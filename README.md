@@ -1,4 +1,4 @@
-# Getting started with ${App Name}
+# Getting started with Radium Learning Server
 
 ## Domains
 
@@ -35,6 +35,7 @@ In the project directory, you can run:
 ## Basic structure and configurations
 
 ```
+seeders/                      // seeds the different envs
 src/                          // container to other folders with the source code of the app
   config/                     // configuration files
   constants/                  // global constants
@@ -51,7 +52,6 @@ src/                          // container to other folders with the source code
       resource.test.ts        // test of the resource
       validations.ts          // validate schemes
     index.ts                  // all the defined routes for the server
-  seeds/                      // seeds for the testing
   utils/                      // reusable functions
   app.ts                      // server app
   index.ts                    // main file

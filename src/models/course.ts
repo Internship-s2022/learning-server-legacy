@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 export interface CourseType {
   _id?: mongoose.Types.ObjectId;
@@ -57,4 +58,9 @@ const courseSchema = new Schema<CourseType, Model<CourseType>>(
   { timestamps: true },
 );
 
-export default mongoose.model('Course', courseSchema);
+courseSchema.plugin(paginate);
+
+export default mongoose.model<CourseType, mongoose.PaginateModel<CourseType>>(
+  'Course',
+  courseSchema,
+);
