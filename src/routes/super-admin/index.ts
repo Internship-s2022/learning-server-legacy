@@ -1,5 +1,6 @@
 import express from 'express';
 
+import firebaseValidations from '../../middlewares/firebase';
 import globalValidations from '../../middlewares/validations';
 import superAdminControllers from './controllers';
 import validations from './validation';
@@ -11,10 +12,16 @@ router.get('/:id', globalValidations.validateMongoID, superAdminControllers.getB
 router.post('/', validations.superAdminValidation, superAdminControllers.create);
 router.put(
   '/:id',
+  firebaseValidations.superAdmin,
   globalValidations.validateMongoID,
   validations.superAdminValidation,
   superAdminControllers.update,
 );
-router.patch('/:id', globalValidations.validateMongoID, superAdminControllers.deleteById);
+router.patch(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoID,
+  superAdminControllers.deleteById,
+);
 
 export default router;

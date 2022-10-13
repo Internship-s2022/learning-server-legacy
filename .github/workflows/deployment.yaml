@@ -3,17 +3,17 @@ name: Deployment
 on:
   workflow_call:
     inputs:
-        environment:
-          required: true
-          type: string
-        production:
-          required: false
-          type: boolean
-          default: false
-        domain:
-          required: false
-          type: string
-          default: ""
+      environment:
+        required: true
+        type: string
+      production:
+        required: false
+        type: boolean
+        default: false
+      domain:
+        required: false
+        type: string
+        default: ''
 
 jobs:
   deploy:
@@ -29,6 +29,9 @@ jobs:
           yarn
           MONGO_URL="${{ secrets.MONGO_URL}}" \
           ENV="${{ secrets.ENV }}" \
+          FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID}}" \
+          FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY}}" \
+          FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL}}" \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1

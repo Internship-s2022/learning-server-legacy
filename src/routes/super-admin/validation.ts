@@ -37,6 +37,7 @@ const superAdminValidation = (req: Request, res: Response, next: NextFunction) =
         'any.required': 'Email is a required field',
       }),
     isActive: Joi.boolean().required(),
+    password: Joi.string(),
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
