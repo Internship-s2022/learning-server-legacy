@@ -5,7 +5,6 @@ export interface SuperAdminType {
   firebaseUid: string;
   firstName: string;
   lastName: string;
-  email: string;
   isActive: boolean;
 }
 
@@ -20,10 +19,6 @@ const superAdminSchema = new Schema<SuperAdminType, Model<SuperAdminType>>(
       required: true,
     },
     lastName: {
-      type: String,
-      required: true,
-    },
-    email: {
       type: String,
       required: true,
     },
