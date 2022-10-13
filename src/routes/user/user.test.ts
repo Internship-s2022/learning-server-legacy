@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import app from '../../app';
+import app from 'src/app';
 
 describe('GET /user', () => {
   test.skip('It should get the user list', async () => {

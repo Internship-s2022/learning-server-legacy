@@ -1,15 +1,26 @@
 import express from 'express';
 
-import firebaseValidations from '../../middlewares/firebase';
-import globalValidations from '../../middlewares/validations';
+import firebaseValidations from 'src/middlewares/firebase';
+import globalValidations from 'src/middlewares/validations';
+
 import superAdminControllers from './controllers';
 import validations from './validation';
 
 const router = express.Router();
 
-router.get('/', superAdminControllers.getAll);
-router.get('/:id', globalValidations.validateMongoID, superAdminControllers.getById);
-router.post('/', validations.superAdminValidation, superAdminControllers.create);
+router.get('/', firebaseValidations.superAdmin, superAdminControllers.getAll);
+router.get(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoID,
+  superAdminControllers.getById,
+);
+router.post(
+  '/',
+  firebaseValidations.superAdmin,
+  validations.superAdminValidation,
+  superAdminControllers.create,
+);
 router.put(
   '/:id',
   firebaseValidations.superAdmin,
