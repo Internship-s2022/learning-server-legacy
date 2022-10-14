@@ -44,3 +44,4 @@ jobs:
           PRODUCTION: ${{ inputs.production }}
           ALIAS_DOMAINS: |
             https://${{ inputs.domain }}${{ secrets.APP_DOMAIN }}
+          DEPLOY_PR_FROM_FORK: true
