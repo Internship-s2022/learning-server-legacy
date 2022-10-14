@@ -29,13 +29,6 @@ const superAdminValidation = (req: Request, res: Response, next: NextFunction) =
         'string.pattern.base': 'Invalid last name, it must contain only letters',
         'any.required': 'Last Name is a required field',
       }),
-    email: Joi.string()
-      .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
-      .required()
-      .messages({
-        'string.pattern.base': 'invalid email format',
-        'any.required': 'Email is a required field',
-      }),
     isActive: Joi.boolean().required(),
   });
   const validation = schema.validate(req.body);

@@ -8,7 +8,7 @@
     "babel": "babel dist -d ./dist/",
     "start:build": "ts-node -r tsconfig-paths/register ./dist/index.js",
     "start": "nodemon",
-    "test": "jest",
+    "test": "IS_TEST=true jest",
     "type-check": "tsc --noEmit",
     "lint": "eslint \"./**/*.{ts,test.ts}\"",
     "format": "prettier --write './**/*.{ts,test.ts}' --config ./.prettierrc",

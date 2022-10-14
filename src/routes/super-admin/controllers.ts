@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
 import SuperAdmin, { SuperAdminType } from 'src/models/super-admin';
 
@@ -28,11 +29,16 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const newFirebaseSuperAdmin = await firebase.auth().createUser({
+    email: req.body.email,
+    password: req.body.password,
+  });
+  const firebaseUid = newFirebaseSuperAdmin.uid;
+  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { role: 'SUPERADMIN' });
   const newSuperadmin = new SuperAdmin<SuperAdminType>({
-    firebaseUid: req.body.firebaseUid,
+    firebaseUid,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    email: req.body.email,
     isActive: req.body.isActive,
   });
   await newSuperadmin.save();

@@ -1,10 +1,11 @@
 import 'express-async-errors';
 import dotenv from 'dotenv';
+
+dotenv.config();
+
 import mongoose from 'mongoose';
 
 import app from './app';
-
-dotenv.config();
 
 const port = process.env.PORT;
 const MONGODB_URL = process.env.MONGO_URL || '';

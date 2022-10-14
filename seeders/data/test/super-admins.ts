@@ -8,7 +8,6 @@ const superAdmins: SuperAdminType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN10',
     firstName: 'Super',
     lastName: 'Admin',
-    email: process.env.SUPER_ADMIN_EMAIL || 'super.admin@radiumrocket.com',
     isActive: true,
   },
 ];

@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import app from '../../app';
+import app from 'src/app';
 
 describe('GET ALL superAdmins', () => {
   test.skip('All superAdmins list status response successful', async () => {
