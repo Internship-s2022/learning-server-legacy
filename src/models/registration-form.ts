@@ -1,6 +1,5 @@
-import mongoose, { Model } from 'mongoose';
-
-const { Schema } = mongoose;
+import mongoose, { Model, Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 type View = {
   _id?: mongoose.Types.ObjectId;
@@ -47,4 +46,9 @@ const registrationFormSchema = new Schema<RegistrationFormType, Model<Registrati
   { timestamps: true },
 );
 
-export default mongoose.model('RegistrationForm', registrationFormSchema);
+registrationFormSchema.plugin(paginate);
+
+export default mongoose.model<RegistrationFormType, mongoose.PaginateModel<RegistrationFormType>>(
+  'RegistrationForm',
+  registrationFormSchema,
+);

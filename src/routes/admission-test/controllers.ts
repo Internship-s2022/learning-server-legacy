@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 
 import AdmissionTest, { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const admissionTest = await AdmissionTest.find(req.query);
-  if (admissionTest.length) {
+  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { docs, ...pagination } = await AdmissionTest.paginate(query, { page, limit });
+  if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of admission tests',
-      data: admissionTest,
+      message: 'Showing the list of admission tests.',
+      data: docs,
+      pagination,
       error: false,
     });
   }
@@ -56,7 +59,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const admissionTest = await AdmissionTest.findById(req.params.id);
-  if (admissionTest?.isActive === false) {
+  if (!admissionTest?.isActive) {
     throw new CustomError(404, 'Admission test has already been deleted');
   }
   const result = await AdmissionTest.findByIdAndUpdate(

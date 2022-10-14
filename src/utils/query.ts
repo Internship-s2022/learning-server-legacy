@@ -14,7 +14,7 @@ export const paginateAndFilterByIncludes = (query: qs.ParsedQs) => {
   const { limit, page, ...rest } = query;
   return {
     query: filterByIncludes(rest),
-    limit: typeof limit === 'string' && limit ? parseInt(limit, 10) : 10,
+    limit: typeof limit === 'string' && limit ? parseInt(limit, 10) : 100,
     page: typeof page === 'string' && page ? parseInt(page, 10) : 1,
   };
 };

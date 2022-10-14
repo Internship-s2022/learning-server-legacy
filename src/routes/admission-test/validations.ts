@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
 
-const admissionTest = (req: Request, res: Response, next: NextFunction) => {
-  const admissionTest = Joi.object({
+const admissionTestValidation = (req: Request, res: Response, next: NextFunction) => {
+  const admissionTestValidation = Joi.object<AdmissionTestType>({
     name: Joi.string().min(3).max(50).required().messages({
       'string.min': 'Invalid admission test name, it must contain more than 3 letters',
       'string.max': 'Invalid admission test name, it must not contain more than 50 letters',
@@ -15,7 +16,7 @@ const admissionTest = (req: Request, res: Response, next: NextFunction) => {
     }),
   });
 
-  const validation = admissionTest.validate(req.body);
+  const validation = admissionTestValidation.validate(req.body);
 
   if (validation.error) {
     throw new CustomError(400, validation.error.details[0].message);
@@ -23,4 +24,4 @@ const admissionTest = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
-export default { admissionTest };
+export default { admissionTestValidation };

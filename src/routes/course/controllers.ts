@@ -6,11 +6,12 @@ import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const courses = await Course.paginate(query, { page, limit });
-  if (courses.docs.length) {
+  const { docs, ...pagination } = await Course.paginate(query, { page, limit });
+  if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of courses',
-      data: courses,
+      data: docs,
+      pagination,
       error: false,
     });
   }
@@ -65,7 +66,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
-  if (course?.isActive === false) {
+  if (!course?.isActive) {
     throw new CustomError(404, 'Course has already been deleted');
   }
   const result = await Course.findByIdAndUpdate(

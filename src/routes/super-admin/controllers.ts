@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
 import SuperAdmin, { SuperAdminType } from 'src/models/super-admin';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const allSuperAdmins = await SuperAdmin.find(req.query);
-  if (allSuperAdmins.length) {
+  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { docs, ...pagination } = await SuperAdmin.paginate(query, { page, limit });
+  if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of super admins',
-      data: allSuperAdmins,
+      data: docs,
+      pagination,
       error: false,
     });
   }
@@ -59,7 +62,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
-  if (superAdmin?.isActive === false) {
+  if (!superAdmin?.isActive) {
     throw new CustomError(404, 'Super Admin has already been deleted');
   }
   const result = await SuperAdmin.findByIdAndUpdate(
