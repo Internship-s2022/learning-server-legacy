@@ -23,4 +23,8 @@ export default {
     remove: true,
     create: true,
   },
+  postulant: {
+    remove: true,
+    create: true,
+  },
 };
