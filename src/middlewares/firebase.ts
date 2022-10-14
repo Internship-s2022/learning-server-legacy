@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
 
-import firebase from '../config/firebase';
+import firebase from 'src/config/firebase';
 
 const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.headers;
