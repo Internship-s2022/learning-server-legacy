@@ -1,20 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
-const { Schema } = mongoose;
+export interface UserType {
+  _id?: mongoose.Types.ObjectId;
+  firebaseUid: string;
+  postulantId: string;
+  isInternal: boolean;
+  isActive: boolean;
+}
 
-const userSchema = new Schema({
-  firstName: {
-    required: true,
+const userSchema = new Schema<UserType, Model<UserType>>(
+  {
+    firebaseUid: {
+      type: String,
+      required: true,
+    },
+    postulantId: {
+      type: String,
+      required: true,
+    },
+    isInternal: {
+      type: Boolean,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
   },
-  lastName: {
-    required: true,
-  },
-  email: {
-    required: true,
-  },
-  password: {
-    required: true,
-  },
-});
+  { timestamps: true },
+);
 
-export default mongoose.model('User', userSchema);
+userSchema.plugin(paginate);
+
+export default mongoose.model<UserType, mongoose.PaginateModel<UserType>>('User', userSchema);

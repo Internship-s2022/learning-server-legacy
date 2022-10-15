@@ -1,186 +1,89 @@
 import { Request, Response } from 'express';
-import fs from 'fs';
 
-import users from 'src/data/users';
+import { CustomError } from 'src/models/custom-error';
+import User, { UserType } from 'src/models/user';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
 
-const getAllUsers = (req: Request, res: Response) => {
-  try {
-    const allUsers = users.filter(
-      (user) => (user.firstName && user.firstName === req.body.firstName) || user.isActive,
-    );
-    if (allUsers.length > 0) {
-      return res.status(200).json({
-        message: 'Showing Users.',
-        data: allUsers,
-        error: false,
-      });
-    }
-    return res.status(404).json({
-      message: 'Cannot show the list of Users.',
-      data: undefined,
-      error: true,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: `Something went wrong: ${error.message}`,
-      data: undefined,
-      error: true,
+const getAllUsers = async (req: Request, res: Response) => {
+  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const users = await User.paginate(query, { page, limit });
+  if (users.docs.length) {
+    return res.status(200).json({
+      message: 'Showing the list of users',
+      data: users,
+      error: false,
     });
   }
+  throw new CustomError(404, 'Cannot find the list of users.');
 };
 
-const getUserById = (req: Request, res: Response) => {
-  try {
-    if (req.params.id) {
-      const user = users.find((user) => user.id === req.params.id && user.isActive);
-      if (!user) {
-        return res.status(404).json({
-          message: `Could not found an user by the id of ${req.params.id}.`,
-          data: undefined,
-          error: true,
-        });
-      }
-      return res.status(200).json({
-        message: `Showing the specified user by the id of ${req.params.id}.`,
-        data: user,
-        error: false,
-      });
-    }
-    return res.status(400).json({
-      message: 'No input available.',
-      data: undefined,
-      error: true,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: `Could not found an user by the id of ${req.params.id}.`,
-      data: undefined,
-      error: true,
+const getUserById = async (req: Request, res: Response) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    return res.status(200).json({
+      message: 'The user has been successfully found',
+      data: user,
+      error: false,
     });
   }
+  throw new CustomError(404, `Could not found the user with id ${req.params.id}`);
 };
 
-const createUser = (req: Request, res: Response) => {
-  try {
-    const newUser = req.body;
-    if (newUser.id && newUser.firstName && newUser.lastName && newUser.email && newUser.password) {
-      users.push(newUser);
-      fs.writeFile('src/data/users.json', JSON.stringify(users), (err) => {
-        if (err) {
-          return res.status(500).json({
-            message: `Something went wrong: ${err.message}`,
-            data: undefined,
-            error: true,
-          });
-        } else {
-          return res.status(200).json({
-            message: 'User added successfully.',
-            data: newUser,
-            error: false,
-          });
-        }
-      });
-    }
-  } catch (error: any) {
-    return res.status(500).json({
-      message: `MongoDB Error: ${error.message}`,
-      data: undefined,
-      error: true,
-    });
-  }
+const create = async (req: Request, res: Response) => {
+  const newUser = new User<UserType>({
+    firebaseUid: req.body.firebaseUid,
+    postulantId: req.body.postulantId,
+    isInternal: req.body.isInternal,
+    isActive: req.body.isActive,
+  });
+  await newUser.save();
+  return res.status(201).json({
+    message: 'User successfully created',
+    data: newUser,
+    error: false,
+  });
 };
 
-const editUser = (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).json({
-        message: 'Missing id parameter',
-        data: undefined,
-        error: true,
-      });
-    }
-    const user = users.find((user) => user.id === req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        message: 'User not found',
-        data: undefined,
-        error: true,
-      });
-    }
-    const newUsers = users.filter((user) => user.id !== req.params.id);
-    const editedUser = {
-      ...user,
-      ...req.body,
-    };
-    newUsers.push(editedUser);
-    fs.writeFile('src/data/users.json', JSON.stringify(newUsers), (err) => {
-      if (err) {
-        return res.status(500).json({
-          message: `Something went wrong: ${err.message}`,
-          data: undefined,
-          error: true,
-        });
-      } else {
-        return res.status(200).json({
-          message: 'User updated',
-          data: editedUser,
-          error: false,
-        });
-      }
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: error.message,
-      data: undefined,
-      error: true,
+const update = async (req: Request, res: Response) => {
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (updatedUser) {
+    return res.status(200).json({
+      message: 'The user has been successfully updated',
+      data: updatedUser,
+      error: false,
     });
   }
+  throw new CustomError(404, `User with id: ${req.params.id} was not found`);
 };
 
-const deleteUser = (req: Request, res: Response) => {
-  try {
-    const user = users.find((user) => user.id === req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        message: 'User not found',
-        data: undefined,
-        error: true,
-      });
-    }
-    const newUsers = users.filter((user) => user.id !== req.params.id);
-    const editedUser = {
-      ...user,
-      isActive: false,
-    };
-    newUsers.push(editedUser);
-    fs.writeFile('src/data/users.json', JSON.stringify(newUsers), (err) => {
-      if (err) {
-        return res.status(500).json({
-          message: `Something went wrong: ${err.message}`,
-          data: undefined,
-          error: true,
-        });
-      } else {
-        return res.status(200).json({
-          message: 'User deleted',
-          data: editedUser,
-          error: false,
-        });
-      }
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: error.message,
-      data: undefined,
-      error: true,
+const deleteById = async (req: Request, res: Response) => {
+  const user = await User.findById(req.params.id);
+  if (user?.isActive === false) {
+    throw new CustomError(404, 'The user has already been deleted');
+  }
+  const result = await User.findByIdAndUpdate(
+    req.params.id,
+    { isActive: false },
+    {
+      new: true,
+    },
+  );
+  if (result) {
+    return res.status(200).json({
+      message: 'The user has been successfully deleted',
+      data: result,
+      error: false,
     });
   }
+  throw new CustomError(404, `User with id: ${req.params.id} was not found`);
 };
 
 export default {
   getAllUsers,
   getUserById,
-  createUser,
-  editUser,
-  deleteUser,
+  create,
+  update,
+  deleteById,
 };

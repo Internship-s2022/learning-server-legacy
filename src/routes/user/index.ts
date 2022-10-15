@@ -1,13 +1,20 @@
 import express from 'express';
 
+import globalValidations from '../../middlewares/validations';
 import controllers from './controllers';
+import validations from './validations';
 
 const router = express.Router();
 
 router.get('/', controllers.getAllUsers);
-router.get('/:id', controllers.getUserById);
-router.post('/', controllers.createUser);
-router.patch('/:id', controllers.editUser);
-router.put('/:id', controllers.deleteUser);
+router.get('/:id', globalValidations.validateMongoID, controllers.getUserById);
+router.post('/', validations.userValidation, controllers.create);
+router.put(
+  '/:id',
+  globalValidations.validateMongoID,
+  validations.userValidation,
+  controllers.update,
+);
+router.patch('/:id', globalValidations.validateMongoID, controllers.deleteById);
 
 export default router;
