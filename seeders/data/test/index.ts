@@ -4,6 +4,7 @@ import firebaseUsers from './firebase';
 import postulants from './postulants';
 import registrationForms from './registration-forms';
 import superAdmins from './super-admins';
+import users from './users';
 
 export default {
   admissionTests,
@@ -12,4 +13,5 @@ export default {
   registrationForms,
   superAdmins,
   postulants,
+  users,
 };
