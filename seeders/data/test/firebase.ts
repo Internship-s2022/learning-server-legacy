@@ -15,7 +15,7 @@ const firebaseUsers: FirebaseUser[] = [
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN12',
-    email: 'user@radiumrocket.com',
+    email: 'user@mail.com',
     password: 'Passw0rd1234',
     type: 'NORMAL',
   },
