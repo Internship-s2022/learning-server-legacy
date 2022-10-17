@@ -4,6 +4,7 @@ import paginate from 'mongoose-paginate-v2';
 export interface CourseType {
   _id?: mongoose.Types.ObjectId;
   name: string;
+  admissionTestIds: mongoose.Types.ObjectId[];
   inscriptionStartDate: Date;
   inscriptionEndDate: Date;
   startDate: Date;
@@ -20,6 +21,13 @@ const courseSchema = new Schema<CourseType, Model<CourseType>>(
       type: String,
       required: true,
     },
+    admissionTestIds: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'AdmissionTest',
+      },
+    ],
     inscriptionStartDate: {
       type: Date,
       required: true,

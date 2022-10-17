@@ -19,4 +19,8 @@ export default {
     remove: true,
     create: true,
   },
+  admissionTests: {
+    remove: true,
+    create: true,
+  },
 };

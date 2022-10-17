@@ -1,4 +1,5 @@
-import mongoose, { Model, model, Schema } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 export interface SuperAdminType {
   _id?: mongoose.Types.ObjectId;
@@ -31,4 +32,9 @@ const superAdminSchema = new Schema<SuperAdminType, Model<SuperAdminType>>(
   { timestamps: true },
 );
 
-export default model('SuperAdmin', superAdminSchema);
+superAdminSchema.plugin(paginate);
+
+export default mongoose.model<SuperAdminType, mongoose.PaginateModel<SuperAdminType>>(
+  'SuperAdmin',
+  superAdminSchema,
+);

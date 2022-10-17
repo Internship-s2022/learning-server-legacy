@@ -6,11 +6,16 @@ import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const courses = await Course.paginate(query, { page, limit });
-  if (courses.docs.length) {
+  const { docs, ...pagination } = await Course.paginate(query, {
+    page,
+    limit,
+    populate: { path: 'admissionTestIds' },
+  });
+  if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of courses',
-      data: courses,
+      data: docs,
+      pagination,
       error: false,
     });
   }
@@ -18,7 +23,7 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findById(req.params.id).populate({ path: 'admissionTestIds' });
   if (course) {
     return res.status(200).json({
       message: 'The course has been successfully found',
@@ -29,9 +34,10 @@ const getById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
-const create = async (req: Request, res: Response) => {
+const create = async (req: Request<Record<string, string>, any, CourseType>, res: Response) => {
   const course = new Course<CourseType>({
     name: req.body.name,
+    admissionTestIds: req.body.admissionTestIds,
     description: req.body.description,
     inscriptionStartDate: req.body.inscriptionStartDate,
     inscriptionEndDate: req.body.inscriptionEndDate,
@@ -65,7 +71,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
-  if (course?.isActive === false) {
+  if (!course?.isActive) {
     throw new CustomError(404, 'Course has already been deleted');
   }
   const result = await Course.findByIdAndUpdate(

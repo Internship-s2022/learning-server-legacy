@@ -2,14 +2,16 @@ import { Request, Response } from 'express';
 
 import { CustomError } from 'src/models/custom-error';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
-import { filterByIncludes } from 'src/utils/query';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const registrationForms = await RegistrationForm.find(filterByIncludes(req.query));
-  if (registrationForms.length) {
+  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { docs, ...pagination } = await RegistrationForm.paginate(query, { page, limit });
+  if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of registration forms',
-      data: registrationForms,
+      data: docs,
+      pagination,
       error: false,
     });
   }
@@ -64,7 +66,7 @@ const updateById = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
-  if (registrationForm?.isActive === false) {
+  if (!registrationForm?.isActive) {
     throw new CustomError(404, 'Registration form has already been deleted');
   }
   const result = await RegistrationForm.findByIdAndUpdate(

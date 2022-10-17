@@ -5,6 +5,7 @@ import { DeleteResult } from 'mongodb';
 import mongoose from 'mongoose';
 
 import { FirebaseUser } from '../src/interfaces/firebase';
+import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
@@ -12,15 +13,17 @@ import config from './config';
 import allData from './data';
 
 interface data {
+  admissionTests: AdmissionTestType[];
   courses: CourseType[];
   firebaseUsers: FirebaseUser[];
   superAdmins: SuperAdminType[];
   registrationForms: RegistrationFormType[];
 }
 
-const env = (process.env.ENV as keyof typeof allData | undefined) || 'develop';
+const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const { courses, firebaseUsers, registrationForms, superAdmins }: data = allData[env];
+const { admissionTests, courses, firebaseUsers, registrationForms, superAdmins }: data =
+  allData[env];
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert({
@@ -102,6 +105,14 @@ firebaseAdmin.initializeApp({
           '|-------------------- ✅ Registration Forms removed --------------|',
         );
       }
+
+      if (config.admissionTests.remove) {
+        promises.push(AdmissionTest.collection.deleteMany({}));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Admission Tests removed -----------------|',
+        );
+      }
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -169,6 +180,14 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Registration Forms added ----------------|',
+        );
+      }
+
+      if (config.admissionTests.create) {
+        promises.push(AdmissionTest.collection.insertMany(admissionTests));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Admission Tests added -------------------|',
         );
       }
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]
