@@ -3,15 +3,17 @@ import paginate from 'mongoose-paginate-v2';
 
 export interface PostulantType {
   _id?: mongoose.Types.ObjectId;
-  name: string;
+  firstName: string;
   lastName: string;
+  birthDate: string;
+  location: string;
   dni: string;
   isActive: boolean;
 }
 
 const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
   {
-    name: {
+    firstName: {
       type: String,
       required: true,
     },
@@ -19,9 +21,18 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
       type: String,
       required: true,
     },
+    birthDate: {
+      type: String,
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
     dni: {
       type: String,
       required: true,
+      unique: true,
     },
     isActive: {
       type: Boolean,
@@ -35,6 +46,6 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
 postulantSchema.plugin(paginate);
 
 export default mongoose.model<PostulantType, mongoose.PaginateModel<PostulantType>>(
-  'AdmissionTest',
+  'PostulantTest',
   postulantSchema,
 );

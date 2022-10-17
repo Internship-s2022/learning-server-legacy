@@ -1,0 +1,2 @@
+"message","data","error"
+"Something went wrong","{""errorInfo"":""Data should not be empty or the \""fields\"" option should be included""}",true

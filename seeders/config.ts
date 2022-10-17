@@ -23,7 +23,7 @@ export default {
     remove: true,
     create: true,
   },
-  postulant: {
+  postulants: {
     remove: true,
     create: true,
   },
