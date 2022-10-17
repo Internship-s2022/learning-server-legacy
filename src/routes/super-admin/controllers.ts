@@ -37,7 +37,7 @@ const create = async (req: Request, res: Response) => {
     password: req.body.password,
   });
   const firebaseUid = newFirebaseSuperAdmin.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { role: 'SUPERADMIN' });
+  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPERADMIN' });
   const newSuperadmin = new SuperAdmin<SuperAdminType>({
     firebaseUid,
     firstName: req.body.firstName,
