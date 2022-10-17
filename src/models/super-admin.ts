@@ -3,6 +3,8 @@ import paginate from 'mongoose-paginate-v2';
 
 export interface SuperAdminType {
   _id?: mongoose.Types.ObjectId;
+  email?: string;
+  password?: string;
   firebaseUid: string;
   firstName: string;
   lastName: string;
