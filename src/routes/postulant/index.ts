@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/', postulantsControllers.getAll);
 router.get('/:dni', postulantsControllers.getByDni);
-// router.post('/', validations.postulantValidation, postulantsControllers.create);
+router.post('/', validations.postulantValidation, postulantsControllers.create);
 router.put(
   '/:id',
   globalValidations.validateMongoID,
