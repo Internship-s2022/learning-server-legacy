@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import { parseAsync } from 'json2csv';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
 import User, { UserType } from 'src/models/user';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -95,10 +96,51 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `User with id: ${req.params.id} was not found`);
 };
 
+const exportToCsv = async (req: Request, res: Response) => {
+  const query = filterByIncludes(req.query);
+  const docs = await User.aggregate([
+    { $match: query },
+    {
+      $lookup: {
+        from: 'postulants',
+        localField: 'postulantId',
+        foreignField: '_id',
+        as: 'postulant',
+      },
+    },
+    { $project: { postulantId: 0 } },
+    { $unwind: { path: '$postulant' } },
+  ]);
+  if (docs.length) {
+    const csv = await parseAsync(docs, {
+      fields: [
+        '_id',
+        'isInternal',
+        'isActive',
+        'postulant._id',
+        'postulant.firstName',
+        'postulant.lastName',
+        'postulant.birthDate',
+        'postulant.location',
+        'postulant.dni',
+        'postulant.phone',
+        'postulant.email',
+      ],
+    });
+    if (csv) {
+      res.set('Content-Type', 'text/csv');
+      res.attachment('users.csv');
+      return res.status(200).send(csv);
+    }
+  }
+  throw new CustomError(404, 'Cannot find the list of courses.');
+};
+
 export default {
   getAllUsers,
   getUserById,
   create,
   update,
   deleteById,
+  exportToCsv,
 };
