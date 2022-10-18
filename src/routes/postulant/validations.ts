@@ -4,6 +4,10 @@ import Joi from 'joi';
 import { CustomError } from 'src/models/custom-error';
 import { PostulantType } from 'src/models/postulant';
 
+const now = Date.now();
+const cutoffDateMax = new Date(now - 1000 * 60 * 60 * 24 * 365 * 18);
+const cutoffDateMin = new Date(now - 1000 * 60 * 60 * 24 * 365 * 100);
+
 const postulantValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object<PostulantType>({
     firstName: Joi.string()
@@ -30,14 +34,19 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
       }),
     location: Joi.string().min(3).max(50).required(),
     email: Joi.string()
+      .required()
       .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
       .messages({
         'string.pattern.base': 'Invalid email format',
       }),
-    birthDate: Joi.date().required(),
+    birthDate: Joi.date().max(cutoffDateMax).min(cutoffDateMin).required().messages({
+      'date.max': 'You need to be more than 18 years old',
+      'date.min': 'You need to be less than 100 years old',
+      'any.required': 'Date is a required field',
+    }),
     dni: Joi.string()
       .min(6)
-      .max(12)
+      .max(9)
       .pattern(/^[0-9]+$/)
       .required()
       .messages({

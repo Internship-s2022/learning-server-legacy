@@ -55,17 +55,22 @@ const create = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const updatedPostulant = await Postulant.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (updatedPostulant) {
+  const post = await Postulant.findOne({ dni: req.body.dni });
+  const currentPost = await Postulant.findOne({ _id: req.params.id });
+  if (!currentPost?._id) {
+    throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
+  }
+  if (post?.dni === currentPost?.dni || !post?._id) {
+    const updatedPostulant = await Postulant.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     return res.status(200).json({
-      message: 'The postulant has been successfully updated.',
+      message: 'Postulant successfully updated',
       data: updatedPostulant,
       error: false,
     });
   }
-  throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
+  throw new CustomError(400, `Postulant with dni ${req.body.dni} already exist.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
@@ -94,7 +99,7 @@ const exportToCsv = async (req: Request, res: Response) => {
   const query = filterByIncludes(req.query);
   const docs = await Postulant.find(query);
   if (docs.length) {
-    const csv = await parseAsync({
+    const csv = await parseAsync(docs, {
       fields: [
         '_id',
         'firstName',
