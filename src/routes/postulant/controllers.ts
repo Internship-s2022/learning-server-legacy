@@ -93,7 +93,6 @@ const deleteById = async (req: Request, res: Response) => {
 const exportToCsv = async (req: Request, res: Response) => {
   const query = filterByIncludes(req.query);
   const docs = await Postulant.find(query);
-  console.log(docs);
   if (docs.length) {
     const csv = await parseAsync({
       fields: [
