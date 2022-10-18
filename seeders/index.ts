@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { FirebaseUser } from '../src/interfaces/firebase';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
+import Postulant, { PostulantType } from '../src/models/postulant';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
 import config from './config';
@@ -18,11 +19,12 @@ interface data {
   firebaseUsers: FirebaseUser[];
   superAdmins: SuperAdminType[];
   registrationForms: RegistrationFormType[];
+  postulants: PostulantType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const { admissionTests, courses, firebaseUsers, registrationForms, superAdmins }: data =
+const { admissionTests, courses, firebaseUsers, registrationForms, superAdmins, postulants }: data =
   allData[env];
 
 firebaseAdmin.initializeApp({
@@ -105,6 +107,13 @@ firebaseAdmin.initializeApp({
           '|-------------------- ✅ Registration Forms removed --------------|',
         );
       }
+      if (config.postulants.remove) {
+        promises.push(Postulant.collection.deleteMany({}));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Postulants removed -------------------------|',
+        );
+      }
 
       if (config.admissionTests.remove) {
         promises.push(AdmissionTest.collection.deleteMany({}));
@@ -180,6 +189,13 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Registration Forms added ----------------|',
+        );
+      }
+      if (config.postulants.create) {
+        promises.push(Postulant.collection.insertMany(postulants));
+        console.log(
+          '\x1b[32m',
+          '|---------------------- ✅ Postulants added --------------------|',
         );
       }
 

@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/json2csv": "^5.0.3",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "cors": "^2.8.5",
@@ -29,6 +30,7 @@
     "express-async-errors": "^3.1.1",
     "firebase-admin": "^11.0.1",
     "joi": "^17.6.1",
+    "json2csv": "^5.0.7",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.1",
     "mongoose-paginate-v2": "^1.7.1"
