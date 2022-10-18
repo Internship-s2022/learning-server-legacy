@@ -56,10 +56,9 @@ const update = async (req: Request, res: Response) => {
     new: true,
   });
   if (updatedUser?.firebaseUid) {
-    const response = await firebase
+    await firebase
       .auth()
       .updateUser(updatedUser.firebaseUid, { email: req.body.email, password: req.body.password });
-    console.log(response);
   }
   if (updatedUser) {
     return res.status(200).json({

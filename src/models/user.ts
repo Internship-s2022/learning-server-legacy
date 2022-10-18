@@ -6,7 +6,7 @@ export interface UserType {
   email?: string;
   password?: string;
   firebaseUid: string;
-  postulantId: mongoose.Types.ObjectId;
+  postulantId: string;
   isInternal: boolean;
   isActive: boolean;
 }
@@ -18,7 +18,7 @@ const userSchema = new Schema<UserType, Model<UserType>>(
       required: true,
     },
     postulantId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: true,
       // ref: 'Postulant', MUST BE UNCOMMENTED WHEN POSTULANT RESOURCE IS DONE
     },
