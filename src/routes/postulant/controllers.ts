@@ -34,24 +34,24 @@ const getByDni = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   const postulant = await Postulant.findOne({ dni: req.body.dni });
   if (postulant) {
-    const newPostulant = new Postulant<PostulantType>({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      location: req.body.location,
-      phone: req.body.phone,
-      email: req.body.email,
-      dni: req.body.dni,
-      birthDate: req.body.birthDate,
-      isActive: req.body.isActive,
-    });
-    await newPostulant.save();
-    return res.status(201).json({
-      message: 'Postulant successfully created.',
-      data: newPostulant,
-      error: false,
-    });
+    throw new CustomError(400, `Postulant with dni ${req.body.dni} already exist.`);
   }
-  throw new CustomError(400, `Postulant with dni ${req.params.dni} already exist.`);
+  const newPostulant = new Postulant<PostulantType>({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    location: req.body.location,
+    phone: req.body.phone,
+    email: req.body.email,
+    dni: req.body.dni,
+    birthDate: req.body.birthDate,
+    isActive: req.body.isActive,
+  });
+  await newPostulant.save();
+  return res.status(201).json({
+    message: 'Postulant successfully created.',
+    data: newPostulant,
+    error: false,
+  });
 };
 
 const update = async (req: Request, res: Response) => {

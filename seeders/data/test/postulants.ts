@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 import { PostulantType } from '../../../src/models/postulant';
 
-const postulantTests: PostulantType[] = [
+const postulants: PostulantType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
     firstName: 'Agustin',
@@ -38,4 +38,4 @@ const postulantTests: PostulantType[] = [
   },
 ];
 
-export default postulantTests;
+export default postulants;

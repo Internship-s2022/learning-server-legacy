@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "b024e114-d3e0-4002-91c8-104b3c1f6218",
+    "_postman_id": "3956b781-0cce-49b3-a8cf-3fc00cf91a7e",
     "name": "RadiumLearning",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23305867"
+    "_exporter_id": "23500192"
   },
   "item": [
     {
@@ -425,6 +425,119 @@
         },
         {
           "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "633b95f09dbcaa8dcc385c75"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Postulant",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Julian\",\n    \"email\": \"agus@gmail.com\",\n    \"lastName\": \"Demeglio\",\n    \"location\":\"Rosario\",\n    \"phone\":\"3416425766\",\n    \"birthDate\":\"01/01/2001\",\n    \"dni\": \"37208586\",\n    \"isActive\": true\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/postulant",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/postulant",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "false",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "63473df73c03df025fff1074"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "63473df73c03df025fff1074"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by dni",
           "request": {
             "method": "GET",
             "header": [],

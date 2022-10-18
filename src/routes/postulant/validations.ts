@@ -29,6 +29,11 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
         'any.required': 'Last Name is a required field',
       }),
     location: Joi.string().min(3).max(50).required(),
+    email: Joi.string()
+      .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+      .messages({
+        'string.pattern.base': 'Invalid email format',
+      }),
     birthDate: Joi.date().required(),
     dni: Joi.string()
       .min(6)
