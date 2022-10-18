@@ -32,7 +32,7 @@ const getByDni = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const postulant = await Postulant.findOne({ dni: req.params.dni });
+  const postulant = await Postulant.findOne({ dni: req.body.dni });
   if (postulant) {
     const newPostulant = new Postulant<PostulantType>({
       firstName: req.body.firstName,
@@ -51,7 +51,7 @@ const create = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(400, `Postulant with dni ${req.params.id} already exist.`);
+  throw new CustomError(400, `Postulant with dni ${req.params.dni} already exist.`);
 };
 
 const update = async (req: Request, res: Response) => {
