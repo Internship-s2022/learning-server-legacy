@@ -32,7 +32,7 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
     birthDate: Joi.date().required(),
     dni: Joi.string()
       .min(6)
-      .max(8)
+      .max(12)
       .pattern(/^[0-9]+$/)
       .required()
       .messages({
@@ -41,10 +41,20 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
         'string.pattern.base': 'Invalid dni, it must contain only numbers',
         'any.required': 'Dni is a required field',
       }),
+    phone: Joi.string()
+      .length(10)
+      .pattern(/^[0-9]+$/)
+      .required()
+      .messages({
+        'string.length': 'Invalid phone, it must contain 10 numbers',
+        'string.pattern.base': 'Invalid phone, it must contain only numbers',
+        'any.required': 'phone is a required field',
+      }),
     isActive: Joi.boolean().required(),
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
+    console.log(validation.error);
     throw new CustomError(400, validation.error.details[0].message);
   }
   return next();

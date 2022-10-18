@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { Parser } from 'json2csv';
+import { parseAsync } from 'json2csv';
 
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -28,12 +28,13 @@ const getByDni = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Postulant with dni ${req.params.id} was not found.`);
+  throw new CustomError(404, `Postulant with dni ${req.params.dni} was not found.`);
 };
 
 const create = async (req: Request, res: Response) => {
-  try {
-    const postulant = new Postulant<PostulantType>({
+  const postulant = await Postulant.findOne({ dni: req.params.dni });
+  if (postulant) {
+    const newPostulant = new Postulant<PostulantType>({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       location: req.body.location,
@@ -43,17 +44,14 @@ const create = async (req: Request, res: Response) => {
       birthDate: req.body.birthDate,
       isActive: req.body.isActive,
     });
-    await postulant.save();
+    await newPostulant.save();
     return res.status(201).json({
       message: 'Postulant successfully created.',
-      data: postulant,
+      data: newPostulant,
       error: false,
     });
-  } catch (error: any) {
-    if (error.code === 11000) {
-      throw new CustomError(400, 'Postulant dni is already in use');
-    } else throw new CustomError(500, 'Something went wrong');
   }
+  throw new CustomError(400, `Postulant with dni ${req.params.id} already exist.`);
 };
 
 const update = async (req: Request, res: Response) => {
@@ -92,11 +90,31 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
 };
 
-const exportCSV = async (req: Request, res: Response) => {
-  const json2csvParser = new Parser();
-  const csv = json2csvParser.parse(req.body);
-  res.attachment('postulants.csv');
-  return res.status(200).send(csv);
+const exportToCsv = async (req: Request, res: Response) => {
+  const query = filterByIncludes(req.query);
+  const docs = await Postulant.find(query);
+  console.log(docs);
+  if (docs.length) {
+    const csv = await parseAsync({
+      fields: [
+        '_id',
+        'firstName',
+        'lastName',
+        'email',
+        'birthDate',
+        'phone',
+        'location',
+        'dni',
+        'isActive',
+      ],
+    });
+    if (csv) {
+      res.set('Content-Type', 'text/csv');
+      res.attachment('postulant.csv');
+      return res.status(200).send(csv);
+    }
+  }
+  throw new CustomError(404, 'Cannot find the list of postulants.');
 };
 
-export default { getAll, getByDni, create, update, deleteById, exportCSV };
+export default { getAll, getByDni, create, update, deleteById, exportToCsv };

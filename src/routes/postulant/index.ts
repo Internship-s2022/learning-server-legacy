@@ -17,6 +17,6 @@ router.put(
   postulantsControllers.update,
 );
 router.patch('/:id', globalValidations.validateMongoID, postulantsControllers.deleteById);
-router.post('/export/csv', postulantsControllers.exportCSV);
+router.get('/export/csv', postulantsControllers.exportToCsv);
 
 export default router;
