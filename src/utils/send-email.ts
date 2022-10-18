@@ -14,7 +14,7 @@ const sendEmail = async (to: string, templateId: string, templateData: Record<st
       },
     },
     to: to,
-    from: 'guido.cerioni@radiumrocket.com',
+    from: process.env.SENDGRID_EMAIL_SENDER ? process.env.SENDGRID_EMAIL_SENDER : '',
     templateId: templateId,
     dynamicTemplateData: templateData,
   };
