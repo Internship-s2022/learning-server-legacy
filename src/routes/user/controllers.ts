@@ -5,7 +5,9 @@ import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
 import User, { UserType } from 'src/models/user';
+import generatePassword from 'src/utils/password-generator';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import sendEmail from 'src/utils/send-email';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -69,6 +71,12 @@ const create = async (req: Request, res: Response) => {
       `The postulant with the id of ${req.body.postulantId} does not exist`,
     );
   }
+
+  return res.status(201).json({
+    message: 'User successfully created',
+    data: mongoUser,
+    error: false,
+  });
 };
 
 const update = async (req: Request, res: Response) => {
