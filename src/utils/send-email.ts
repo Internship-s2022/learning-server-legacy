@@ -6,11 +6,10 @@ const sendEmail = async (to: string, templateId: string, templateData: Record<st
   const msg: MailDataRequired = {
     mailSettings: {
       sandboxMode: {
-        enable: !(
+        enable:
           process.env.ENV === 'test' ||
           process.env.ENV === 'develop' ||
-          process.env.IS_TEST === 'true'
-        ),
+          process.env.IS_TEST === 'true',
       },
     },
     to: to,
