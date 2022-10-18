@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "cors": "^2.8.5",
