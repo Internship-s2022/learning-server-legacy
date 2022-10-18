@@ -8,6 +8,8 @@ export interface PostulantType {
   birthDate: string;
   location: string;
   dni: string;
+  email: string;
+  phone: string;
   isActive: boolean;
 }
 
@@ -39,6 +41,14 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
       required: true,
       default: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true },
 );
@@ -46,6 +56,6 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
 postulantSchema.plugin(paginate);
 
 export default mongoose.model<PostulantType, mongoose.PaginateModel<PostulantType>>(
-  'PostulantTest',
+  'Postulant',
   postulantSchema,
 );

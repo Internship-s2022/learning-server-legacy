@@ -13,7 +13,7 @@ const validateMongoID = (req: Request, res: Response, next: NextFunction) => {
   }
   return next();
 };
-//deberia hacer una validacion de dni para el postulante?
+
 export default {
   validateMongoID,
 };

@@ -37,6 +37,8 @@ const create = async (req: Request, res: Response) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       location: req.body.location,
+      phone: req.body.phone,
+      email: req.body.email,
       dni: req.body.dni,
       birthDate: req.body.birthDate,
       isActive: req.body.isActive,
@@ -49,7 +51,7 @@ const create = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     if (error.code === 11000) {
-      throw new CustomError(404, 'Postulant dni is already in use');
+      throw new CustomError(400, 'Postulant dni is already in use');
     } else throw new CustomError(500, 'Something went wrong');
   }
 };

@@ -13,6 +13,12 @@ const firebaseUsers: FirebaseUser[] = [
     password: 'asdasd123',
     type: 'NORMAL',
   },
+  {
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN12',
+    email: 'user@radiumrocket.com',
+    password: 'Passw0rd1234',
+    type: 'NORMAL',
+  },
 ];
 
 export default firebaseUsers;
