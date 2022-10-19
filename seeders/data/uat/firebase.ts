@@ -15,7 +15,13 @@ const firebaseUsers: FirebaseUser[] = [
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN12',
-    email: 'user@mail.com',
+    email: 'User@mail.com',
+    password: 'Passw0rd1234',
+    type: 'NORMAL',
+  },
+  {
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN13',
+    email: 'externalUser@mail.com',
     password: 'Passw0rd1234',
     type: 'NORMAL',
   },
