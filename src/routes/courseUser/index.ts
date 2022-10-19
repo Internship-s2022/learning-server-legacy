@@ -13,10 +13,10 @@ router.get(
   courseUserControllers.getByCourseId,
 );
 router.get('/by-user/:id', globalValidations.validateMongoID, courseUserControllers.getByUserId);
-router.post('/', validations.courseUserValidations, courseUserControllers.create);
+router.post('/', validations.courseUserValidations('post'), courseUserControllers.create);
 router.put(
   '/:id',
-  validations.courseUserValidations,
+  validations.courseUserValidations('put'),
   globalValidations.validateMongoID,
   courseUserControllers.updateByUserId,
 );
