@@ -21,6 +21,7 @@ const userSchema = new Schema<UserType, Model<UserType>>(
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'Postulant',
+      unique: false,
     },
     isInternal: {
       type: Boolean,

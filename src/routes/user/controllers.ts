@@ -3,6 +3,7 @@ import { parseAsync } from 'json2csv';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
+import Postulant from 'src/models/postulant';
 import User, { UserType } from 'src/models/user';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
@@ -32,48 +33,65 @@ const getUserById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const newFirebaseUser = await firebase.auth().createUser({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  const firebaseUid = newFirebaseUser.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-  try {
-    const newUser = new User<UserType>({
-      firebaseUid,
-      postulantId: req.body.postulantId,
-      isInternal: req.body.isInternal,
-      isActive: req.body.isActive,
+  const postulant = await Postulant.findById(req.body.postulantId);
+  if (postulant) {
+    const newFirebaseUser = await firebase.auth().createUser({
+      email: req.body.email,
+      password: req.body.password,
     });
-    await newUser.save();
-    return res.status(201).json({
-      message: 'User successfully created',
-      data: newUser,
-      error: false,
-    });
-  } catch (err: any) {
-    firebase.auth().deleteUser(firebaseUid);
-    throw Error(err.message);
+    const firebaseUid = newFirebaseUser.uid;
+    await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
+    try {
+      const newUser = new User<UserType>({
+        firebaseUid,
+        postulantId: req.body.postulantId,
+        isInternal: req.body.isInternal,
+        isActive: req.body.isActive,
+      });
+      await newUser.save();
+      return res.status(201).json({
+        message: 'User successfully created',
+        data: newUser,
+        error: false,
+      });
+    } catch (err: any) {
+      firebase.auth().deleteUser(firebaseUid);
+      throw Error(err.message);
+    }
+  } else {
+    throw new CustomError(
+      400,
+      `The postulant with the id of ${req.body.postulantId} does not exist`,
+    );
   }
 };
 
 const update = async (req: Request, res: Response) => {
-  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (updatedUser?.firebaseUid) {
-    await firebase
-      .auth()
-      .updateUser(updatedUser.firebaseUid, { email: req.body.email, password: req.body.password });
-  }
-  if (updatedUser) {
-    return res.status(200).json({
-      message: 'The user has been successfully updated',
-      data: updatedUser,
-      error: false,
+  const postulant = await Postulant.findById(req.body.postulantId);
+  if (postulant) {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
     });
+    if (updatedUser?.firebaseUid) {
+      await firebase.auth().updateUser(updatedUser.firebaseUid, {
+        email: req.body.email,
+        password: req.body.password,
+      });
+    }
+    if (updatedUser) {
+      return res.status(200).json({
+        message: 'The user has been successfully updated',
+        data: updatedUser,
+        error: false,
+      });
+    }
+    throw new CustomError(404, `User with id: ${req.params.id} was not found`);
+  } else {
+    throw new CustomError(
+      400,
+      `The postulant with the id of ${req.body.postulantId} does not exist`,
+    );
   }
-  throw new CustomError(404, `User with id: ${req.params.id} was not found`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
