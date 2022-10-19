@@ -1,8 +1,16 @@
-import MailService, { MailDataRequired } from '@sendgrid/mail';
+import { ClientResponse } from '@sendgrid/client/src/response';
+import { ResponseError } from '@sendgrid/helpers/classes';
+import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
+import MailService from '@sendgrid/mail';
 
 MailService.setApiKey(process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY : '');
 
-const sendEmail = async (to: string, templateId: string, templateData: Record<string, string>) => {
+const sendEmail = async (
+  to: string,
+  templateId: string,
+  templateData: Record<string, string>,
+  callback: (err: Error | ResponseError, result: [ClientResponse, Record<string, never>]) => void,
+) => {
   const msg: MailDataRequired = {
     mailSettings: {
       sandboxMode: {
@@ -17,7 +25,7 @@ const sendEmail = async (to: string, templateId: string, templateData: Record<st
     templateId: templateId,
     dynamicTemplateData: templateData,
   };
-  await MailService.send(msg);
+  await MailService.send(msg, undefined, callback);
 };
 
 export default sendEmail;
