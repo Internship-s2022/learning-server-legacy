@@ -1,16 +1,9 @@
 {
 	"info": {
-<<<<<<< HEAD
-		"_postman_id": "3956b781-0cce-49b3-a8cf-3fc00cf91a7e",
-		"name": "RadiumLearning",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23500192"
-=======
-		"_postman_id": "eaad5707-fd91-4df3-b7fd-0c9a5f2f408d",
+		"_postman_id": "97dcd039-688c-46eb-8d63-1a892465f4a3",
 		"name": "RadiumLearning",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23577719"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 	},
 	"item": [
 		{
@@ -152,11 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
 							"raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTestIds\": [\n        {\n            \"_id\": \"1e063109a88495b45758c000\"\n        }\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
-=======
-							"raw": "{\n    \"name\": \"MongoDB course\",\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\":\"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"options": {
 								"raw": {
 									"language": "json"
@@ -282,122 +271,6 @@
 				}
 			]
 		},
-<<<<<<< HEAD
-=======
-    {
-      "name": "Admission test",
-      "item": [
-        {
-          "name": "Create",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/admission-test",
-              "host": ["{{API_URL}}"],
-              "path": ["admission-test"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get all",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{API_URL}}/admission-test",
-              "host": ["{{API_URL}}"],
-              "path": ["admission-test"],
-              "query": [
-                {
-                  "key": "isActive",
-                  "value": "false",
-                  "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update by id",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/admission-test/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["admission-test", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "63473df73c03df025fff1074"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Logical delete by id",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{API_URL}}/admission-test/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["admission-test", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "63473df73c03df025fff1074"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get by id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{API_URL}}/admission-test//:id",
-              "host": ["{{API_URL}}"],
-              "path": ["admission-test", "", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "633b95f09dbcaa8dcc385c75"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 		{
 			"name": "Registration Form",
 			"item": [
@@ -408,11 +281,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
 							"raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 7\",\n    \"description\": \"this is a description\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        }\n    ],\n    \"isActive\": true\n}",
-=======
-							"raw": "{\n    \"course_id\": \"633731b3a943619145e6f020\",\n    \"title\": \"form 7\",\n    \"description\": \"this is a description\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        },\n        {\n            \"name\": \"friends\"\n        },\n        {\n            \"name\": \"university\"\n        }\n    ],\n    \"isActive\": true\n}",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"options": {
 								"raw": {
 									"language": "json"
@@ -532,11 +401,7 @@
 			]
 		},
 		{
-<<<<<<< HEAD
 			"name": "Admission test",
-=======
-			"name": "User",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 			"item": [
 				{
 					"name": "Create",
@@ -545,11 +410,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
 							"raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-=======
-							"raw": "{\n    \"email\": \"someemail@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulantId\": \"607f1f77bcf86cd799400004\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"options": {
 								"raw": {
 									"language": "json"
@@ -557,20 +418,12 @@
 							}
 						},
 						"url": {
-<<<<<<< HEAD
 							"raw": "{{API_URL}}/admission-test",
-=======
-							"raw": "{{API_URL}}/user",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-<<<<<<< HEAD
 								"admission-test"
-=======
-								"user"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							]
 						}
 					},
@@ -582,16 +435,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-<<<<<<< HEAD
 							"raw": "{{API_URL}}/admission-test",
-=======
-							"raw": "{{API_URL}}/user",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-<<<<<<< HEAD
 								"admission-test"
 							],
 							"query": [
@@ -600,9 +448,6 @@
 									"value": "false",
 									"disabled": true
 								}
-=======
-								"user"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							]
 						}
 					},
@@ -615,11 +460,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
 							"raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-=======
-							"raw": "{\n    \"postulantId\": \"607f1f77bcf86cd799400001\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"password\": \"testing123\"\n}",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"options": {
 								"raw": {
 									"language": "json"
@@ -627,30 +468,18 @@
 							}
 						},
 						"url": {
-<<<<<<< HEAD
 							"raw": "{{API_URL}}/admission-test/:id",
-=======
-							"raw": "{{API_URL}}/user/:id",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-<<<<<<< HEAD
 								"admission-test",
-=======
-								"user",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-<<<<<<< HEAD
 									"value": "63473df73c03df025fff1074"
-=======
-									"value": "507f1f77bcf86cd799400001"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								}
 							]
 						}
@@ -663,30 +492,18 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-<<<<<<< HEAD
 							"raw": "{{API_URL}}/admission-test/:id",
-=======
-							"raw": "{{API_URL}}/user/:id",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-<<<<<<< HEAD
 								"admission-test",
-=======
-								"user",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-<<<<<<< HEAD
 									"value": "63473df73c03df025fff1074"
-=======
-									"value": "507f1f77bcf86cd799400001"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								}
 							]
 						}
@@ -699,30 +516,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-<<<<<<< HEAD
 							"raw": "{{API_URL}}/admission-test/:id",
-=======
-							"raw": "{{API_URL}}/user/:id",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-<<<<<<< HEAD
 								"admission-test",
-=======
-								"user",
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-<<<<<<< HEAD
 									"value": "633b95f09dbcaa8dcc385c75"
-=======
-									"value": "507f1f77bcf86cd799400001"
->>>>>>> f74eae8 (RL-68: Updated postman collection)
 								}
 							]
 						}
@@ -730,7 +535,6 @@
 					"response": []
 				}
 			]
-<<<<<<< HEAD
 		},
 		{
 			"name": "Postulant",
@@ -886,8 +690,166 @@
 					"response": []
 				}
 			]
-=======
->>>>>>> f74eae8 (RL-68: Updated postman collection)
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"someemadsfil@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulantId\": \"607f1f77bcf86cd799400002\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/user",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n                \"_id\": \"507f1f77bcf86cd799400000\",\n                \"postulantId\": \"607f1f77bcf86cd799400000\",\n                \"firebaseUid\": \"M5MCzG5aCKpf0B7qpNNsi8RyjN11\",\n                \"isInternal\": true,\n                \"isActive\": true\n            }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/user",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"postulantId\": \"607f1f77bcf86cd799400001\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"password\": \"testing123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/user/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799400000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical delete by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/user/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799400001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/user/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799400001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Export Csv",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/user/export/csv",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"user",
+								"export",
+								"csv"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -917,8 +879,4 @@
 			"type": "string"
 		}
 	]
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f74eae8 (RL-68: Updated postman collection)

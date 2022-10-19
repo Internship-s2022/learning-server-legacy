@@ -120,7 +120,7 @@ firebaseAdmin.initializeApp({
         promises.push(Postulant.collection.deleteMany({}));
         console.log(
           '\x1b[32m',
-          '|-------------------- ✅ Postulants removed -------------------------|',
+          '|-------------------- ✅ Postulants removed ----------------------|',
         );
       }
 
@@ -136,7 +136,7 @@ firebaseAdmin.initializeApp({
         promises.push(User.collection.deleteMany({}));
         console.log(
           '\x1b[32m',
-          '|-------------------- ✅ Users removed -------------------------|',
+          '|-------------------- ✅ Users removed ---------------------------|',
         );
       }
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
@@ -212,7 +212,7 @@ firebaseAdmin.initializeApp({
         promises.push(Postulant.collection.insertMany(postulants));
         console.log(
           '\x1b[32m',
-          '|---------------------- ✅ Postulants added --------------------|',
+          '|-------------------- ✅ Postulants added ------------------------|',
         );
       }
 
@@ -228,7 +228,7 @@ firebaseAdmin.initializeApp({
         promises.push(User.collection.insertMany(users));
         console.log(
           '\x1b[32m',
-          '|-------------------- ✅ Users added ---------------------------|',
+          '|-------------------- ✅ Users added -----------------------------|',
         );
       }
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]

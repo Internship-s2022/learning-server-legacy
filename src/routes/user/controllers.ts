@@ -38,18 +38,23 @@ const create = async (req: Request, res: Response) => {
   });
   const firebaseUid = newFirebaseUser.uid;
   await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-  const newUser = new User<UserType>({
-    firebaseUid,
-    postulantId: req.body.postulantId,
-    isInternal: req.body.isInternal,
-    isActive: req.body.isActive,
-  });
-  await newUser.save();
-  return res.status(201).json({
-    message: 'User successfully created',
-    data: newUser,
-    error: false,
-  });
+  try {
+    const newUser = new User<UserType>({
+      firebaseUid,
+      postulantId: req.body.postulantId,
+      isInternal: req.body.isInternal,
+      isActive: req.body.isActive,
+    });
+    await newUser.save();
+    return res.status(201).json({
+      message: 'User successfully created',
+      data: newUser,
+      error: false,
+    });
+  } catch (err: any) {
+    firebase.auth().deleteUser(firebaseUid);
+    throw Error(err.message);
+  }
 };
 
 const update = async (req: Request, res: Response) => {
@@ -133,7 +138,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot find the list of courses.');
+  throw new CustomError(404, 'Cannot find the list of users.');
 };
 
 export default {
