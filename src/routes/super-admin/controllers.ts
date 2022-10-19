@@ -37,7 +37,7 @@ const create = async (req: Request, res: Response) => {
     password: req.body.password,
   });
   const firebaseUid = newFirebaseSuperAdmin.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { role: 'SUPERADMIN' });
+  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPERADMIN' });
   const newSuperadmin = new SuperAdmin<SuperAdminType>({
     firebaseUid,
     firstName: req.body.firstName,
@@ -56,6 +56,12 @@ const update = async (req: Request, res: Response) => {
   const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
+  if (updatedSuperAdmin?.firebaseUid) {
+    await firebase.auth().updateUser(updatedSuperAdmin.firebaseUid, {
+      email: req.body.email,
+      password: req.body.password,
+    });
+  }
   if (updatedSuperAdmin) {
     return res.status(200).json({
       message: 'The super admin has been successfully updated',
@@ -78,6 +84,9 @@ const deleteById = async (req: Request, res: Response) => {
       new: true,
     },
   );
+  if (result?.firebaseUid) {
+    await firebase.auth().updateUser(result.firebaseUid, { disabled: true });
+  }
   if (result) {
     return res.status(200).json({
       message: 'The super admin has been successfully deleted',

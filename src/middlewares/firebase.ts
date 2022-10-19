@@ -12,7 +12,7 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const response = await firebase.auth().verifyIdToken(String(token));
   req.body.firebaseUid = response.uid;
 
-  if (response.userRole !== 'SUPER_ADMIN') {
+  if (response.userType !== 'SUPER_ADMIN') {
     throw new CustomError(401, 'Unauthorized. You must be an superadmin to access.');
   }
   return next();
@@ -27,7 +27,7 @@ const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   const response = await firebase.auth().verifyIdToken(String(token));
   req.body.firebaseUid = response.uid;
 
-  if (response.userRole !== 'NORMAL') {
+  if (response.userType !== 'NORMAL') {
     throw new CustomError(401, 'Unauthorized. You must be an normal user to access.');
   }
   return next();

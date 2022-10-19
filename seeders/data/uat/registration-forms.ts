@@ -7,7 +7,7 @@ const registrationForms: RegistrationFormType[] = [
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439011'),
     // TO-DO: Update with the population
-    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c000') as unknown as string,
+    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
     title: `Formulario de ingreso - ${courses[0].name}`,
     description: 'Este formulario es para la inscripcion del proximo curso de radium',
     views: [
@@ -37,7 +37,7 @@ const registrationForms: RegistrationFormType[] = [
   {
     _id: new mongoose.Types.ObjectId('2e063109a88495b45758ccd2'),
     // TO-DO: Update with the population of the course
-    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c001') as unknown as string,
+    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
     title: `Formulario de ingreso - ${courses[1].name}`,
     description: 'Este formulario es para la inscripcion del proximo curso de radium',
     views: [
@@ -67,7 +67,7 @@ const registrationForms: RegistrationFormType[] = [
   {
     _id: new mongoose.Types.ObjectId('2e063109a88495b45758ccd3'),
     // TO-DO: Update with the population
-    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c002') as unknown as string,
+    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     title: `Formulario de ingreso - ${courses[2].name}`,
     description: 'Este formulario es para la inscripcion del proximo curso de radium',
     views: [
@@ -97,7 +97,7 @@ const registrationForms: RegistrationFormType[] = [
   {
     _id: new mongoose.Types.ObjectId('2e063109a88495b45758ccd4'),
     // TO-DO: Update with the population
-    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c003') as unknown as string,
+    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
     title: `Formulario de ingreso - ${courses[3].name}`,
     description: 'Este formulario es para la inscripcion del proximo curso de radium',
     views: [
@@ -127,7 +127,7 @@ const registrationForms: RegistrationFormType[] = [
   {
     _id: new mongoose.Types.ObjectId('2e063109a88495b45758ccd5'),
     // TO-DO: Update with the population
-    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c004') as unknown as string,
+    courseId: new mongoose.Types.ObjectId('1e063109a88495b45758c004'),
     title: `Formulario de ingreso - ${courses[4].name}`,
     description: 'Este formulario es para la inscripcion del proximo curso de radium',
     views: [

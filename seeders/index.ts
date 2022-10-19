@@ -10,6 +10,7 @@ import Course, { CourseType } from '../src/models/course';
 import Postulant, { PostulantType } from '../src/models/postulant';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
+import User, { UserType } from '../src/models/user';
 import config from './config';
 import allData from './data';
 
@@ -20,12 +21,20 @@ interface data {
   superAdmins: SuperAdminType[];
   registrationForms: RegistrationFormType[];
   postulants: PostulantType[];
+  users: UserType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const { admissionTests, courses, firebaseUsers, registrationForms, superAdmins, postulants }: data =
-  allData[env];
+const {
+  admissionTests,
+  courses,
+  firebaseUsers,
+  registrationForms,
+  superAdmins,
+  postulants,
+  users,
+}: data = allData[env];
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert({
@@ -111,7 +120,7 @@ firebaseAdmin.initializeApp({
         promises.push(Postulant.collection.deleteMany({}));
         console.log(
           '\x1b[32m',
-          '|-------------------- ✅ Postulants removed -------------------------|',
+          '|-------------------- ✅ Postulants removed ----------------------|',
         );
       }
 
@@ -120,6 +129,14 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Admission Tests removed -----------------|',
+        );
+      }
+
+      if (config.users.remove) {
+        promises.push(User.collection.deleteMany({}));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Users removed ---------------------------|',
         );
       }
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
@@ -195,7 +212,7 @@ firebaseAdmin.initializeApp({
         promises.push(Postulant.collection.insertMany(postulants));
         console.log(
           '\x1b[32m',
-          '|---------------------- ✅ Postulants added --------------------|',
+          '|-------------------- ✅ Postulants added ------------------------|',
         );
       }
 
@@ -204,6 +221,14 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Admission Tests added -------------------|',
+        );
+      }
+
+      if (config.users.create) {
+        promises.push(User.collection.insertMany(users));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Users added -----------------------------|',
         );
       }
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]

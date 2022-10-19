@@ -27,4 +27,8 @@ export default {
     remove: true,
     create: true,
   },
+  users: {
+    remove: true,
+    create: true,
+  },
 };
