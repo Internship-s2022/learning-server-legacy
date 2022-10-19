@@ -21,5 +21,15 @@ router.put(
   courseUserControllers.updateByUserId,
 );
 router.patch('/:id', globalValidations.validateMongoID, courseUserControllers.deleteByUserId);
+router.get(
+  '/export-by-course/csv/:id',
+  globalValidations.validateMongoID,
+  courseUserControllers.exportToCsvByCourseId,
+);
+router.get(
+  '/export-by-user/csv/:id',
+  globalValidations.validateMongoID,
+  courseUserControllers.exportToCsvByUserId,
+);
 
 export default router;

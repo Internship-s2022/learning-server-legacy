@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { parseAsync } from 'json2csv';
 
 import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
@@ -142,10 +143,66 @@ const deleteByUserId = async (req: Request, res: Response) => {
   }
 };
 
+const exportToCsvByCourseId = async (req: Request, res: Response) => {
+  const docs = await CourseUser.aggregate([
+    { $match: { courseId: req.params.id } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    { $project: { userId: 0 } },
+    { $unwind: { path: '$user' } },
+  ]);
+  if (docs.length) {
+    const csv = await parseAsync(docs, {
+      fields: ['_id', 'courseId', 'role', 'isActive', 'user._id', 'user.isInternal'],
+    });
+    if (csv) {
+      res.set('Content-Type', 'text/csv');
+      res.attachment('users.csv');
+      return res.status(200).send(csv);
+    }
+  }
+  throw new CustomError(404, 'Cannot find the list of users.');
+};
+
+const exportToCsvByUserId = async (req: Request, res: Response) => {
+  const docs = await CourseUser.aggregate([
+    { $match: { userId: req.params.id } },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'courseId',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
+    { $project: { userId: 0 } },
+    { $unwind: { path: '$course' } },
+  ]);
+  if (docs.length) {
+    const csv = await parseAsync(docs, {
+      fields: ['_id', 'userId', 'role', 'isActive', 'course._id', 'course.name'],
+    });
+    if (csv) {
+      res.set('Content-Type', 'text/csv');
+      res.attachment('users.csv');
+      return res.status(200).send(csv);
+    }
+  }
+  throw new CustomError(404, 'Cannot find the list of courses.');
+};
+
 export default {
   getByCourseId,
   getByUserId,
   create,
   updateByUserId,
   deleteByUserId,
+  exportToCsvByCourseId,
+  exportToCsvByUserId,
 };
