@@ -41,36 +41,9 @@ const getUserById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-<<<<<<< HEAD
   const postulant = await Postulant.findById(req.body.postulantId);
   if (postulant) {
     const newFirebaseUser = await firebase.auth().createUser({
-=======
-  const newPassword = generatePassword(24);
-  const newFirebaseUser = await firebase.auth().createUser({
-    email: req.body.email,
-    password: newPassword,
-  });
-  const firebaseUid = newFirebaseUser.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-
-  let mongoUser;
-  try {
-    mongoUser = new User<UserType>({
-      firebaseUid,
-      postulantId: req.body.postulantId,
-      isInternal: req.body.isInternal,
-      isActive: req.body.isActive,
-    });
-    await mongoUser.save();
-  } catch (err: any) {
-    await firebase.auth().deleteUser(firebaseUid);
-    throw new Error(err.message);
-  }
-
-  try {
-    sendEmail(req.body.email, sendgridTemplates.sendUserCredentials, {
->>>>>>> 9b04907 (RL-11: Update workflow .env variables and create sendgrid templates constants)
       email: req.body.email,
       password: req.body.password,
     });
