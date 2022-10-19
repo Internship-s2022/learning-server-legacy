@@ -31,4 +31,8 @@ export default {
     remove: true,
     create: true,
   },
+  courseUsers: {
+    remove: true,
+    create: true,
+  },
 };

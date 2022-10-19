@@ -1,12 +1,7 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 
-enum RoleType {
-  ADMIN = 'ADMIN',
-  TUTOR = 'TUTOR',
-  AUXILIARY = 'AUXILIARY',
-  STUDENT = 'STUDENT',
-}
+type RoleType = 'ADMIN' | 'TUTOR' | 'AUXILIARY' | 'STUDENT';
 
 export interface CourseUserType {
   _id?: mongoose.Types.ObjectId;
