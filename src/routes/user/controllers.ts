@@ -112,7 +112,7 @@ const createManual = async (req: Request, res: Response) => {
     postulantId = req.body.postulantId;
     const postulantById = await Postulant.findById(req.body.postulantId);
     if (!postulantById?._id) {
-      throw new CustomError(400, 'The postulant id was not found');
+      throw new CustomError(404, 'The postulant id was not found');
     }
   }
   const newPassword = generatePassword(24);
