@@ -8,38 +8,40 @@ import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 
 const getByCourseId = async (req: Request, res: Response) => {
-  const courseUser = await CourseUser.find({ courseId: req.params.id }).populate({
-    path: 'userId',
-    populate: { path: 'postulantId' },
-  });
-  if (courseUser.length) {
-    return res.status(200).json({
-      message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
-      data: courseUser,
-      error: false,
+  const course = await Course.findById(req.params.id);
+  if (course) {
+    const courseUser = await CourseUser.find({ courseId: req.params.id }).populate({
+      path: 'userId',
+      populate: { path: 'postulantId' },
     });
+    if (courseUser.length) {
+      return res.status(200).json({
+        message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
+        data: courseUser,
+        error: false,
+      });
+    }
+    throw new CustomError(400, 'This course does not have any members.');
   }
-  throw new CustomError(
-    404,
-    `Users and roles of the course with id: ${req.params.id} were not found.`,
-  );
+  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
 const getByUserId = async (req: Request, res: Response) => {
-  const courseUser = await CourseUser.find({ userId: req.params.id }).populate({
-    path: 'courseId',
-  });
-  if (courseUser.length) {
-    return res.status(200).json({
-      message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
-      data: courseUser,
-      error: false,
+  const user = await User.findById(req.params.id);
+  if (user) {
+    const courseUser = await CourseUser.find({ userId: req.params.id }).populate({
+      path: 'courseId',
     });
+    if (courseUser.length) {
+      return res.status(200).json({
+        message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
+        data: courseUser,
+        error: false,
+      });
+    }
+    throw new CustomError(400, 'This user does not belong to any course.');
   }
-  throw new CustomError(
-    404,
-    `Courses and roles of the user with id: ${req.params.id} were not found.`,
-  );
+  throw new CustomError(404, `User with id ${req.params.id} was not found.`);
 };
 
 const assignRole = async (req: Request, res: Response) => {
@@ -195,7 +197,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         return res.status(200).send(csv);
       }
     }
-    throw new CustomError(404, 'This course does not have any members');
+    throw new CustomError(400, 'This course does not have any members');
   }
   throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
@@ -240,7 +242,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
         return res.status(200).send(csv);
       }
     }
-    throw new CustomError(404, 'This users does not belong to any course');
+    throw new CustomError(400, 'This user does not belong to any course');
   }
   throw new CustomError(404, `User with id ${req.params.id} was not found.`);
 };
