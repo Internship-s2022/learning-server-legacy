@@ -3,13 +3,11 @@ import { parseAsync } from 'json2csv';
 import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
-import sendgridTemplates from 'src/constants/sendgrid-templates';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
-import User, { UserType } from 'src/models/user';
-import generatePassword from 'src/utils/password-generator';
+import User from 'src/models/user';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
-import sendEmail from 'src/utils/send-email';
+import userCreation from 'src/utils/user-creation';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -42,43 +40,10 @@ const getUserById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const newPassword = generatePassword(24);
   const postulant = await Postulant.findById(req.body.postulantId);
   let newMongoUser;
   if (postulant?._id) {
-    const newFirebaseUser = await firebase.auth().createUser({
-      email: req.body.email,
-      password: newPassword,
-    });
-    const firebaseUid = newFirebaseUser.uid;
-    await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-    try {
-      newMongoUser = new User<UserType>({
-        firebaseUid,
-        postulantId: postulant._id,
-        isInternal: req.body.isInternal,
-        isActive: req.body.isActive,
-      });
-      await newMongoUser.save();
-    } catch (err: any) {
-      await firebase.auth().deleteUser(firebaseUid);
-      throw new Error(err.message);
-    }
-
-    await sendEmail(
-      req.body.email,
-      sendgridTemplates.sendUserCredentials,
-      {
-        email: req.body.email,
-        password: newPassword,
-      },
-      async (err: any, result) => {
-        if (err) {
-          await firebase.auth().deleteUser(firebaseUid);
-          throw new Error(`Sendgrid error: ${err.message}`);
-        }
-      },
-    );
+    newMongoUser = await userCreation(req.body, req.body.postulantId);
   } else {
     throw new CustomError(
       400,
@@ -109,48 +74,13 @@ const createManual = async (req: Request, res: Response) => {
     await newPostulant.save();
     postulantId = newPostulant._id;
   } else {
-    postulantId = req.body.postulantId;
     const postulantById = await Postulant.findById(req.body.postulantId);
     if (!postulantById?._id) {
       throw new CustomError(404, 'The postulant id was not found');
     }
   }
-  const newPassword = generatePassword(24);
-  const newFirebaseUser = await firebase.auth().createUser({
-    email: req.body.email,
-    password: newPassword,
-  });
-  const firebaseUid = newFirebaseUser.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-
-  let newMongoUser;
-  try {
-    newMongoUser = new User<UserType>({
-      firebaseUid,
-      postulantId: postulantId,
-      isInternal: req.body.isInternal,
-      isActive: req.body.isActive,
-    });
-    await newMongoUser.save();
-  } catch (err: any) {
-    await firebase.auth().deleteUser(firebaseUid);
-    throw new Error(err.message);
-  }
-
-  await sendEmail(
-    req.body.email,
-    sendgridTemplates.sendUserCredentials,
-    {
-      email: req.body.email,
-      password: newPassword,
-    },
-    async (err: any, result) => {
-      if (err) {
-        await firebase.auth().deleteUser(firebaseUid);
-        throw new Error(`Sendgrid error: ${err.message}`);
-      }
-    },
-  );
+  postulantId = req.body.postulantId;
+  const newMongoUser = await userCreation(req.body, postulantId);
 
   return res.status(201).json({
     message: 'User successfully created',
