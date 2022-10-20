@@ -9,11 +9,12 @@ import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const users = await User.paginate(query, { page, limit, populate: { path: 'postulantId' } });
-  if (users.docs.length) {
+  const { docs, ...pagination } = await User.paginate(query, { page, limit });
+  if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of users',
-      data: users,
+      data: docs,
+      pagination,
       error: false,
     });
   }
