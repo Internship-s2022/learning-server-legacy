@@ -8,6 +8,7 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', controllers.getAllUsers);
+router.get('/export/csv', controllers.exportToCsv);
 router.get('/:id', globalValidations.validateMongoID, controllers.getUserById);
 router.post('/', validations.userValidation, controllers.create);
 router.put(
@@ -17,6 +18,5 @@ router.put(
   controllers.update,
 );
 router.patch('/:id', globalValidations.validateMongoID, controllers.deleteById);
-router.post('/export/csv', controllers.exportToCsv);
 
 export default router;
