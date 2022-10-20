@@ -43,5 +43,6 @@
     "simple-import-sort/exports": "error",
     "prettier/prettier": ["error", { "endOfLine": "auto" }]
   },
-  "ignorePatterns": ["dist"]
+  "ignorePatterns": ["dist"],
+  "root": true
 }

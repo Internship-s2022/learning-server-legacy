@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express, { Express, Response } from 'express';
 
+import errorHandler from './middlewares/error-handler';
 import router from './routes';
 
 const app: Express = express();
@@ -18,5 +19,7 @@ app.get('/', (_req, res: Response) => {
     error: false,
   });
 });
+
+router.use(errorHandler);
 
 export default app;

@@ -1,0 +1,47 @@
+name: Deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      production:
+        required: false
+        type: boolean
+        default: false
+      domain:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: | # ADD ALL ENV VARIABLES HERE
+          yarn
+          MONGO_URL="${{ secrets.MONGO_URL}}" \
+          ENV="${{ secrets.ENV }}" \
+          FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID}}" \
+          FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY}}" \
+          FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL}}" \
+          yarn build
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_NAME }}
+          PRODUCTION: ${{ inputs.production }}
+          ALIAS_DOMAINS: |
+            https://${{ inputs.domain }}${{ secrets.APP_DOMAIN }}
+          DEPLOY_PR_FROM_FORK: true
