@@ -21,7 +21,7 @@ const getByCourseId = async (req: Request, res: Response) => {
   }
   throw new CustomError(
     404,
-    `Users and roles of the course with id: ${req.params.id} was not found.`,
+    `Users and roles of the course with id: ${req.params.id} were not found.`,
   );
 };
 
@@ -38,7 +38,7 @@ const getByUserId = async (req: Request, res: Response) => {
   }
   throw new CustomError(
     404,
-    `Courses and roles of the user with id: ${req.params.id} was not found.`,
+    `Courses and roles of the user with id: ${req.params.id} were not found.`,
   );
 };
 
@@ -146,95 +146,103 @@ const disableByUserId = async (req: Request, res: Response) => {
 };
 
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
-  const docs = await CourseUser.aggregate([
-    { $match: { courseId: new ObjectId(req.params.id) } },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'user',
+  const course = await Course.findById(req.params.id);
+  if (course) {
+    const docs = await CourseUser.aggregate([
+      { $match: { courseId: new ObjectId(req.params.id) } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
       },
-    },
-    { $unwind: { path: '$user' } },
-    {
-      $lookup: {
-        from: 'postulants',
-        localField: 'user.postulantId',
-        foreignField: '_id',
-        as: 'user.personalInfo',
+      { $unwind: { path: '$user' } },
+      {
+        $lookup: {
+          from: 'postulants',
+          localField: 'user.postulantId',
+          foreignField: '_id',
+          as: 'user.personalInfo',
+        },
       },
-    },
-    { $unwind: { path: '$user.personalInfo' } },
-    { $project: { userId: 0, 'user.personalInfo._id': 0 } },
-  ]);
-  if (docs.length) {
-    const csv = await parseAsync(docs, {
-      fields: [
-        '_id',
-        'courseId',
-        'role',
-        'isActive',
-        'user._id',
-        'user.isInternal',
-        'user.isActive',
-        'user.personalInfo.firstName',
-        'user.personalInfo.lastName',
-        'user.personalInfo.email',
-        'user.personalInfo.phone',
-        'user.personalInfo.location',
-        'user.personalInfo.birthDate',
-        'user.personalInfo.dni',
-      ],
-    });
-    if (csv) {
-      res.set('Content-Type', 'text/csv');
-      res.attachment('users.csv');
-      return res.status(200).send(csv);
+      { $unwind: { path: '$user.personalInfo' } },
+      { $project: { userId: 0, 'user.personalInfo._id': 0 } },
+    ]);
+    if (docs.length) {
+      const csv = await parseAsync(docs, {
+        fields: [
+          '_id',
+          'courseId',
+          'role',
+          'isActive',
+          'user._id',
+          'user.isInternal',
+          'user.isActive',
+          'user.personalInfo.firstName',
+          'user.personalInfo.lastName',
+          'user.personalInfo.email',
+          'user.personalInfo.phone',
+          'user.personalInfo.location',
+          'user.personalInfo.birthDate',
+          'user.personalInfo.dni',
+        ],
+      });
+      if (csv) {
+        res.set('Content-Type', 'text/csv');
+        res.attachment('users.csv');
+        return res.status(200).send(csv);
+      }
     }
+    throw new CustomError(404, 'This course does not have any members');
   }
-  throw new CustomError(404, 'Cannot find the list of users.');
+  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
 const exportToCsvByUserId = async (req: Request, res: Response) => {
-  const docs = await CourseUser.aggregate([
-    { $match: { userId: new ObjectId(req.params.id) } },
-    {
-      $lookup: {
-        from: 'courses',
-        localField: 'courseId',
-        foreignField: '_id',
-        as: 'course',
+  const user = await User.findById(req.params.id);
+  if (user) {
+    const docs = await CourseUser.aggregate([
+      { $match: { userId: new ObjectId(req.params.id) } },
+      {
+        $lookup: {
+          from: 'courses',
+          localField: 'courseId',
+          foreignField: '_id',
+          as: 'course',
+        },
       },
-    },
-    { $project: { userId: 0 } },
-    { $unwind: { path: '$course' } },
-  ]);
-  if (docs.length) {
-    const csv = await parseAsync(docs, {
-      fields: [
-        '_id',
-        'role',
-        'isActive',
-        'course._id',
-        'course.name',
-        'course.inscriptionStartDate',
-        'course.inscriptionEndDate',
-        'course.startDate',
-        'course.endDate',
-        'course.type',
-        'course.description',
-        'course.isInternal',
-        'course.isActive',
-      ],
-    });
-    if (csv) {
-      res.set('Content-Type', 'text/csv');
-      res.attachment('users.csv');
-      return res.status(200).send(csv);
+      { $project: { userId: 0 } },
+      { $unwind: { path: '$course' } },
+    ]);
+    if (docs.length) {
+      const csv = await parseAsync(docs, {
+        fields: [
+          '_id',
+          'role',
+          'isActive',
+          'course._id',
+          'course.name',
+          'course.inscriptionStartDate',
+          'course.inscriptionEndDate',
+          'course.startDate',
+          'course.endDate',
+          'course.type',
+          'course.description',
+          'course.isInternal',
+          'course.isActive',
+        ],
+      });
+      if (csv) {
+        res.set('Content-Type', 'text/csv');
+        res.attachment('users.csv');
+        return res.status(200).send(csv);
+      }
     }
+    throw new CustomError(404, 'This users does not belong to any course');
   }
-  throw new CustomError(404, 'Cannot find the list of courses.');
+  throw new CustomError(404, `User with id ${req.params.id} was not found.`);
 };
 
 export default {
