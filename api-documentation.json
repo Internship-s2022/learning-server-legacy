@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "97dcd039-688c-46eb-8d63-1a892465f4a3",
+    "_postman_id": "d6d7cd6f-ebac-4f6c-a1db-e7c370d0a8c0",
     "name": "RadiumLearning",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577719"
+    "_exporter_id": "23305867"
   },
   "item": [
     {
@@ -577,10 +577,16 @@
           "name": "Create",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"someemadsfil@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulantId\": \"607f1f77bcf86cd799400002\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
+              "raw": "{\n    \"email\": \"someemadsfil@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulantId\": \"1e063109a88495b45758c000\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -602,7 +608,13 @@
           },
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n                \"_id\": \"507f1f77bcf86cd799400000\",\n                \"postulantId\": \"607f1f77bcf86cd799400000\",\n                \"firebaseUid\": \"M5MCzG5aCKpf0B7qpNNsi8RyjN11\",\n                \"isInternal\": true,\n                \"isActive\": true\n            }",
@@ -624,7 +636,13 @@
           "name": "Update by id",
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"postulantId\": \"607f1f77bcf86cd799400001\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"password\": \"testing123\"\n}",
@@ -652,7 +670,13 @@
           "name": "Logical delete by id",
           "request": {
             "method": "PATCH",
-            "header": [],
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/user/:id",
               "host": ["{{API_URL}}"],
@@ -671,7 +695,13 @@
           "name": "Get by id",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/user/:id",
               "host": ["{{API_URL}}"],
@@ -700,6 +730,52 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res=pm.response.json();",
+                  "pm.collectionVariables.set(\"token\",res.idToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"super.admin@radiumrocket.com\",\n  \"password\": \"Passw0rd1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E",
+              "protocol": "https",
+              "host": ["identitytoolkit", "googleapis", "com"],
+              "path": ["v1", "accounts:signInWithPassword"],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [
@@ -723,6 +799,10 @@
       "key": "API_URL",
       "value": "http://localhost:4000",
       "type": "string"
+    },
+    {
+      "key": "token",
+      "value": ""
     }
   ]
 }
