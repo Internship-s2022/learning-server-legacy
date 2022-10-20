@@ -13,14 +13,14 @@ router.get(
   courseUserControllers.getByCourseId,
 );
 router.get('/by-user/:id', globalValidations.validateMongoID, courseUserControllers.getByUserId);
-router.post('/', validations.courseUserValidations('post'), courseUserControllers.create);
+router.post('/', validations.courseUserValidations('post'), courseUserControllers.assignRole);
 router.put(
   '/:id',
   validations.courseUserValidations('put'),
   globalValidations.validateMongoID,
   courseUserControllers.updateByUserId,
 );
-router.patch('/:id', globalValidations.validateMongoID, courseUserControllers.deleteByUserId);
+router.patch('/:id', globalValidations.validateMongoID, courseUserControllers.disableByUserId);
 router.get(
   '/export-by-course/csv/:id',
   globalValidations.validateMongoID,

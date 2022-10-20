@@ -2,7 +2,7 @@ import express from 'express';
 
 import admissionTestRouter from './admission-test';
 import courseRouter from './course';
-import courseUserRouter from './courseUser';
+import courseUserRouter from './course-user';
 import registrationFormRouter from './registration-form';
 import superAdminRouter from './super-admin';
 import userRouter from './user';

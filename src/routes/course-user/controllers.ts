@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
+import { ObjectId } from 'mongodb';
 
 import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
@@ -9,8 +10,9 @@ import User from 'src/models/user';
 const getByCourseId = async (req: Request, res: Response) => {
   const courseUser = await CourseUser.find({ courseId: req.params.id }).populate({
     path: 'userId',
+    populate: { path: 'postulantId' },
   });
-  if (courseUser) {
+  if (courseUser.length) {
     return res.status(200).json({
       message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
       data: courseUser,
@@ -27,7 +29,7 @@ const getByUserId = async (req: Request, res: Response) => {
   const courseUser = await CourseUser.find({ userId: req.params.id }).populate({
     path: 'courseId',
   });
-  if (courseUser) {
+  if (courseUser.length) {
     return res.status(200).json({
       message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
       data: courseUser,
@@ -40,7 +42,7 @@ const getByUserId = async (req: Request, res: Response) => {
   );
 };
 
-const create = async (req: Request, res: Response) => {
+const assignRole = async (req: Request, res: Response) => {
   const user = await User.findById(req.body.userId);
   const course = await Course.findById(req.body.courseId);
   if (user && course) {
@@ -67,7 +69,7 @@ const create = async (req: Request, res: Response) => {
       error: false,
     });
   } else {
-    throw new CustomError(400, 'The user or course does not exist');
+    throw new CustomError(404, 'The user or course does not exist');
   }
 };
 
@@ -98,7 +100,7 @@ const updateByUserId = async (req: Request, res: Response) => {
         error: false,
       });
     }
-    throw new CustomError(404, `User with id ${req.params.id} does not have a rol in this course.`);
+    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
   } else {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
@@ -107,7 +109,7 @@ const updateByUserId = async (req: Request, res: Response) => {
   }
 };
 
-const deleteByUserId = async (req: Request, res: Response) => {
+const disableByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   const course = await Course.findById(req.body.courseId);
   if (user && course) {
@@ -134,7 +136,7 @@ const deleteByUserId = async (req: Request, res: Response) => {
         });
       }
     }
-    throw new CustomError(404, `User with id ${req.params.id} does not have a rol in this course.`);
+    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
   } else {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
@@ -145,7 +147,7 @@ const deleteByUserId = async (req: Request, res: Response) => {
 
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const docs = await CourseUser.aggregate([
-    { $match: { courseId: req.params.id } },
+    { $match: { courseId: new ObjectId(req.params.id) } },
     {
       $lookup: {
         from: 'users',
@@ -154,12 +156,36 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         as: 'user',
       },
     },
-    { $project: { userId: 0 } },
     { $unwind: { path: '$user' } },
+    {
+      $lookup: {
+        from: 'postulants',
+        localField: 'user.postulantId',
+        foreignField: '_id',
+        as: 'user.personalInfo',
+      },
+    },
+    { $unwind: { path: '$user.personalInfo' } },
+    { $project: { userId: 0, 'user.personalInfo._id': 0 } },
   ]);
   if (docs.length) {
     const csv = await parseAsync(docs, {
-      fields: ['_id', 'courseId', 'role', 'isActive', 'user._id', 'user.isInternal'],
+      fields: [
+        '_id',
+        'courseId',
+        'role',
+        'isActive',
+        'user._id',
+        'user.isInternal',
+        'user.isActive',
+        'user.personalInfo.firstName',
+        'user.personalInfo.lastName',
+        'user.personalInfo.email',
+        'user.personalInfo.phone',
+        'user.personalInfo.location',
+        'user.personalInfo.birthDate',
+        'user.personalInfo.dni',
+      ],
     });
     if (csv) {
       res.set('Content-Type', 'text/csv');
@@ -172,7 +198,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
 
 const exportToCsvByUserId = async (req: Request, res: Response) => {
   const docs = await CourseUser.aggregate([
-    { $match: { userId: req.params.id } },
+    { $match: { userId: new ObjectId(req.params.id) } },
     {
       $lookup: {
         from: 'courses',
@@ -186,7 +212,21 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
   ]);
   if (docs.length) {
     const csv = await parseAsync(docs, {
-      fields: ['_id', 'userId', 'role', 'isActive', 'course._id', 'course.name'],
+      fields: [
+        '_id',
+        'role',
+        'isActive',
+        'course._id',
+        'course.name',
+        'course.inscriptionStartDate',
+        'course.inscriptionEndDate',
+        'course.startDate',
+        'course.endDate',
+        'course.type',
+        'course.description',
+        'course.isInternal',
+        'course.isActive',
+      ],
     });
     if (csv) {
       res.set('Content-Type', 'text/csv');
@@ -200,9 +240,9 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
 export default {
   getByCourseId,
   getByUserId,
-  create,
+  assignRole,
   updateByUserId,
-  deleteByUserId,
+  disableByUserId,
   exportToCsvByCourseId,
   exportToCsvByUserId,
 };
