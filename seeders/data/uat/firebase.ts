@@ -10,25 +10,31 @@ const firebaseUsers: FirebaseUser[] = [
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN11',
     email: 'franco.marini@radiumrocket.com',
-    password: 'asdasd123',
+    password: 'password123',
     type: 'NORMAL',
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN12',
-    email: 'agustin.chazaretta@gmail.com',
-    password: 'asdasd123',
+    email: 'agustin.chazaretta@radiumrocket.com',
+    password: 'password123',
     type: 'NORMAL',
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN13',
-    email: 'guido.cerioni@gmail.com',
-    password: 'Passw0rd1234',
+    email: 'guido.cerioni@radiumrocket.com',
+    password: 'password123',
     type: 'NORMAL',
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN14',
-    email: 'iara.criscenti@hotmail.com',
-    password: 'Passw0rd1234',
+    email: 'iara.criscenti@radiumrocket.com',
+    password: 'password123',
+    type: 'NORMAL',
+  },
+  {
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN15',
+    email: 'julian.demeglio@radiumrocket.com',
+    password: 'password123',
     type: 'NORMAL',
   },
 ];
