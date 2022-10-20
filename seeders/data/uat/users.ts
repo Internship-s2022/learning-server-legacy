@@ -38,6 +38,13 @@ const users: UserType[] = [
     isInternal: false,
     isActive: true,
   },
+  {
+    _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400003'),
+    postulantId: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
+    firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN14',
+    isInternal: false,
+    isActive: true,
+  },
 ];
 
 export default users;

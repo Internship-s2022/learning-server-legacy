@@ -39,8 +39,13 @@ const postulants: PostulantType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
     firstName: 'Iara',
+<<<<<<< HEAD
     lastName: 'Criscenti',
     dni: '41343398',
+=======
+    lastName: 'Cresenti',
+    dni: '389783<s67',
+>>>>>>> 57a98c8 (RL-11: Update seeders)
     phone: '3415666666',
     email: 'iara.criscenti@hotmail.com',
     location: 'Rosario',
