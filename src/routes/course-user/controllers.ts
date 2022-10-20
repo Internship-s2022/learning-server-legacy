@@ -6,18 +6,26 @@ import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
 
 const getByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
-    const courseUser = await CourseUser.find({ courseId: req.params.id }).populate({
-      path: 'userId',
-      populate: { path: 'postulantId' },
-    });
+    const courseUser = await CourseUser.find({ courseId: req.params.id });
     if (courseUser.length) {
+      const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+      const { docs, ...pagination } = await CourseUser.paginate(query, {
+        page,
+        limit,
+        populate: {
+          path: 'userId',
+          populate: { path: 'postulantId' },
+        },
+      });
       return res.status(200).json({
         message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
-        data: courseUser,
+        data: docs,
+        pagination,
         error: false,
       });
     }
@@ -29,13 +37,20 @@ const getByCourseId = async (req: Request, res: Response) => {
 const getByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
-    const courseUser = await CourseUser.find({ userId: req.params.id }).populate({
-      path: 'courseId',
-    });
+    const courseUser = await CourseUser.find({ userId: req.params.id });
     if (courseUser.length) {
+      const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+      const { docs, ...pagination } = await CourseUser.paginate(query, {
+        page,
+        limit,
+        populate: {
+          path: 'courseId',
+        },
+      });
       return res.status(200).json({
         message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
-        data: courseUser,
+        data: docs,
+        pagination,
         error: false,
       });
     }
