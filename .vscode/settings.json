@@ -1,6 +1,6 @@
 {
   "editor.detectIndentation": false,
-  "editor.insertSpaces": true,
+  "editor.insertSpaces": false,
   "editor.tabSize": 2,
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
@@ -11,5 +11,8 @@
   "eslint.format.enable": true,
   "eslint.validate": ["javascript", "javascriptreact", "html", "typescriptreact"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "typescript.preferences.importModuleSpecifier": "shortest"
 }
