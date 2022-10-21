@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { FirebaseUser } from '../src/interfaces/firebase';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
+import CourseUser, { CourseUserType } from '../src/models/course-user';
 import Postulant, { PostulantType } from '../src/models/postulant';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
@@ -22,6 +23,7 @@ interface data {
   registrationForms: RegistrationFormType[];
   postulants: PostulantType[];
   users: UserType[];
+  courseUsers: CourseUserType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
@@ -34,6 +36,7 @@ const {
   superAdmins,
   postulants,
   users,
+  courseUsers,
 }: data = allData[env];
 
 firebaseAdmin.initializeApp({
@@ -139,6 +142,14 @@ firebaseAdmin.initializeApp({
           '|-------------------- ✅ Users removed ---------------------------|',
         );
       }
+
+      if (config.courseUsers.remove) {
+        promises.push(CourseUser.collection.deleteMany({}));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Course users removed --------------------|',
+        );
+      }
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -229,6 +240,14 @@ firebaseAdmin.initializeApp({
         console.log(
           '\x1b[32m',
           '|-------------------- ✅ Users added -----------------------------|',
+        );
+      }
+
+      if (config.courseUsers.create) {
+        promises.push(CourseUser.collection.insertMany(courseUsers));
+        console.log(
+          '\x1b[32m',
+          '|-------------------- ✅ Course users added ----------------------|',
         );
       }
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]
