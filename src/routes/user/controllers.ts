@@ -99,25 +99,6 @@ const update = async (req: Request, res: Response) => {
   }
 };
 
-const updatePassword = async (req: Request, res: Response) => {
-  const updatedUser = await firebase
-    .auth()
-    .updateUser(req.body.firebaseUid, { password: req.body.password });
-
-  if (updatedUser) {
-    return res.status(200).json({
-      message: 'The user password has been successfully updated',
-      data: {
-        uid: updatedUser.uid,
-        email: updatedUser.email,
-        userType: updatedUser?.customClaims?.userType,
-      },
-      error: false,
-    });
-  }
-  throw new CustomError(404, `User with firebase uid: ${req.body.firebaseUid} was not found`);
-};
-
 const deleteById = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user?.isActive === false) {
@@ -188,7 +169,6 @@ export default {
   getUserById,
   create,
   update,
-  updatePassword,
   deleteById,
   exportToCsv,
 };

@@ -30,7 +30,6 @@ router.patch(
   globalValidations.validateMongoID,
   controllers.deleteById,
 );
-router.patch('/update-password', validations.updatePasswordValidation, controllers.updatePassword);
 router.post('/export/csv', controllers.exportToCsv);
 
 export default router;

@@ -1,6 +1,7 @@
 import express from 'express';
 
 import admissionTestRouter from './admission-test';
+import authRouter from './auth';
 import courseRouter from './course';
 import courseUserRouter from './course-user';
 import postulantRouter from './postulant';
@@ -10,12 +11,13 @@ import userRouter from './user';
 
 const router = express.Router();
 
-router.use('/user', userRouter);
+router.use('/admission-test', admissionTestRouter);
+router.use('/auth', authRouter);
 router.use('/course', courseRouter);
-router.use('/super-admin', superAdminRouter);
+router.use('/course-user', courseUserRouter);
 router.use('/postulant', postulantRouter);
 router.use('/registration-form', registrationFormRouter);
-router.use('/admission-test', admissionTestRouter);
-router.use('/course-user', courseUserRouter);
+router.use('/super-admin', superAdminRouter);
+router.use('/user', userRouter);
 
 export default router;
