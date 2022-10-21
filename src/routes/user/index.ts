@@ -16,6 +16,12 @@ router.get(
   globalValidations.validateMongoID,
   controllers.getUserById,
 );
+router.post(
+  '/manual',
+  firebaseValidations.superAdmin,
+  validations.userManualValidation,
+  controllers.createManual,
+);
 router.post('/', firebaseValidations.superAdmin, validations.userValidation, controllers.create);
 router.put(
   '/:id',

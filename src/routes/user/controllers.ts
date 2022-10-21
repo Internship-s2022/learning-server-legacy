@@ -43,7 +43,7 @@ const create = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.body.postulantId);
   let newMongoUser;
   if (postulant?._id) {
-    newMongoUser = await userCreation(req.body, req.body.postulantId);
+    newMongoUser = await userCreation(req, req.body.postulantId);
   } else {
     throw new CustomError(
       400,
@@ -78,9 +78,12 @@ const createManual = async (req: Request, res: Response) => {
     if (!postulantById?._id) {
       throw new CustomError(404, 'The postulant id was not found');
     }
+    if (!(postulantById?.dni === req.body.dni)) {
+      throw new CustomError(404, 'The dni of the postulant must not change');
+    }
+    postulantId = req.body.postulantId;
   }
-  postulantId = req.body.postulantId;
-  const newMongoUser = await userCreation(req.body, postulantId);
+  const newMongoUser = await userCreation(req, postulantId);
 
   return res.status(201).json({
     message: 'User successfully created',
