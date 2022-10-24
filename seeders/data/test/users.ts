@@ -32,16 +32,9 @@ const users: UserType[] = [
     isActive: true,
   },
   {
-    _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400002'),
+    _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400004'),
     postulantId: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
-    firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN13',
-    isInternal: false,
-    isActive: true,
-  },
-  {
-    _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400003'),
-    postulantId: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
-    firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN14',
+    firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN15',
     isInternal: false,
     isActive: true,
   },
