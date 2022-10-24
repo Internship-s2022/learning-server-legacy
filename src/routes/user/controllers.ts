@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
+import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
-import Postulant from 'src/models/postulant';
-import User, { UserType } from 'src/models/user';
+import Postulant, { PostulantType } from 'src/models/postulant';
+import User from 'src/models/user';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import userCreation from 'src/utils/user-creation';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -39,36 +41,55 @@ const getUserById = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.body.postulantId);
-  if (postulant) {
-    const newFirebaseUser = await firebase.auth().createUser({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    const firebaseUid = newFirebaseUser.uid;
-    await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-    try {
-      const newUser = new User<UserType>({
-        firebaseUid,
-        postulantId: req.body.postulantId,
-        isInternal: req.body.isInternal,
-        isActive: req.body.isActive,
-      });
-      await newUser.save();
-      return res.status(201).json({
-        message: 'User successfully created',
-        data: newUser,
-        error: false,
-      });
-    } catch (err: any) {
-      firebase.auth().deleteUser(firebaseUid);
-      throw Error(err.message);
-    }
+  let newMongoUser;
+  if (postulant?._id) {
+    newMongoUser = await userCreation(req, req.body.postulantId);
   } else {
     throw new CustomError(
       400,
       `The postulant with the id of ${req.body.postulantId} does not exist`,
     );
   }
+
+  return res.status(201).json({
+    message: 'User successfully created',
+    data: newMongoUser,
+    error: false,
+  });
+};
+
+const createManual = async (req: Request, res: Response) => {
+  let postulantId: mongoose.Types.ObjectId;
+  if (!req.body.postulantId) {
+    const newPostulant = new Postulant<PostulantType>({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      location: req.body.location,
+      phone: req.body.phone,
+      email: req.body.email,
+      dni: req.body.dni,
+      birthDate: req.body.birthDate,
+      isActive: req.body.isActive,
+    });
+    await newPostulant.save();
+    postulantId = newPostulant._id;
+  } else {
+    const postulantById = await Postulant.findById(req.body.postulantId);
+    if (!postulantById?._id) {
+      throw new CustomError(404, 'The postulant id was not found');
+    }
+    if (!(postulantById?.dni === req.body.dni)) {
+      throw new CustomError(404, 'The dni of the postulant must not change');
+    }
+    postulantId = req.body.postulantId;
+  }
+  const newMongoUser = await userCreation(req, postulantId);
+
+  return res.status(201).json({
+    message: 'User successfully created',
+    data: newMongoUser,
+    error: false,
+  });
 };
 
 const update = async (req: Request, res: Response) => {
@@ -168,6 +189,7 @@ export default {
   getAllUsers,
   getUserById,
   create,
+  createManual,
   update,
   deleteById,
   exportToCsv,

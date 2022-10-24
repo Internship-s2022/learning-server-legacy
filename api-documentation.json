@@ -2,6 +2,7 @@
   "info": {
     "_postman_id": "b504d570-665e-4d45-a8f9-e95cb92a8856",
     "name": "RadiumLearning",
+    "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "23305867"
   },

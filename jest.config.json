@@ -1,7 +1,11 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
+  "rootDir": "./",
+  "modulePaths": ["<rootDir>"],
   "moduleNameMapper": {
-    "src/(.*)$": "<rootDir>/src/$1"
-  }
+    "src/(.*).ts$": "<rootDir>/src/$1"
+  },
+  "moduleDirectories": ["node_modules"],
+  "moduleFileExtensions": ["ts", "js"]
 }
