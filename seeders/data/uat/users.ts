@@ -9,6 +9,7 @@ const users: UserType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN11',
     isInternal: true,
     isActive: true,
+    isNewUser: true,
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400001'),
@@ -16,6 +17,7 @@ const users: UserType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN12',
     isInternal: false,
     isActive: true,
+    isNewUser: true,
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400002'),
@@ -23,6 +25,7 @@ const users: UserType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN13',
     isInternal: false,
     isActive: true,
+    isNewUser: true,
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400003'),
@@ -30,6 +33,7 @@ const users: UserType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN14',
     isInternal: false,
     isActive: true,
+    isNewUser: true,
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400004'),
@@ -37,6 +41,7 @@ const users: UserType[] = [
     firebaseUid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN15',
     isInternal: false,
     isActive: true,
+    isNewUser: true,
   },
 ];
 

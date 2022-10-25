@@ -33,6 +33,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       postulantId: postulantId,
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
+      isNewUser: true,
     });
     await newMongoUser.save();
   } catch (err: any) {

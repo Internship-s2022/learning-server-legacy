@@ -6,7 +6,7 @@ import { CustomError } from 'src/models/custom-error';
 const updatePassword = async (req: Request, res: Response) => {
   const updatedUser = await firebase
     .auth()
-    .updateUser(req.body.firebaseUid, { password: req.body.password });
+    .updateUser(req.body.firebaseUid, { password: req.body.newPassword });
 
   if (updatedUser) {
     return res.status(200).json({

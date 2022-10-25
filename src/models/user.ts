@@ -9,6 +9,7 @@ export interface UserType {
   postulantId: mongoose.Types.ObjectId;
   isInternal: boolean;
   isActive: boolean;
+  isNewUser: boolean;
 }
 
 const userSchema = new Schema<UserType, Model<UserType>>(
@@ -28,6 +29,11 @@ const userSchema = new Schema<UserType, Model<UserType>>(
       required: true,
     },
     isActive: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
+    isNewUser: {
       type: Boolean,
       default: true,
       required: true,

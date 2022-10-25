@@ -30,6 +30,7 @@ router.put(
   validations.userValidation,
   controllers.update,
 );
+router.patch('/update/:uid', globalValidations.validateFirebaseUid, controllers.updateIsNewUser);
 router.patch(
   '/:id',
   firebaseValidations.superAdmin,

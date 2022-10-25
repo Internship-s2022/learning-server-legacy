@@ -119,6 +119,32 @@ const update = async (req: Request, res: Response) => {
     );
   }
 };
+const updateIsNewUser = async (req: Request, res: Response) => {
+  const user = await User.findOne({ firebaseUid: req.params.uid });
+  let isNewUser = false;
+  if (user) {
+    isNewUser = user?.isNewUser;
+  } else throw new CustomError(404, `User with uid: ${req.params.uid} was not found`);
+
+  if (isNewUser) {
+    const result = await User.findOneAndUpdate(
+      { firebaseUid: req.params.uid },
+      { isNewUser: false },
+      {
+        new: true,
+      },
+    );
+    if (result) {
+      return res.status(200).json({
+        message: 'The user has been successfully updated',
+        data: isNewUser,
+        error: false,
+      });
+    }
+  }
+
+  throw new CustomError(400, `User with uid: ${req.params.uid} has already been logged`);
+};
 
 const deleteById = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
@@ -193,4 +219,5 @@ export default {
   update,
   deleteById,
   exportToCsv,
+  updateIsNewUser,
 };
