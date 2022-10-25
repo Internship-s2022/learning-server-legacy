@@ -29,9 +29,11 @@ const userValidation = (req: Request, res: Response, next: NextFunction) => {
     isActive: Joi.boolean().required().messages({
       'any.required': 'Is active is required',
     }),
+    isNewUser: Joi.boolean().required(),
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
+    console.log('validation.error', validation.error);
     throw new CustomError(400, validation.error.details[0].message);
   }
   return next();
