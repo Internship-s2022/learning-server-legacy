@@ -123,7 +123,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTests\": [\n        {\n            \"_id\": \"1e063109a88495b45758c000\"\n        }\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
+              "raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTestIds\": [\n        {\n            \"_id\": \"1e063109a88495b45758c000\"\n        }\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -623,7 +623,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"someemadsfil@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
+              "raw": "{\n    \"email\": \"someemadsfil@gmail.com\",\n    \"password\":\"testing123\",\n    \"postulantId\": \"1e063109a88495b45758c000\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -645,7 +645,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"guidocerioni98aa1@gmail.com\",\n    \"postulant\": \"63505618405f3b6169488df2\",\n    \"firstName\": \"guido\",\n    \"lastName\": \"cerio\",\n    \"dni\": \"37288111\",\n    \"phone\": \"3415444444\",\n    \"location\": \"Rosario\",\n    \"birthDate\": \"2001-01-05T20:17:04.581Z\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
+              "raw": "{\n    \"email\": \"guidocerioni98aa1@gmail.com\",\n    \"postulantId\": \"63505618405f3b6169488df2\",\n    \"firstName\": \"guido\",\n    \"lastName\": \"cerio\",\n    \"dni\": \"37288111\",\n    \"phone\": \"3415444444\",\n    \"location\": \"Rosario\",\n    \"birthDate\": \"2001-01-05T20:17:04.581Z\",\n    \"isInternal\": false,\n    \"isActive\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -676,7 +676,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n                \"_id\": \"507f1f77bcf86cd799400000\",\n                \"postulant\": \"607f1f77bcf86cd799400000\",\n                \"firebaseUid\": \"M5MCzG5aCKpf0B7qpNNsi8RyjN11\",\n                \"isInternal\": true,\n                \"isActive\": true\n            }",
+              "raw": "{\n                \"_id\": \"507f1f77bcf86cd799400000\",\n                \"postulantId\": \"607f1f77bcf86cd799400000\",\n                \"firebaseUid\": \"M5MCzG5aCKpf0B7qpNNsi8RyjN11\",\n                \"isInternal\": true,\n                \"isActive\": true\n            }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -684,13 +684,13 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course?name=q&isActive=true&admissionTests._id=1e063109a88495b45758c000",
+              "raw": "{{API_URL}}/user?postulant.firstName=gui&isActive=true",
               "host": ["{{API_URL}}"],
-              "path": ["course"],
+              "path": ["user"],
               "query": [
                 {
-                  "key": "name",
-                  "value": "q"
+                  "key": "postulant.firstName",
+                  "value": "gui"
                 },
                 {
                   "key": "isActive",
@@ -714,7 +714,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"postulant\": \"607f1f77bcf86cd799400001\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"password\": \"testing123\"\n}",
+              "raw": "{\n    \"postulantId\": \"607f1f77bcf86cd799400001\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"password\": \"testing123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -862,7 +862,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"507f1f77bcf86cd799400001\",\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"userId\": \"507f1f77bcf86cd799400001\",\n    \"courseId\": \"1e063109a88495b45758c000\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -895,9 +895,15 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "raw": "{{API_URL}}/course-user/by-user/:id?course._id=1e063109a88495b45758c000",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
+              "query": [
+                {
+                  "key": "course._id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -934,7 +940,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"courseId\": \"1e063109a88495b45758c000\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -962,7 +968,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course\": \"1e063109a88495b45758c000\"\n}",
+              "raw": "{\n    \"courseId\": \"1e063109a88495b45758c000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
