@@ -8,6 +8,7 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', coursesControllers.getAll);
+router.get('/export/csv', coursesControllers.exportToCsv);
 router.get('/:id', globalValidations.validateMongoID, coursesControllers.getById);
 router.post('/', validations.courseValidation, coursesControllers.create);
 router.put(

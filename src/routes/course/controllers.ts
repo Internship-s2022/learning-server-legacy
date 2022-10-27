@@ -1,15 +1,38 @@
 import { Request, Response } from 'express';
+import { parseAsync } from 'json2csv';
+import { PipelineStage } from 'mongoose';
 
+import { ResponseBody } from 'src/interfaces/response';
 import Course, { CourseType } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+
+const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean }) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: 'admissiontests',
+        localField: 'admissionTestIds',
+        foreignField: '_id',
+        as: 'admissionTestIds',
+      },
+    },
+    { $match: query },
+  ];
+
+  if (options?.unwindAdmissionTest) {
+    pipeline.push({ $unwind: { path: '$admissionTestIds' } });
+  }
+
+  return pipeline;
+};
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await Course.paginate(query, {
+  const courseAggregate = Course.aggregate(getCoursePipeline(query));
+  const { docs, ...pagination } = await Course.aggregatePaginate(courseAggregate, {
     page,
     limit,
-    populate: { path: 'admissionTestIds' },
   });
   if (docs.length) {
     return res.status(200).json({
@@ -34,7 +57,10 @@ const getById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
-const create = async (req: Request<Record<string, string>, any, CourseType>, res: Response) => {
+const create = async (
+  req: Request<Record<string, string>, unknown, CourseType>,
+  res: Response<ResponseBody<CourseType>>,
+) => {
   const course = new Course<CourseType>({
     name: req.body.name,
     admissionTestIds: req.body.admissionTestIds,
@@ -91,4 +117,41 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
 };
 
-export default { getAll, getById, create, update, deleteById };
+const exportToCsv = async (req: Request, res: Response) => {
+  const query = filterByIncludes(req.query);
+  const docs = await Course.aggregate(getCoursePipeline(query, { unwindAdmissionTest: true }));
+  if (docs.length) {
+    const csv = await parseAsync(docs, {
+      fields: [
+        '_id',
+        'name',
+        'description',
+        'inscriptionStartDate',
+        'inscriptionEndDate',
+        'startDate',
+        'endDate',
+        'type',
+        'isInternal',
+        'isActive',
+        'admissionTestIds._id',
+        'admissionTestIds.name',
+        'admissionTestIds.isActive',
+      ],
+    });
+    if (csv) {
+      res.set('Content-Type', 'text/csv');
+      res.attachment('courses.csv');
+      return res.status(200).send(csv);
+    }
+  }
+  throw new CustomError(404, 'Cannot export the list of courses.');
+};
+
+export default {
+  getAll,
+  getById,
+  create,
+  update,
+  deleteById,
+  exportToCsv,
+};

@@ -1,5 +1,5 @@
-import mongoose, { Model, Schema } from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface CourseType {
   _id?: mongoose.Types.ObjectId;
@@ -13,6 +13,10 @@ export interface CourseType {
   description: string;
   isInternal: boolean;
   isActive: boolean;
+}
+
+interface CourseDocument extends CourseType, Document {
+  _id?: mongoose.Types.ObjectId;
 }
 
 const courseSchema = new Schema<CourseType, Model<CourseType>>(
@@ -66,9 +70,9 @@ const courseSchema = new Schema<CourseType, Model<CourseType>>(
   { timestamps: true },
 );
 
-courseSchema.plugin(paginate);
+courseSchema.plugin(aggregatePaginate);
 
-export default mongoose.model<CourseType, mongoose.PaginateModel<CourseType>>(
+export default mongoose.model<CourseType, mongoose.AggregatePaginateModel<CourseDocument>>(
   'Course',
   courseSchema,
 );

@@ -9,12 +9,25 @@ import User from 'src/models/user';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 import userCreation from 'src/utils/user-creation';
 
+const getUserPipeline = (query: qs.ParsedQs) => [
+  {
+    $lookup: {
+      from: 'postulants',
+      localField: 'postulantId',
+      foreignField: '_id',
+      as: 'postulantId',
+    },
+  },
+  { $unwind: { path: '$postulantId' } },
+  { $match: query },
+];
+
 const getAllUsers = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await User.paginate(query, {
+  const userAggregate = User.aggregate(getUserPipeline(query));
+  const { docs, ...pagination } = await User.aggregatePaginate(userAggregate, {
     page,
     limit,
-    populate: { path: 'postulantId' },
   });
   if (docs.length) {
     return res.status(200).json({
@@ -173,33 +186,21 @@ const deleteById = async (req: Request, res: Response) => {
 
 const exportToCsv = async (req: Request, res: Response) => {
   const query = filterByIncludes(req.query);
-  const docs = await User.aggregate([
-    { $match: query },
-    {
-      $lookup: {
-        from: 'postulants',
-        localField: 'postulantId',
-        foreignField: '_id',
-        as: 'postulant',
-      },
-    },
-    { $project: { postulantId: 0 } },
-    { $unwind: { path: '$postulant' } },
-  ]);
+  const docs = await User.aggregate(getUserPipeline(query));
   if (docs.length) {
     const csv = await parseAsync(docs, {
       fields: [
         '_id',
         'isInternal',
         'isActive',
-        'postulant._id',
-        'postulant.firstName',
-        'postulant.lastName',
-        'postulant.birthDate',
-        'postulant.location',
-        'postulant.dni',
-        'postulant.phone',
-        'postulant.email',
+        'postulantId._id',
+        'postulantId.firstName',
+        'postulantId.lastName',
+        'postulantId.birthDate',
+        'postulantId.location',
+        'postulantId.dni',
+        'postulantId.phone',
+        'postulantId.email',
       ],
     });
     if (csv) {
