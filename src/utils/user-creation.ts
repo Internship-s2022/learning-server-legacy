@@ -48,7 +48,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       email: req.body.email,
       password: newPassword,
     },
-    async (err: any, result) => {
+    async (err: Error) => {
       if (err) {
         await firebase.auth().deleteUser(firebaseUid);
         throw new Error(`Sendgrid error: ${err.message}`);
