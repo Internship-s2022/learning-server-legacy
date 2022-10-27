@@ -11,7 +11,7 @@ const postulants: PostulantType[] = [
     phone: '3415444444',
     email: 'franco.marini@radiumrocket.com',
     location: 'Rosario',
-    birthDate: '2023-01-05T20:17:04.581Z',
+    birthDate: '1998-01-05T00:00:00.000Z',
     isActive: true,
   },
   {
@@ -22,7 +22,7 @@ const postulants: PostulantType[] = [
     phone: '3415444444',
     email: 'agustin.chazaretta@gmail.com',
     location: 'Rosario',
-    birthDate: '2023-01-05T20:17:04.581Z',
+    birthDate: '1998-01-05T00:00:00.000Z',
     isActive: true,
   },
   {
