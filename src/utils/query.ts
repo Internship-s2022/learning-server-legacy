@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
 export const filterByIncludes = (query: qs.ParsedQs) => {
@@ -18,7 +19,7 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
       if (mongoose.Types.ObjectId.isValid(value)) {
         return {
           ...prev,
-          [key]: value,
+          [key]: new ObjectId(value),
         };
       }
       return {

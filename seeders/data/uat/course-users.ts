@@ -24,6 +24,20 @@ const courseUsers: CourseUserType[] = [
     role: 'STUDENT',
     isActive: true,
   },
+  {
+    _id: new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400003'),
+    course: new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
+    user: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
+    role: 'STUDENT',
+    isActive: true,
+  },
+  {
+    _id: new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400004'),
+    course: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+    user: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
+    role: 'STUDENT',
+    isActive: true,
+  },
 ];
 
 export default courseUsers;
