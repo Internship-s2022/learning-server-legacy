@@ -8,7 +8,7 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', registrationFormControllers.getAll);
-router.get('/:id', globalValidations.validateMongoID, registrationFormControllers.getById);
+router.get('/:id', globalValidations.validateMongoId, registrationFormControllers.getById);
 router.post(
   '/',
   validations.registrationFormValidation('post'),
@@ -16,10 +16,10 @@ router.post(
 );
 router.put(
   '/:id',
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   validations.registrationFormValidation('put'),
   registrationFormControllers.updateById,
 );
-router.patch('/:id', globalValidations.validateMongoID, registrationFormControllers.deleteById);
+router.patch('/:id', globalValidations.validateMongoId, registrationFormControllers.deleteById);
 
 export default router;

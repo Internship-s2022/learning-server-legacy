@@ -30,7 +30,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
   try {
     newMongoUser = new User<UserType>({
       firebaseUid,
-      postulantId: postulantId,
+      postulant: postulantId,
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
       isNewUser: true,

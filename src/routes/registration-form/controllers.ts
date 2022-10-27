@@ -8,12 +8,12 @@ const getRegistrationFormPipeline = (query: qs.ParsedQs) => [
   {
     $lookup: {
       from: 'courses',
-      localField: 'courseId',
+      localField: 'course',
       foreignField: '_id',
-      as: 'courseId',
+      as: 'course',
     },
   },
-  { $unwind: { path: '$courseId' } },
+  { $unwind: { path: '$course' } },
   { $match: query },
 ];
 
@@ -49,7 +49,7 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   const registrationForm = new RegistrationForm<RegistrationFormType>({
-    courseId: req.body.courseId,
+    course: req.body.course,
     title: req.body.title,
     description: req.body.description,
     views: req.body.views,

@@ -12,21 +12,21 @@ const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: Object
   {
     $lookup: {
       from: 'users',
-      localField: 'userId',
+      localField: 'user',
       foreignField: '_id',
-      as: 'userId',
+      as: 'user',
     },
   },
-  { $unwind: { path: '$userId' } },
+  { $unwind: { path: '$user' } },
   {
     $lookup: {
       from: 'postulants',
-      localField: 'userId.postulantId',
+      localField: 'user.postulant',
       foreignField: '_id',
-      as: 'userId.postulantId',
+      as: 'user.postulant',
     },
   },
-  { $unwind: { path: '$userId.postulantId' } },
+  { $unwind: { path: '$user.postulant' } },
   { $match: query },
 ];
 
@@ -34,12 +34,12 @@ const geCourseBasedOnUserPipeline = (query: qs.ParsedQs | { [k: string]: ObjectI
   {
     $lookup: {
       from: 'courses',
-      localField: 'courseId',
+      localField: 'course',
       foreignField: '_id',
-      as: 'courseId',
+      as: 'course',
     },
   },
-  { $unwind: { path: '$courseId' } },
+  { $unwind: { path: '$course' } },
   { $match: query },
 ];
 
@@ -47,11 +47,11 @@ const getByCourseId = async (req: Request, res: Response) => {
   const courseId = req.params.id;
   const course = await Course.findById(courseId);
   if (course) {
-    const courseUser = await CourseUser.findOne({ courseId });
+    const courseUser = await CourseUser.findOne({ course: courseId });
     if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        getUserBasedOnCoursePipeline({ ...query, courseId: new ObjectId(courseId) }),
+        getUserBasedOnCoursePipeline({ ...query, course: new ObjectId(courseId) }),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -73,11 +73,11 @@ const getByUserId = async (req: Request, res: Response) => {
   const userId = req.params.id;
   const user = await User.findById(userId);
   if (user) {
-    const courseUser = await CourseUser.findOne({ userId });
+    const courseUser = await CourseUser.findOne({ user: userId });
     if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        geCourseBasedOnUserPipeline({ ...query, userId: new ObjectId(userId) }),
+        geCourseBasedOnUserPipeline({ ...query, user: new ObjectId(userId) }),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -96,22 +96,22 @@ const getByUserId = async (req: Request, res: Response) => {
 };
 
 const assignRole = async (req: Request, res: Response) => {
-  const user = await User.findById(req.body.userId);
-  const course = await Course.findById(req.body.courseId);
+  const user = await User.findById(req.body.user);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.find({
-      userId: req.body.userId,
-      courseId: req.body.courseId,
+      user: req.body.user,
+      course: req.body.course,
     });
     if (courseUser.length) {
       throw new CustomError(
         400,
-        `The user with id: ${req.body.userId} has already a role in this course.`,
+        `The user with id: ${req.body.user} has already a role in this course.`,
       );
     }
     const NewCourseUser = new CourseUser<CourseUserType>({
-      courseId: req.body.courseId,
-      userId: req.body.userId,
+      course: req.body.course,
+      user: req.body.user,
       role: req.body.role,
       isActive: req.body.isActive,
     });
@@ -128,18 +128,18 @@ const assignRole = async (req: Request, res: Response) => {
 
 const updateByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
-  const course = await Course.findById(req.body.courseId);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.findOne({
-      userId: req.params.id,
-      courseId: req.body.courseId,
+      user: req.params.id,
+      course: req.body.course,
     });
     if (courseUser) {
       const updatedCourseUser = await CourseUser.findOneAndUpdate(
         courseUser._id,
         {
-          userId: req.params.id,
-          courseId: req.body.courseId,
+          user: req.params.id,
+          course: req.body.course,
           role: req.body.role,
           isActive: req.body.isActive,
         },
@@ -158,17 +158,17 @@ const updateByUserId = async (req: Request, res: Response) => {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
     }
-    throw new CustomError(404, `Course with id ${req.body.courseId} was not found.`);
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
 };
 
 const disableByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
-  const course = await Course.findById(req.body.courseId);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.findOne({
-      userId: req.params.id,
-      courseId: req.body.courseId,
+      user: req.params.id,
+      course: req.body.course,
     });
     if (courseUser?.isActive === false) {
       throw new CustomError(404, 'The user has already been disabled');
@@ -194,7 +194,7 @@ const disableByUserId = async (req: Request, res: Response) => {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
     }
-    throw new CustomError(404, `Course with id ${req.body.courseId} was not found.`);
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
 };
 
@@ -202,30 +202,30 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
     const docs = await CourseUser.aggregate(
-      getUserBasedOnCoursePipeline({ courseId: new ObjectId(req.params.id) }),
+      getUserBasedOnCoursePipeline({ course: new ObjectId(req.params.id) }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
         fields: [
           '_id',
-          'courseId',
+          'course',
           'role',
           'isActive',
-          'userId._id',
-          'userId.isInternal',
-          'userId.isActive',
-          'userId.postulantId.firstName',
-          'userId.postulantId.lastName',
-          'userId.postulantId.email',
-          'userId.postulantId.phone',
-          'userId.postulantId.location',
-          'userId.postulantId.birthDate',
-          'userId.postulantId.dni',
+          'user._id',
+          'user.isInternal',
+          'user.isActive',
+          'user.postulant.firstName',
+          'user.postulant.lastName',
+          'user.postulant.email',
+          'user.postulant.phone',
+          'user.postulant.location',
+          'user.postulant.birthDate',
+          'user.postulant.dni',
         ],
       });
       if (csv) {
         res.set('Content-Type', 'text/csv');
-        res.attachment('course-users-by-courseId.csv');
+        res.attachment('course-users-by-course.csv');
         return res.status(200).send(csv);
       }
     }
@@ -238,7 +238,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
     const docs = await CourseUser.aggregate(
-      geCourseBasedOnUserPipeline({ userId: new ObjectId(req.params.id) }),
+      geCourseBasedOnUserPipeline({ user: new ObjectId(req.params.id) }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -246,21 +246,21 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
           '_id',
           'role',
           'isActive',
-          'courseId._id',
-          'courseId.name',
-          'courseId.inscriptionStartDate',
-          'courseId.inscriptionEndDate',
-          'courseId.startDate',
-          'courseId.endDate',
-          'courseId.type',
-          'courseId.description',
-          'courseId.isInternal',
-          'courseId.isActive',
+          'course._id',
+          'course.name',
+          'course.inscriptionStartDate',
+          'course.inscriptionEndDate',
+          'course.startDate',
+          'course.endDate',
+          'course.type',
+          'course.description',
+          'course.isInternal',
+          'course.isActive',
         ],
       });
       if (csv) {
         res.set('Content-Type', 'text/csv');
-        res.attachment('course-users-by-userId.csv');
+        res.attachment('course-users-by-user.csv');
         return res.status(200).send(csv);
       }
     }

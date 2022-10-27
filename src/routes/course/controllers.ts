@@ -12,16 +12,16 @@ const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean 
     {
       $lookup: {
         from: 'admissiontests',
-        localField: 'admissionTestIds',
+        localField: 'admissionTests',
         foreignField: '_id',
-        as: 'admissionTestIds',
+        as: 'admissionTests',
       },
     },
     { $match: query },
   ];
 
   if (options?.unwindAdmissionTest) {
-    pipeline.push({ $unwind: { path: '$admissionTestIds' } });
+    pipeline.push({ $unwind: { path: '$admissionTests' } });
   }
 
   return pipeline;
@@ -46,7 +46,7 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id).populate({ path: 'admissionTestIds' });
+  const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
   if (course) {
     return res.status(200).json({
       message: 'The course has been successfully found',
@@ -63,7 +63,7 @@ const create = async (
 ) => {
   const course = new Course<CourseType>({
     name: req.body.name,
-    admissionTestIds: req.body.admissionTestIds,
+    admissionTests: req.body.admissionTests,
     description: req.body.description,
     inscriptionStartDate: req.body.inscriptionStartDate,
     inscriptionEndDate: req.body.inscriptionEndDate,
@@ -133,9 +133,9 @@ const exportToCsv = async (req: Request, res: Response) => {
         'type',
         'isInternal',
         'isActive',
-        'admissionTestIds._id',
-        'admissionTestIds.name',
-        'admissionTestIds.isActive',
+        'admissionTests._id',
+        'admissionTests.name',
+        'admissionTests.isActive',
       ],
     });
     if (csv) {

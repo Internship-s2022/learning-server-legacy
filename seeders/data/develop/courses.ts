@@ -9,7 +9,7 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
     name: `BASP ${today.getFullYear()}`,
-    admissionTestIds: [
+    admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
     ],
@@ -25,7 +25,7 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
     name: 'React Native',
-    admissionTestIds: [
+    admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
@@ -43,7 +43,7 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     name: 'Vue',
-    admissionTestIds: [
+    admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
     ],
@@ -59,7 +59,7 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),
     name: `QA ${today.getFullYear()}`,
-    admissionTestIds: [
+    admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     ],
@@ -75,7 +75,7 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c004'),
     name: 'Dev 2021',
-    admissionTestIds: [
+    admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     ],

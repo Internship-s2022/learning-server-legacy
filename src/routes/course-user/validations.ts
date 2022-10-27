@@ -7,7 +7,7 @@ import { CustomError } from 'src/models/custom-error';
 const courseUserValidations = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const courseUserValidations = Joi.object<CourseUserType>({
-      courseId: Joi.string()
+      course: Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -15,7 +15,7 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
           'any.required': 'Course id is a required field',
         }),
 
-      userId:
+      user:
         requestType === 'post'
           ? Joi.string()
               .pattern(/^[0-9a-fA-F]{24}$/)

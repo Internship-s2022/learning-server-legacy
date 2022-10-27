@@ -16,7 +16,7 @@ const userValidation = (req: Request, res: Response, next: NextFunction) => {
       .messages({
         'string.pattern.base': 'Invalid email format',
       }),
-    postulantId: Joi.string()
+    postulant: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
       .required()
       .messages({
@@ -33,7 +33,6 @@ const userValidation = (req: Request, res: Response, next: NextFunction) => {
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
-    console.log('validation.error', validation.error);
     throw new CustomError(400, validation.error.details[0].message);
   }
   return next();
@@ -95,7 +94,7 @@ const userManualValidation = (req: Request, res: Response, next: NextFunction) =
       'date.min': 'You need to be less than 100 years old',
       'any.required': 'Date is a required field',
     }),
-    postulantId: Joi.string()
+    postulant: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
       .optional()
       .messages({

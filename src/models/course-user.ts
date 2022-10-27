@@ -5,8 +5,8 @@ type RoleType = 'ADMIN' | 'TUTOR' | 'AUXILIARY' | 'STUDENT';
 
 export interface CourseUserType {
   _id?: mongoose.Types.ObjectId;
-  courseId: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   role: RoleType;
   isActive: boolean;
 }
@@ -17,13 +17,13 @@ interface CourseUserDocument extends CourseUserType, Document {
 
 const CourseUserSchema = new Schema<CourseUserType, Model<CourseUserType>>(
   {
-    courseId: {
+    course: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'Course',
       unique: false,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',

@@ -12,11 +12,11 @@ router.get('/:dni', postulantsControllers.getByDni);
 router.post('/', validations.postulantValidation, postulantsControllers.create);
 router.put(
   '/:id',
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   validations.postulantValidation,
   postulantsControllers.update,
 );
-router.patch('/:id', globalValidations.validateMongoID, postulantsControllers.deleteById);
+router.patch('/:id', globalValidations.validateMongoId, postulantsControllers.deleteById);
 router.get('/export/csv', postulantsControllers.exportToCsv);
 
 export default router;

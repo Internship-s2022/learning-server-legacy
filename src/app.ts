@@ -6,6 +6,8 @@ import router from './routes';
 
 const app: Express = express();
 
+router.use(errorHandler);
+
 app.use(cors());
 
 app.use(express.json());
@@ -19,7 +21,5 @@ app.get('/', (_req, res: Response) => {
     error: false,
   });
 });
-
-router.use(errorHandler);
 
 export default app;

@@ -8,7 +8,7 @@ type View = {
 
 export interface RegistrationFormType {
   _id?: mongoose.Types.ObjectId;
-  courseId: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
   title: string;
   description: string;
   views: View[];
@@ -21,7 +21,7 @@ interface RegistrationFormDocument extends RegistrationFormType, Document {
 
 const registrationFormSchema = new Schema<RegistrationFormType, Model<RegistrationFormType>>(
   {
-    courseId: {
+    course: {
       type: Schema.Types.ObjectId,
       required: true,
     },

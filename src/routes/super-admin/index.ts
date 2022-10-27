@@ -12,7 +12,7 @@ router.get('/', firebaseValidations.superAdmin, superAdminControllers.getAll);
 router.get(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   superAdminControllers.getById,
 );
 router.post(
@@ -24,14 +24,14 @@ router.post(
 router.put(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   validations.superAdminValidation,
   superAdminControllers.update,
 );
 router.patch(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   superAdminControllers.deleteById,
 );
 

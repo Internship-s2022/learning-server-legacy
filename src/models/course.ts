@@ -4,7 +4,7 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 export interface CourseType {
   _id?: mongoose.Types.ObjectId;
   name: string;
-  admissionTestIds: mongoose.Types.ObjectId[];
+  admissionTests: mongoose.Types.ObjectId[];
   inscriptionStartDate: Date;
   inscriptionEndDate: Date;
   startDate: Date;
@@ -25,7 +25,7 @@ const courseSchema = new Schema<CourseType, Model<CourseType>>(
       type: String,
       required: true,
     },
-    admissionTestIds: [
+    admissionTests: [
       {
         type: Schema.Types.ObjectId,
         required: true,
