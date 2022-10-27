@@ -33,7 +33,7 @@ const postulants: PostulantType[] = [
     phone: '3415777777',
     email: 'guido.cerioni@gmail.com',
     location: 'Rosario',
-    birthDate: '2021-01-05T20:17:04.581Z',
+    birthDate: '1998-01-05T00:00:00.000Z',
     isActive: true,
   },
   {
@@ -44,7 +44,7 @@ const postulants: PostulantType[] = [
     phone: '3415666666',
     email: 'iara.criscenti@hotmail.com',
     location: 'Rosario',
-    birthDate: '2022-01-05T20:17:04.581Z',
+    birthDate: '1998-01-05T00:00:00.000Z',
     isActive: true,
   },
   {
@@ -55,7 +55,7 @@ const postulants: PostulantType[] = [
     phone: '3415666666',
     email: 'julian.demeglio@radiumrocket.com',
     location: 'Rosario',
-    birthDate: '2022-01-05T20:17:04.581Z',
+    birthDate: '1998-01-05T00:00:00.000Z',
     isActive: true,
   },
 ];
