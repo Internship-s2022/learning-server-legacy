@@ -11,7 +11,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       'string.max': 'Invalid course name, it must not contain more than 50 letters',
       'any.required': 'Name is a required field',
     }),
-    admissionTestIds: Joi.array().items(
+    admissionTests: Joi.array().items(
       Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()

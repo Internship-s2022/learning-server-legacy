@@ -13,7 +13,7 @@ router.get('/export/csv', controllers.exportToCsv);
 router.get(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   controllers.getUserById,
 );
 router.post(
@@ -26,7 +26,7 @@ router.post('/', firebaseValidations.superAdmin, validations.userValidation, con
 router.put(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   validations.userValidation,
   controllers.update,
 );
@@ -34,7 +34,7 @@ router.patch('/update/:uid', globalValidations.validateFirebaseUid, controllers.
 router.patch(
   '/:id',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   controllers.deleteById,
 );
 

@@ -8,14 +8,14 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', admissionTestControllers.getAll);
-router.get('/:id', globalValidations.validateMongoID, admissionTestControllers.getById);
+router.get('/:id', globalValidations.validateMongoId, admissionTestControllers.getById);
 router.post('/', validations.admissionTestValidation, admissionTestControllers.create);
 router.put(
   '/:id',
-  globalValidations.validateMongoID,
+  globalValidations.validateMongoId,
   validations.admissionTestValidation,
   admissionTestControllers.update,
 );
-router.patch('/:id', globalValidations.validateMongoID, admissionTestControllers.deleteById);
+router.patch('/:id', globalValidations.validateMongoId, admissionTestControllers.deleteById);
 
 export default router;

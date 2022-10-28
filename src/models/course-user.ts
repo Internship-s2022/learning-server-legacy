@@ -1,25 +1,29 @@
-import mongoose, { Model, Schema } from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 type RoleType = 'ADMIN' | 'TUTOR' | 'AUXILIARY' | 'STUDENT';
 
 export interface CourseUserType {
   _id?: mongoose.Types.ObjectId;
-  courseId: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   role: RoleType;
   isActive: boolean;
 }
 
+interface CourseUserDocument extends CourseUserType, Document {
+  _id?: mongoose.Types.ObjectId;
+}
+
 const CourseUserSchema = new Schema<CourseUserType, Model<CourseUserType>>(
   {
-    courseId: {
+    course: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'Course',
       unique: false,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',
@@ -37,9 +41,9 @@ const CourseUserSchema = new Schema<CourseUserType, Model<CourseUserType>>(
   { timestamps: true },
 );
 
-CourseUserSchema.plugin(paginate);
+CourseUserSchema.plugin(aggregatePaginate);
 
-export default mongoose.model<CourseUserType, mongoose.PaginateModel<CourseUserType>>(
+export default mongoose.model<CourseUserType, mongoose.AggregatePaginateModel<CourseUserDocument>>(
   'CourseUser',
   CourseUserSchema,
 );

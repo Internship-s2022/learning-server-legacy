@@ -8,19 +8,54 @@ import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
 
+const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: ObjectId }) => [
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'user',
+      foreignField: '_id',
+      as: 'user',
+    },
+  },
+  { $unwind: { path: '$user' } },
+  {
+    $lookup: {
+      from: 'postulants',
+      localField: 'user.postulant',
+      foreignField: '_id',
+      as: 'user.postulant',
+    },
+  },
+  { $unwind: { path: '$user.postulant' } },
+  { $match: query },
+];
+
+const geCourseBasedOnUserPipeline = (query: qs.ParsedQs | { [k: string]: ObjectId }) => [
+  {
+    $lookup: {
+      from: 'courses',
+      localField: 'course',
+      foreignField: '_id',
+      as: 'course',
+    },
+  },
+  { $unwind: { path: '$course' } },
+  { $match: query },
+];
+
 const getByCourseId = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id);
+  const courseId = req.params.id;
+  const course = await Course.findById(courseId);
   if (course) {
-    const courseUser = await CourseUser.find({ courseId: req.params.id });
-    if (courseUser.length) {
+    const courseUser = await CourseUser.findOne({ course: courseId });
+    if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-      const { docs, ...pagination } = await CourseUser.paginate(query, {
+      const courseUserAggregate = CourseUser.aggregate(
+        getUserBasedOnCoursePipeline({ ...query, course: new ObjectId(courseId) }),
+      );
+      const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
         limit,
-        populate: {
-          path: 'userId',
-          populate: { path: 'postulantId' },
-        },
       });
       return res.status(200).json({
         message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
@@ -35,17 +70,18 @@ const getByCourseId = async (req: Request, res: Response) => {
 };
 
 const getByUserId = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  const userId = req.params.id;
+  const user = await User.findById(userId);
   if (user) {
-    const courseUser = await CourseUser.find({ userId: req.params.id });
-    if (courseUser.length) {
+    const courseUser = await CourseUser.findOne({ user: userId });
+    if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-      const { docs, ...pagination } = await CourseUser.paginate(query, {
+      const courseUserAggregate = CourseUser.aggregate(
+        geCourseBasedOnUserPipeline({ ...query, user: new ObjectId(userId) }),
+      );
+      const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
         limit,
-        populate: {
-          path: 'courseId',
-        },
       });
       return res.status(200).json({
         message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
@@ -60,22 +96,22 @@ const getByUserId = async (req: Request, res: Response) => {
 };
 
 const assignRole = async (req: Request, res: Response) => {
-  const user = await User.findById(req.body.userId);
-  const course = await Course.findById(req.body.courseId);
+  const user = await User.findById(req.body.user);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.find({
-      userId: req.body.userId,
-      courseId: req.body.courseId,
+      user: req.body.user,
+      course: req.body.course,
     });
     if (courseUser.length) {
       throw new CustomError(
         400,
-        `The user with id: ${req.body.userId} has already a role in this course.`,
+        `The user with id: ${req.body.user} has already a role in this course.`,
       );
     }
     const NewCourseUser = new CourseUser<CourseUserType>({
-      courseId: req.body.courseId,
-      userId: req.body.userId,
+      course: req.body.course,
+      user: req.body.user,
       role: req.body.role,
       isActive: req.body.isActive,
     });
@@ -92,18 +128,18 @@ const assignRole = async (req: Request, res: Response) => {
 
 const updateByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
-  const course = await Course.findById(req.body.courseId);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
-    const courseUser = await CourseUser.find({
-      userId: req.params.id,
-      courseId: req.body.courseId,
+    const courseUser = await CourseUser.findOne({
+      user: req.params.id,
+      course: req.body.course,
     });
-    if (courseUser.length) {
+    if (courseUser) {
       const updatedCourseUser = await CourseUser.findOneAndUpdate(
-        courseUser[0]?._id,
+        courseUser._id,
         {
-          userId: req.params.id,
-          courseId: req.body.courseId,
+          user: req.params.id,
+          course: req.body.course,
           role: req.body.role,
           isActive: req.body.isActive,
         },
@@ -122,24 +158,24 @@ const updateByUserId = async (req: Request, res: Response) => {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
     }
-    throw new CustomError(404, `Course with id ${req.body.courseId} was not found.`);
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
 };
 
 const disableByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
-  const course = await Course.findById(req.body.courseId);
+  const course = await Course.findById(req.body.course);
   if (user && course) {
-    const courseUser = await CourseUser.find({
-      userId: req.params.id,
-      courseId: req.body.courseId,
+    const courseUser = await CourseUser.findOne({
+      user: req.params.id,
+      course: req.body.course,
     });
-    if (courseUser[0]?.isActive === false) {
+    if (courseUser?.isActive === false) {
       throw new CustomError(404, 'The user has already been disabled');
     }
-    if (courseUser.length) {
+    if (courseUser) {
       const result = await CourseUser.findByIdAndUpdate(
-        courseUser[0]._id,
+        courseUser._id,
         { isActive: false },
         {
           new: true,
@@ -158,57 +194,38 @@ const disableByUserId = async (req: Request, res: Response) => {
     if (!user?._id) {
       throw new CustomError(404, `User with id ${req.params.id} was not found.`);
     }
-    throw new CustomError(404, `Course with id ${req.body.courseId} was not found.`);
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
 };
 
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
-    const docs = await CourseUser.aggregate([
-      { $match: { courseId: new ObjectId(req.params.id) } },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'userId',
-          foreignField: '_id',
-          as: 'user',
-        },
-      },
-      { $unwind: { path: '$user' } },
-      {
-        $lookup: {
-          from: 'postulants',
-          localField: 'user.postulantId',
-          foreignField: '_id',
-          as: 'user.personalInfo',
-        },
-      },
-      { $unwind: { path: '$user.personalInfo' } },
-      { $project: { userId: 0, 'user.personalInfo._id': 0 } },
-    ]);
+    const docs = await CourseUser.aggregate(
+      getUserBasedOnCoursePipeline({ course: new ObjectId(req.params.id) }),
+    );
     if (docs.length) {
       const csv = await parseAsync(docs, {
         fields: [
           '_id',
-          'courseId',
+          'course',
           'role',
           'isActive',
           'user._id',
           'user.isInternal',
           'user.isActive',
-          'user.personalInfo.firstName',
-          'user.personalInfo.lastName',
-          'user.personalInfo.email',
-          'user.personalInfo.phone',
-          'user.personalInfo.location',
-          'user.personalInfo.birthDate',
-          'user.personalInfo.dni',
+          'user.postulant.firstName',
+          'user.postulant.lastName',
+          'user.postulant.email',
+          'user.postulant.phone',
+          'user.postulant.location',
+          'user.postulant.birthDate',
+          'user.postulant.dni',
         ],
       });
       if (csv) {
         res.set('Content-Type', 'text/csv');
-        res.attachment('users.csv');
+        res.attachment('course-users-by-course.csv');
         return res.status(200).send(csv);
       }
     }
@@ -220,19 +237,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
 const exportToCsvByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
-    const docs = await CourseUser.aggregate([
-      { $match: { userId: new ObjectId(req.params.id) } },
-      {
-        $lookup: {
-          from: 'courses',
-          localField: 'courseId',
-          foreignField: '_id',
-          as: 'course',
-        },
-      },
-      { $project: { userId: 0 } },
-      { $unwind: { path: '$course' } },
-    ]);
+    const docs = await CourseUser.aggregate(
+      geCourseBasedOnUserPipeline({ user: new ObjectId(req.params.id) }),
+    );
     if (docs.length) {
       const csv = await parseAsync(docs, {
         fields: [
@@ -253,7 +260,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
       });
       if (csv) {
         res.set('Content-Type', 'text/csv');
-        res.attachment('users.csv');
+        res.attachment('course-users-by-user.csv');
         return res.status(200).send(csv);
       }
     }

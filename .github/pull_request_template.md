@@ -1,4 +1,15 @@
-# [projectCode-XXX: title-of-ticket](JIRA_url)
+> ## PR Check
+
+Before creating the PR, I made sure that:
+
+1. The branch was rebased with develop.
+2. All the commits have the corresponding format: `RL-XX: Capitalized description`.
+3. I tested the app again before creating this PR.
+4. I assigned the PR to myself.
+5. I assigned the corresponding reviewers
+6. Remove the PR Check section
+
+# [projectCode-XXX: title-of-ticket](https://learning-radiumrocket.atlassian.net/browse/RL-XXX)
 
 > Ticket code, title of the ticket and as a hyperlink, the corresponding JIRA link
 
@@ -25,6 +36,6 @@
 ## Change Procedure
 
 > Elements to take into account when merging or reviewing the PR. For example:
-> If the mergeo depends on another PR
-> The priority of the mergeo of it
+> If the merge depends on another PR
+> The priority of the merge of it
 > What variables must be taken into account in order to review the PR

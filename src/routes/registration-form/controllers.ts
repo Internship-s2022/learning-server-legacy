@@ -4,9 +4,26 @@ import { CustomError } from 'src/models/custom-error';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
 
+const getRegistrationFormPipeline = (query: qs.ParsedQs) => [
+  {
+    $lookup: {
+      from: 'courses',
+      localField: 'course',
+      foreignField: '_id',
+      as: 'course',
+    },
+  },
+  { $unwind: { path: '$course' } },
+  { $match: query },
+];
+
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await RegistrationForm.paginate(query, { page, limit });
+  const registrationFormAggregate = RegistrationForm.aggregate(getRegistrationFormPipeline(query));
+  const { docs, ...pagination } = await RegistrationForm.aggregatePaginate(
+    registrationFormAggregate,
+    { page, limit },
+  );
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of registration forms',
@@ -32,7 +49,7 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   const registrationForm = new RegistrationForm<RegistrationFormType>({
-    courseId: req.body.courseId,
+    course: req.body.course,
     title: req.body.title,
     description: req.body.description,
     views: req.body.views,

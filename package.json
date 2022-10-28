@@ -33,6 +33,7 @@
     "json2csv": "^5.0.7",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.1",
+    "mongoose-aggregate-paginate-v2": "^1.0.6",
     "mongoose-paginate-v2": "^1.7.1"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.7",
     "@types/json2csv": "^5.0.3",
+    "@types/mongoose-aggregate-paginate-v2": "^1.0.5",
     "@types/node": "^18.7.6",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.33.1",

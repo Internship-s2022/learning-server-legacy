@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "b504d570-665e-4d45-a8f9-e95cb92a8856",
+    "_postman_id": "6b5cfed4-066e-4810-b34d-a61c10c72953",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23305867"
+    "_exporter_id": "23577717"
   },
   "item": [
     {
@@ -144,14 +144,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{API_URL}}/course",
+              "raw": "{{API_URL}}/course?isActive=true&name=A",
               "host": ["{{API_URL}}"],
               "path": ["course"],
               "query": [
                 {
                   "key": "isActive",
-                  "value": "true",
-                  "disabled": true
+                  "value": "true"
+                },
+                {
+                  "key": "name",
+                  "value": "A"
                 }
               ]
             }
@@ -223,6 +226,25 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Export Csv",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/course/export/csv?name=",
+              "host": ["{{API_URL}}"],
+              "path": ["course", "export", "csv"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -257,9 +279,23 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{API_URL}}/registration-form",
+              "raw": "{{API_URL}}/registration-form?isActive=true&description=est&title=Dev",
               "host": ["{{API_URL}}"],
-              "path": ["registration-form"]
+              "path": ["registration-form"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "description",
+                  "value": "est"
+                },
+                {
+                  "key": "title",
+                  "value": "Dev"
+                }
+              ]
             }
           },
           "response": []
@@ -648,9 +684,19 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/user",
+              "raw": "{{API_URL}}/user?postulant.firstName=gui&isActive=true",
               "host": ["{{API_URL}}"],
-              "path": ["user"]
+              "path": ["user"],
+              "query": [
+                {
+                  "key": "postulant.firstName",
+                  "value": "gui"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
             }
           },
           "response": []
@@ -745,9 +791,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{API_URL}}/user/export/csv",
+              "raw": "{{API_URL}}/user/export/csv?isActive=true",
               "host": ["{{API_URL}}"],
-              "path": ["user", "export", "csv"]
+              "path": ["user", "export", "csv"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
             }
           },
           "response": []
@@ -843,9 +895,15 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "raw": "{{API_URL}}/course-user/by-user/:id?course._id=1e063109a88495b45758c000",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
+              "query": [
+                {
+                  "key": "course._id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -882,7 +940,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"courseId\": \"1e063109a88495b45758c002\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"courseId\": \"1e063109a88495b45758c000\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -924,7 +982,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "507f1f77bcf86cd799400001"
+                  "value": "507f1f77bcf86cd799400000"
                 }
               ]
             }
@@ -951,7 +1009,7 @@
           "response": []
         },
         {
-          "name": "Export Csv Copy CourseId",
+          "name": "Export Csv by CourseId",
           "request": {
             "method": "GET",
             "header": [],

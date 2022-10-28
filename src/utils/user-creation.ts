@@ -30,7 +30,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
   try {
     newMongoUser = new User<UserType>({
       firebaseUid,
-      postulantId: postulantId,
+      postulant: postulantId,
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
       isNewUser: true,
@@ -48,7 +48,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       email: req.body.email,
       password: newPassword,
     },
-    async (err: any, result) => {
+    async (err: Error) => {
       if (err) {
         await firebase.auth().deleteUser(firebaseUid);
         throw new Error(`Sendgrid error: ${err.message}`);

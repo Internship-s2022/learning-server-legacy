@@ -7,7 +7,7 @@ import { RegistrationFormType } from 'src/models/registration-form';
 const registrationFormValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const registrationFormValidation = Joi.object<RegistrationFormType>({
-      courseId: Joi.string()
+      course: Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
