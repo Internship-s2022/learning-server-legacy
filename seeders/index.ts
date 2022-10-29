@@ -168,11 +168,14 @@ firebaseAdmin.initializeApp({
       if (config.firebaseUsers.create) {
         createFirebaseUsers = firebaseUsers.map((user) => {
           const userType = user.type;
+          const isNewUser = user.isNewUser;
           return firebaseAdmin
             .auth()
             .createUser({ ...user })
             .then(async (userRecord) => {
-              await firebaseAdmin.auth().setCustomUserClaims(userRecord.uid, { userType });
+              await firebaseAdmin
+                .auth()
+                .setCustomUserClaims(userRecord.uid, { userType, isNewUser });
               return userRecord;
             });
         });
