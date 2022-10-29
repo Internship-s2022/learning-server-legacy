@@ -12,7 +12,7 @@ export interface UserType {
   isNewUser: boolean;
 }
 
-interface UserDocument extends UserType, Document {
+export interface UserDocument extends UserType, Document {
   _id?: mongoose.Types.ObjectId;
 }
 
