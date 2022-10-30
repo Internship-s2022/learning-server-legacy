@@ -9,7 +9,7 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', firebaseValidations.superAdmin, controllers.getAllUsers);
-router.get('/export/csv', controllers.exportToCsv);
+router.get('/export/csv', firebaseValidations.superAdmin, controllers.exportToCsv);
 router.get(
   '/:id',
   firebaseValidations.superAdmin,
@@ -30,7 +30,6 @@ router.put(
   validations.userValidation,
   controllers.update,
 );
-router.patch('/update/:uid', globalValidations.validateFirebaseUid, controllers.updateIsNewUser);
 router.patch(
   '/:id',
   firebaseValidations.superAdmin,

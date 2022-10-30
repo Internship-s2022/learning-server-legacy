@@ -3,4 +3,5 @@ export interface FirebaseUser {
   email: string;
   password: string;
   type: 'SUPER_ADMIN' | 'NORMAL';
+  isNewUser?: boolean;
 }

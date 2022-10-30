@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
 import sendgridTemplates from 'src/constants/sendgrid-templates';
-import User, { UserType } from 'src/models/user';
+import Postulant from 'src/models/postulant';
+import User, { UserDocument, UserType } from 'src/models/user';
 
 import sendEmail from './send-email';
 
@@ -19,14 +20,21 @@ export const generatePassword = (length: number) => {
 
 const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) => {
   const newPassword = generatePassword(24);
-  const newFirebaseUser = await firebase.auth().createUser({
-    email: req.body.email,
-    password: newPassword,
-  });
-  const firebaseUid = newFirebaseUser.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL' });
-
-  let newMongoUser;
+  let firebaseUid: string;
+  try {
+    const newFirebaseUser = await firebase.auth().createUser({
+      email: req.body.email,
+      password: newPassword,
+    });
+    firebaseUid = newFirebaseUser.uid;
+    await firebase
+      .auth()
+      .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
+  } catch (err: any) {
+    if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
+    throw new Error(err.message);
+  }
+  let newMongoUser: UserDocument;
   try {
     newMongoUser = new User<UserType>({
       firebaseUid,
@@ -37,6 +45,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
     });
     await newMongoUser.save();
   } catch (err: any) {
+    if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
     await firebase.auth().deleteUser(firebaseUid);
     throw new Error(err.message);
   }
@@ -48,8 +57,10 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       email: req.body.email,
       password: newPassword,
     },
-    async (err: Error) => {
+    async (err: any) => {
       if (err) {
+        if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
+        await User.findByIdAndDelete(newMongoUser._id);
         await firebase.auth().deleteUser(firebaseUid);
         throw new Error(`Sendgrid error: ${err.message}`);
       }

@@ -9,7 +9,7 @@ Before creating the PR, I made sure that:
 5. I assigned the corresponding reviewers
 6. Remove the PR Check section
 
-# [projectCode-XXX: title-of-ticket](https://learning-radiumrocket.atlassian.net/browse/RL-XXX)
+# [RL-XXX: title-of-ticket](https://learning-radiumrocket.atlassian.net/browse/RL-XXX)
 
 > Ticket code, title of the ticket and as a hyperlink, the corresponding JIRA link
 
@@ -28,14 +28,12 @@ Before creating the PR, I made sure that:
 > - It must write what was changed, why it was changed and for what purpose.
 > - It is recommended to describe it in points to facilitate understanding.
 
-## Attachments
-
-> Images or videos showing the behavior of what is introduced in the UI, necessary to facilitate the understanding and correction of the PR.
-> In the event that what has been done cannot be visually detected (for example, work on the Backend), this section will remain empty.
-
 ## Change Procedure
 
 > Elements to take into account when merging or reviewing the PR. For example:
-> If the merge depends on another PR
-> The priority of the merge of it
-> What variables must be taken into account in order to review the PR
+>
+> - If another PR needs to be merged before this one
+> - The priority of this PR
+> - Other variables that must be taken into account in order to review the PR
+>
+> Add if necessary. If there are no special considerations, remove this section.
