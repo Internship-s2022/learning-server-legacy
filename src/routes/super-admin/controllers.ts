@@ -37,12 +37,12 @@ const create = async (req: Request, res: Response) => {
     password: req.body.password,
   });
   const firebaseUid = newFirebaseSuperAdmin.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPERADMIN' });
+  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPER_ADMIN' });
   const newSuperadmin = new SuperAdmin<SuperAdminType>({
     firebaseUid,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    isActive: req.body.isActive,
+    isActive: true,
   });
   await newSuperadmin.save();
   return res.status(201).json({
