@@ -1,5 +1,5 @@
-import mongoose, { Model, Schema } from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 type View = {
   _id?: mongoose.Types.ObjectId;
@@ -8,16 +8,20 @@ type View = {
 
 export interface RegistrationFormType {
   _id?: mongoose.Types.ObjectId;
-  courseId: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
   title: string;
   description: string;
   views: View[];
   isActive: boolean;
 }
 
+interface RegistrationFormDocument extends RegistrationFormType, Document {
+  _id?: mongoose.Types.ObjectId;
+}
+
 const registrationFormSchema = new Schema<RegistrationFormType, Model<RegistrationFormType>>(
   {
-    courseId: {
+    course: {
       type: Schema.Types.ObjectId,
       required: true,
     },
@@ -46,9 +50,9 @@ const registrationFormSchema = new Schema<RegistrationFormType, Model<Registrati
   { timestamps: true },
 );
 
-registrationFormSchema.plugin(paginate);
+registrationFormSchema.plugin(aggregatePaginate);
 
-export default mongoose.model<RegistrationFormType, mongoose.PaginateModel<RegistrationFormType>>(
-  'RegistrationForm',
-  registrationFormSchema,
-);
+export default mongoose.model<
+  RegistrationFormType,
+  mongoose.AggregatePaginateModel<RegistrationFormDocument>
+>('RegistrationForm', registrationFormSchema);

@@ -6,7 +6,6 @@ import { SuperAdminType } from 'src/models/super-admin';
 
 const superAdminValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object<SuperAdminType>({
-    firebaseUid: Joi.string().required(),
     email: Joi.string()
       .pattern(/^\w+([.-]?\w+)*@radiumrocket.com$/)
       .messages({
@@ -43,7 +42,7 @@ const superAdminValidation = (req: Request, res: Response, next: NextFunction) =
         'string.pattern.base': 'Invalid last name, it must contain only letters',
         'any.required': 'Last Name is a required field',
       }),
-    isActive: Joi.boolean().required(),
+    isActive: Joi.boolean().optional(),
   });
   const validation = schema.validate(req.body);
   if (validation.error) {

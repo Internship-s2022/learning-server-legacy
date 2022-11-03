@@ -1,5 +1,6 @@
 import express from 'express';
 
+import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
 
 import postulantsControllers from './controllers';
@@ -7,16 +8,27 @@ import validations from './validations';
 
 const router = express.Router();
 
-router.get('/', postulantsControllers.getAll);
-router.get('/:dni', postulantsControllers.getByDni);
-router.post('/', validations.postulantValidation, postulantsControllers.create);
+router.get('/', firebaseValidations.superAdmin, postulantsControllers.getAll);
+router.get('/:dni', firebaseValidations.superAdmin, postulantsControllers.getByDni);
+router.post(
+  '/',
+  firebaseValidations.superAdmin,
+  validations.postulantValidation,
+  postulantsControllers.create,
+);
 router.put(
   '/:id',
-  globalValidations.validateMongoID,
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
   validations.postulantValidation,
   postulantsControllers.update,
 );
-router.patch('/:id', globalValidations.validateMongoID, postulantsControllers.deleteById);
-router.get('/export/csv', postulantsControllers.exportToCsv);
+router.patch(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  postulantsControllers.deleteById,
+);
+router.get('/export/csv', firebaseValidations.superAdmin, postulantsControllers.exportToCsv);
 
 export default router;

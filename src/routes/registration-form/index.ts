@@ -1,5 +1,6 @@
 import express from 'express';
 
+import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
 
 import registrationFormControllers from './controllers';
@@ -7,19 +8,31 @@ import validations from './validations';
 
 const router = express.Router();
 
-router.get('/', registrationFormControllers.getAll);
-router.get('/:id', globalValidations.validateMongoID, registrationFormControllers.getById);
+router.get('/', firebaseValidations.superAdmin, registrationFormControllers.getAll);
+router.get(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  registrationFormControllers.getById,
+);
 router.post(
   '/',
+  firebaseValidations.superAdmin,
   validations.registrationFormValidation('post'),
   registrationFormControllers.create,
 );
 router.put(
   '/:id',
-  globalValidations.validateMongoID,
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
   validations.registrationFormValidation('put'),
   registrationFormControllers.updateById,
 );
-router.patch('/:id', globalValidations.validateMongoID, registrationFormControllers.deleteById);
+router.patch(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  registrationFormControllers.deleteById,
+);
 
 export default router;

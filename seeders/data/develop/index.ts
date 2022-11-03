@@ -1,4 +1,5 @@
 import admissionTests from './admission-test';
+import courseUsers from './course-users';
 import courses from './courses';
 import firebaseUsers from './firebase';
 import postulants from './postulants';
@@ -14,4 +15,5 @@ export default {
   superAdmins,
   postulants,
   users,
+  courseUsers,
 };
