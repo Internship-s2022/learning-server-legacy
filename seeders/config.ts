@@ -26,10 +26,12 @@ export default {
   postulants: {
     remove: true,
     create: true,
+    amountRandom: 20,
   },
   users: {
     remove: true,
     create: true,
+    amountRandom: 100,
   },
   courseUsers: {
     remove: true,
