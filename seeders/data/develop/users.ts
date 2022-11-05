@@ -10,6 +10,7 @@ const users: UserType[] = [
     isInternal: true,
     isActive: true,
     isNewUser: true,
+    email: 'franco.marini@radiumrocket.com',
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400001'),
@@ -18,6 +19,7 @@ const users: UserType[] = [
     isInternal: false,
     isActive: true,
     isNewUser: true,
+    email: 'agustin.chazaretta@radiumrocket.com',
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400002'),
@@ -26,6 +28,7 @@ const users: UserType[] = [
     isInternal: false,
     isActive: true,
     isNewUser: true,
+    email: 'guido.cerioni@radiumrocket.com',
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400003'),
@@ -34,6 +37,7 @@ const users: UserType[] = [
     isInternal: false,
     isActive: true,
     isNewUser: true,
+    email: 'iara.criscenti@radiumrocket.com',
   },
   {
     _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799400004'),
@@ -42,6 +46,7 @@ const users: UserType[] = [
     isInternal: false,
     isActive: true,
     isNewUser: true,
+    email: 'julian.demeglio@radiumrocket.com',
   },
 ];
 
