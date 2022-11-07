@@ -34,10 +34,16 @@ router.put(
   courseUserControllers.updateByUserId,
 );
 router.patch(
-  '/:id',
+  '/',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoId,
+  validations.courseUserDelete,
   courseUserControllers.disableByUserId,
+);
+router.delete(
+  '/',
+  firebaseValidations.superAdmin,
+  validations.courseUserDelete,
+  courseUserControllers.physicalDeleteByUserId,
 );
 router.get(
   '/export-by-course/csv/:id',

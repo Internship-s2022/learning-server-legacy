@@ -97,4 +97,17 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`);
 };
 
-export default { getAll, update, deleteById, create, getById };
+const physicalDeleteById = async (req: Request, res: Response) => {
+  const result = await SuperAdmin.findByIdAndDelete(req.params.id);
+  if (result?.firebaseUid) {
+    await firebase.auth().deleteUser(result.firebaseUid);
+    return res.status(200).json({
+      message: `The super admin with id ${req.params.id} has been successfully deleted`,
+      data: result,
+      error: false,
+    });
+  }
+  throw new CustomError(404, `Super admin with id ${req.params.id} was not found.`);
+};
+
+export default { getAll, update, deleteById, physicalDeleteById, create, getById };

@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "6b5cfed4-066e-4810-b34d-a61c10c72953",
+    "_postman_id": "e6eaa1cc-bd47-4a5f-9b8e-e60890c3f515",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577717"
+    "_exporter_id": "23305867"
   },
   "item": [
     {
@@ -140,6 +140,31 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/super-admin/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5e063109a88495b45758ccd1"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -266,6 +291,31 @@
           "name": "Get by id",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
             "header": [
               {
                 "key": "token",
@@ -463,6 +513,31 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/registration-form/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2e063109a88495b45758ccd2"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -586,6 +661,31 @@
           "name": "Get by id",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
             "header": [
               {
                 "key": "token",
@@ -744,6 +844,31 @@
                 {
                   "key": "dni",
                   "value": "33456456"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
                 }
               ]
             }
@@ -956,6 +1081,31 @@
           "response": []
         },
         {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400004"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Export Csv",
           "request": {
             "method": "GET",
@@ -974,52 +1124,6 @@
                 {
                   "key": "isActive",
                   "value": "true"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var res=pm.response.json();",
-                  "pm.collectionVariables.set(\"token\",res.idToken);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"{{PASSWORD}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{GOOGLE_API_KEY}}",
-              "protocol": "https",
-              "host": ["identitytoolkit", "googleapis", "com"],
-              "path": ["v1", "accounts:signInWithPassword"],
-              "query": [
-                {
-                  "key": "key",
-                  "value": "{{GOOGLE_API_KEY}}"
                 }
               ]
             }
@@ -1175,7 +1279,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course\": \"1e063109a88495b45758c000\"\n}",
+              "raw": "{\n    \"course\": \"1e063109a88495b45758c003\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1183,15 +1287,37 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/:id",
+              "raw": "{{API_URL}}/course-user/",
               "host": ["{{API_URL}}"],
-              "path": ["course-user", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "507f1f77bcf86cd799400000"
+              "path": ["course-user", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by UserId and CourseId",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"1e063109a88495b45758c002\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
                 }
-              ]
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ""]
             }
           },
           "response": []
@@ -1240,6 +1366,52 @@
                 {
                   "key": "id",
                   "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res=pm.response.json();",
+                  "pm.collectionVariables.set(\"token\",res.idToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"{{PASSWORD}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{GOOGLE_API_KEY}}",
+              "protocol": "https",
+              "host": ["identitytoolkit", "googleapis", "com"],
+              "path": ["v1", "accounts:signInWithPassword"],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{GOOGLE_API_KEY}}"
                 }
               ]
             }
