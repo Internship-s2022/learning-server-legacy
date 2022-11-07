@@ -152,6 +152,19 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `User with id: ${req.params.id} was not found`);
 };
 
+const physicalDeleteById = async (req: Request, res: Response) => {
+  const result = await User.findByIdAndDelete(req.params.id);
+  if (result?.firebaseUid) {
+    await firebase.auth().deleteUser(result.firebaseUid);
+    return res.status(200).json({
+      message: `The user with id ${req.params.id} has been successfully deleted`,
+      data: result,
+      error: false,
+    });
+  }
+  throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+};
+
 const exportToCsv = async (req: Request, res: Response) => {
   const query = filterByIncludes(req.query);
   const docs = await User.aggregate(getUserPipeline(query));
@@ -187,5 +200,6 @@ export default {
   createManual,
   update,
   deleteById,
+  physicalDeleteById,
   exportToCsv,
 };

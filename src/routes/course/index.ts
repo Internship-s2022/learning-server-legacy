@@ -35,5 +35,11 @@ router.patch(
   globalValidations.validateMongoId,
   coursesControllers.deleteById,
 );
+router.delete(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  coursesControllers.physicalDeleteById,
+);
 
 export default router;

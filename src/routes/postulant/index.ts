@@ -29,6 +29,12 @@ router.patch(
   globalValidations.validateMongoId,
   postulantsControllers.deleteById,
 );
+router.delete(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  postulantsControllers.physicalDeleteById,
+);
 router.get('/export/csv', firebaseValidations.superAdmin, postulantsControllers.exportToCsv);
 
 export default router;

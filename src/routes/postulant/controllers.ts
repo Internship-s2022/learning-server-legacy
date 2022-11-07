@@ -95,6 +95,18 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
 };
 
+const physicalDeleteById = async (req: Request, res: Response) => {
+  const result = await Postulant.findByIdAndDelete(req.params.id);
+  if (result) {
+    return res.status(200).json({
+      message: `The postulant with id ${req.params.id} has been successfully deleted`,
+      data: result,
+      error: false,
+    });
+  }
+  throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
+};
+
 const exportToCsv = async (req: Request, res: Response) => {
   const query = filterByIncludes(req.query);
   const docs = await Postulant.find(query);
@@ -121,4 +133,4 @@ const exportToCsv = async (req: Request, res: Response) => {
   throw new CustomError(404, 'Cannot find the list of postulants.');
 };
 
-export default { getAll, getByDni, create, update, deleteById, exportToCsv };
+export default { getAll, getByDni, create, update, deleteById, physicalDeleteById, exportToCsv };

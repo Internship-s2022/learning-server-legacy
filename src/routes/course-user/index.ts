@@ -39,6 +39,12 @@ router.patch(
   globalValidations.validateMongoId,
   courseUserControllers.disableByUserId,
 );
+router.delete(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  courseUserControllers.physicalDeleteByUserId,
+);
 router.get(
   '/export-by-course/csv/:id',
   firebaseValidations.superAdmin,

@@ -198,6 +198,30 @@ const disableByUserId = async (req: Request, res: Response) => {
   }
 };
 
+const physicalDeleteByUserId = async (req: Request, res: Response) => {
+  const user = await User.findById(req.params.id);
+  const course = await Course.findById(req.body.course);
+  if (user && course) {
+    const result = await CourseUser.findOneAndDelete({
+      user: req.params.id,
+      course: req.body.course,
+    });
+    if (result) {
+      return res.status(200).json({
+        message: 'The course-user been successfully deleted',
+        data: result,
+        error: false,
+      });
+    }
+    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
+  } else {
+    if (!user?._id) {
+      throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+    }
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
+  }
+};
+
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
@@ -275,6 +299,7 @@ export default {
   assignRole,
   updateByUserId,
   disableByUserId,
+  physicalDeleteByUserId,
   exportToCsvByCourseId,
   exportToCsvByUserId,
 };
