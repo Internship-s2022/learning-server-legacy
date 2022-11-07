@@ -34,15 +34,15 @@ router.put(
   courseUserControllers.updateByUserId,
 );
 router.patch(
-  '/:id',
+  '/',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoId,
+  validations.courseUserDelete,
   courseUserControllers.disableByUserId,
 );
 router.delete(
-  '/:id',
+  '/',
   firebaseValidations.superAdmin,
-  globalValidations.validateMongoId,
+  validations.courseUserDelete,
   courseUserControllers.physicalDeleteByUserId,
 );
 router.get(

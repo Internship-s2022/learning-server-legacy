@@ -163,11 +163,11 @@ const updateByUserId = async (req: Request, res: Response) => {
 };
 
 const disableByUserId = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.body.user);
   const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.findOne({
-      user: req.params.id,
+      user: req.body.user,
       course: req.body.course,
     });
     if (courseUser?.isActive === false) {
@@ -189,21 +189,21 @@ const disableByUserId = async (req: Request, res: Response) => {
         });
       }
     }
-    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
+    throw new CustomError(400, `User with id ${req.body.user} does not have a rol in this course.`);
   } else {
     if (!user?._id) {
-      throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+      throw new CustomError(404, `User with id ${req.body.user} was not found.`);
     }
     throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
 };
 
 const physicalDeleteByUserId = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.body.user);
   const course = await Course.findById(req.body.course);
   if (user && course) {
     const result = await CourseUser.findOneAndDelete({
-      user: req.params.id,
+      user: req.body.user,
       course: req.body.course,
     });
     if (result) {
@@ -213,10 +213,10 @@ const physicalDeleteByUserId = async (req: Request, res: Response) => {
         error: false,
       });
     }
-    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
+    throw new CustomError(400, `User with id ${req.body.user} does not have a rol in this course.`);
   } else {
     if (!user?._id) {
-      throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+      throw new CustomError(404, `User with id ${req.body.user} was not found.`);
     }
     throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
