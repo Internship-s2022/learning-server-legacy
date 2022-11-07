@@ -21,9 +21,10 @@ export const generatePassword = (length: number) => {
 const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) => {
   const newPassword = generatePassword(24);
   let firebaseUid: string;
+  const email = req.body.email;
   try {
     const newFirebaseUser = await firebase.auth().createUser({
-      email: req.body.email,
+      email,
       password: newPassword,
     });
     firebaseUid = newFirebaseUser.uid;
@@ -38,6 +39,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
   try {
     newMongoUser = new User<UserType>({
       firebaseUid,
+      email,
       postulant: postulantId,
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
