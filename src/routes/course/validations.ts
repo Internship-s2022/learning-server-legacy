@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-import { CourseType } from 'src/models/course';
+import { CourseType, CourseWithUsers } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 
 const courseValidation = (req: Request, res: Response, next: NextFunction) => {
-  const courseValidation = Joi.object<CourseType>({
+  const courseValidation = Joi.object<CourseWithUsers>({
     name: Joi.string().min(3).max(50).required().messages({
       'string.min': 'Invalid course name, it must contain more than 3 letters',
       'string.max': 'Invalid course name, it must not contain more than 50 letters',
@@ -22,6 +22,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
     ),
     description: Joi.string()
       .pattern(/(.*[a-zA-Z]){4}/)
+      .max(200)
       .required()
       .messages({
         'string.pattern.base': 'Invalid description, it must contain at least 4 letters',
@@ -51,6 +52,17 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
     isActive: Joi.boolean().required().messages({
       'any.required': 'Is active is a required field',
     }),
+    courseUsers: Joi.array()
+      .items(
+        Joi.object({
+          user: Joi.string(),
+          role: Joi.string().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT'),
+        }),
+      )
+      .min(2)
+      .has(Joi.object({ user: Joi.string(), role: Joi.string().valid('TUTOR') }))
+      .has(Joi.object({ user: Joi.string(), role: Joi.string().valid('ADMIN') }))
+      .unique('user'),
   });
 
   const validation = courseValidation.validate(req.body);

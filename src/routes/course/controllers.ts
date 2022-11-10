@@ -3,7 +3,8 @@ import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
 import { ResponseBody } from 'src/interfaces/response';
-import Course, { CourseType } from 'src/models/course';
+import Course, { CourseType, CourseWithUsers } from 'src/models/course';
+import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
@@ -58,27 +59,43 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (
-  req: Request<Record<string, string>, unknown, CourseType>,
-  res: Response<ResponseBody<CourseType>>,
+  req: Request<Record<string, string>, unknown, CourseWithUsers>,
+  res: Response<ResponseBody<CourseWithUsers>>,
 ) => {
-  const course = new Course<CourseType>({
-    name: req.body.name,
-    admissionTests: req.body.admissionTests,
-    description: req.body.description,
-    inscriptionStartDate: req.body.inscriptionStartDate,
-    inscriptionEndDate: req.body.inscriptionEndDate,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    type: req.body.type,
-    isInternal: req.body.isInternal,
-    isActive: req.body.isActive,
-  });
-  await course.save();
-  return res.status(201).json({
-    message: 'Course successfully created.',
-    data: course,
-    error: false,
-  });
+  try {
+    const course = new Course<CourseWithUsers>({
+      name: req.body.name,
+      admissionTests: req.body.admissionTests,
+      description: req.body.description,
+      inscriptionStartDate: req.body.inscriptionStartDate,
+      inscriptionEndDate: req.body.inscriptionEndDate,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: req.body.type,
+      isInternal: req.body.isInternal,
+      isActive: req.body.isActive,
+    });
+    await course.save();
+    CourseUser.insertMany(
+      req.body.courseUsers?.map((e) => ({
+        course: course._id,
+        user: e.user,
+        role: e.role,
+        isActive: e.isActive,
+      })),
+    );
+    return res.status(201).json({
+      message: 'Course successfully created.',
+      data: course,
+      error: false,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: 'error',
+      data: error,
+      error: true,
+    });
+  }
 };
 
 const update = async (req: Request, res: Response) => {
