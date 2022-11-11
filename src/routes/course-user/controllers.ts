@@ -255,7 +255,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
     }
     throw new CustomError(400, 'This course does not have any members.');
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `There are no course with id ${req.params.id} to export.`);
 };
 
 const exportToCsvByUserId = async (req: Request, res: Response) => {
@@ -290,7 +290,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
     }
     throw new CustomError(400, 'This user does not belong to any course.');
   }
-  throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `There are no course user with id ${req.params.id} to export.`);
 };
 
 export default {

@@ -157,7 +157,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot find the list of postulants.');
+  throw new CustomError(404, 'There are no postulants to export.');
 };
 
 export default { getAll, getByDni, create, update, deleteById, physicalDeleteById, exportToCsv };

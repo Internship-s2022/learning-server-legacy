@@ -223,7 +223,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot export the list of courses.');
+  throw new CustomError(404, 'There are no courses to export.');
 };
 
 export default {
