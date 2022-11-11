@@ -43,8 +43,8 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
     endDate: Joi.date().greater(Joi.ref('startDate')).messages({
       'date.greater': 'Invalid end date, it must be after the course start date',
     }),
-    type: Joi.string().max(15).messages({
-      'string.max': 'Invalid type, it must not contain more than 15 letters',
+    type: Joi.string().valid('EXPRESS', 'FULL').messages({
+      'any.required': 'Start date is a required field',
     }),
     isInternal: Joi.boolean().required().messages({
       'any.required': 'Is internal is a required field',
