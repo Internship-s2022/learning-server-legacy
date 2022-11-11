@@ -38,6 +38,12 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
         ...filterExcludeArrayOfIds(value as string[] | string),
       };
     }
+    if (key === 'includeIds') {
+      return {
+        ...prev,
+        ...filterIncludeArrayOfIds(value as string[] | string),
+      };
+    }
     if (typeof value === 'string') {
       if (mongoose.Types.ObjectId.isValid(value)) {
         return {
