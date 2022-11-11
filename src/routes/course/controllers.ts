@@ -62,6 +62,7 @@ const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
   res: Response<ResponseBody<CourseWithUsers>>,
 ) => {
+  let newCourse: CourseWithUsers | undefined;
   try {
     const course = new Course<CourseWithUsers>({
       name: req.body.name,
@@ -76,9 +77,14 @@ const create = async (
       isActive: req.body.isActive,
     });
     await course.save();
+    newCourse = course;
+  } catch {
+    throw new CustomError(500, 'There was an error during the creation.');
+  }
+  try {
     CourseUser.insertMany(
       req.body.courseUsers?.map((e) => ({
-        course: course._id,
+        course: newCourse?._id,
         user: e.user,
         role: e.role,
         isActive: e.isActive,
@@ -86,15 +92,12 @@ const create = async (
     );
     return res.status(201).json({
       message: 'Course with users successfully created.',
-      data: course,
+      data: newCourse,
       error: false,
     });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: 'error',
-      data: error,
-      error: true,
-    });
+  } catch {
+    await Course.findByIdAndDelete(newCourse._id);
+    throw new CustomError(500, 'There was an error during the creation.');
   }
 };
 

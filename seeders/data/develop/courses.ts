@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-import { CourseType } from '../../../src/models/course';
+import { CourseWithUsers } from '../../../src/models/course';
 
 const today = new Date();
 const daysDiff = 40;
 
-const courses: CourseType[] = [
+const courses: CourseWithUsers[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
     name: `BASP ${today.getFullYear()}`,
@@ -30,7 +30,6 @@ const courses: CourseType[] = [
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     ],
-
     description: 'Curso express de React Native',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 3)),
     inscriptionEndDate: new Date(new Date().setDate(today.getDate() + daysDiff * 4)),
@@ -55,6 +54,20 @@ const courses: CourseType[] = [
     type: 'Express',
     isInternal: true,
     isActive: true,
+    courseUsers: [
+      {
+        course: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+        user: new mongoose.Types.ObjectId('507f1f77bcf86cd799400000'),
+        role: 'TUTOR',
+        isActive: true,
+      },
+      {
+        course: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+        user: new mongoose.Types.ObjectId('507f1f77bcf86cd799400001'),
+        role: 'TUTOR',
+        isActive: true,
+      },
+    ],
   },
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c003'),

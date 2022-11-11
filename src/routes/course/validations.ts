@@ -56,6 +56,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       .items(
         Joi.object({
           user: Joi.string().required(),
+          isActive: Joi.boolean().required(),
           role: Joi.string().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT').required().messages({
             'any.required': 'The role must be one of the assigned',
             'string.valid': 'Role must be valid',
@@ -66,24 +67,25 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       .has(
         Joi.object({
           user: Joi.string().required(),
-          role: Joi.string().valid('TUTOR').messages({
-            'any.required': 'The role must be one of the assigned',
-            'string.valid': 'At least there must be one TUTOR',
-          }),
+          isActive: Joi.boolean().required(),
+          role: Joi.string().valid('TUTOR'),
         }),
       )
       .has(
         Joi.object({
           user: Joi.string().required(),
-          role: Joi.string().valid('ADMIN').messages({
-            'any.required': 'The role must be one of the assigned',
-            'string.valid': 'At least there must be one ADMIN',
-          }),
+          isActive: Joi.boolean().required(),
+          role: Joi.string().valid('ADMIN'),
         }),
       )
       .unique('user')
       .required()
-      .messages({ 'array.min': 'Must have at least two course users' }),
+      .messages({
+        'array.min': 'Must have at least two course users',
+        'array.unique': 'The users must be diferent',
+        'array.has': 'At least there must be one ADMIN and TUTOR',
+        'any.required': 'It must be a required field',
+      }),
   });
 
   const validation = courseValidation.validate(req.body);
