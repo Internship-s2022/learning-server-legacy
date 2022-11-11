@@ -3,8 +3,8 @@ import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
 import { ResponseBody } from 'src/interfaces/response';
-import Course, { CourseType, CourseWithUsers } from 'src/models/course';
-import CourseUser, { CourseUserType } from 'src/models/course-user';
+import Course, { CourseWithUsers } from 'src/models/course';
+import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
@@ -85,7 +85,7 @@ const create = async (
       })),
     );
     return res.status(201).json({
-      message: 'Course successfully created.',
+      message: 'Course with users successfully created.',
       data: course,
       error: false,
     });

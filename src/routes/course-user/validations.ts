@@ -33,7 +33,7 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
         'any.only': 'The role must be one of: ADMIN, TUTOR, AUXILIARY or STUDENT',
         'any.required': 'Role is a required field',
       }),
-      isActive: Joi.boolean().required().messages({
+      isActive: Joi.boolean().messages({
         'any.required': 'Is active is required',
       }),
     });

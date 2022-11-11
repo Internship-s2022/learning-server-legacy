@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-import { CourseType, CourseWithUsers } from 'src/models/course';
+import { CourseWithUsers } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 
 const courseValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -55,14 +55,35 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
     courseUsers: Joi.array()
       .items(
         Joi.object({
-          user: Joi.string(),
-          role: Joi.string().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT'),
+          user: Joi.string().required(),
+          role: Joi.string().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT').required().messages({
+            'any.required': 'The role must be one of the assigned',
+            'string.valid': 'Role must be valid',
+          }),
         }),
       )
       .min(2)
-      .has(Joi.object({ user: Joi.string(), role: Joi.string().valid('TUTOR') }))
-      .has(Joi.object({ user: Joi.string(), role: Joi.string().valid('ADMIN') }))
-      .unique('user'),
+      .has(
+        Joi.object({
+          user: Joi.string().required(),
+          role: Joi.string().valid('TUTOR').messages({
+            'any.required': 'The role must be one of the assigned',
+            'string.valid': 'At least there must be one TUTOR',
+          }),
+        }),
+      )
+      .has(
+        Joi.object({
+          user: Joi.string().required(),
+          role: Joi.string().valid('ADMIN').messages({
+            'any.required': 'The role must be one of the assigned',
+            'string.valid': 'At least there must be one ADMIN',
+          }),
+        }),
+      )
+      .unique('user')
+      .required()
+      .messages({ 'array.min': 'Must have at least two course users' }),
   });
 
   const validation = courseValidation.validate(req.body);
