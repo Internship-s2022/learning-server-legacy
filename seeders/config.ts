@@ -37,4 +37,8 @@ export default {
     remove: true,
     create: true,
   },
+  questions: {
+    remove: true,
+    create: true,
+  },
 };

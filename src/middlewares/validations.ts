@@ -3,13 +3,18 @@ import Joi from 'joi';
 import mongoose from 'mongoose';
 
 import { CustomError } from 'src/models/custom-error';
+
 const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.params.id) {
+  const entries = Object.entries(req.params);
+  const idParams = entries
+    .filter((entry) => entry[0].toLowerCase().includes('id'))
+    .map((entry) => [entry[0], mongoose.Types.ObjectId.isValid(entry[1])]);
+  if (!idParams.length) {
     throw new CustomError(400, 'Missing mongo id parameter');
   }
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) {
-    throw new CustomError(400, `The mongo id: ${req.params.id} is not valid`);
+  const invalidId = idParams.find((param) => param[1] === false);
+  if (invalidId) {
+    throw new CustomError(400, `Mongo id: ${invalidId[0]}  is not valid`);
   }
   return next();
 };
