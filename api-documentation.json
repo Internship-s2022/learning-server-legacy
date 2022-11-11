@@ -1,1920 +1,1640 @@
 {
-	"info": {
-		"_postman_id": "d26eaea2-d318-4cc3-b424-92ce931bc99a",
-		"name": "RadiumLearning",
-		"description": "This is the api documentation of Radium Learning API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23305867"
-	},
-	"item": [
-		{
-			"name": "SuperAdmin",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"The super\",\n    \"lastName\": \"Admin\",\n    \"email\": \"the.super.admin@radiumrocket.com\"\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/super-admin",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/super-admin",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n        \"firstName\": \"Editado\",\n        \"lastName\": \"Loreal\",\n        \"email\": \"editado.loreal@radiumrocket.com\",\n        \"isActive\": true\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/super-admin/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "635da6dfbc32d0c9b290cf46"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/super-admin/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "635da6dfbc32d0c9b290cf46"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/super-admin/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "635da6dfbc32d0c9b290cf46"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/super-admin/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"super-admin",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "5e063109a88495b45758ccd1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Course",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTests\": [\n        \"1e063109a88495b45758c000\"\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course?isActive=true&name=A",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course"
-							],
-							"query": [
-								{
-									"key": "isActive",
-									"value": "true"
-								},
-								{
-									"key": "name",
-									"value": "A"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"React course edited\",\n    \"inscriptionStartDate\": \"2023-05-03T00:00:00.000Z\",\n    \"inscriptionEndDate\": \"2023-06-03T00:00:00.000Z\",\n    \"startDate\": \"2023-07-03T00:00:00.000Z\",\n    \"endDate\": \"2023-11-03T00:00:00.000Z\",\n    \"description\": \"this is a description\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Export Csv",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course/export/csv?name=qa",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course",
-								"export",
-								"csv"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "qa"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Registration Form",
-			"item": [
-				{
-					"name": "Question",
-					"item": [
-						{
-							"name": "Create",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 2\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    }\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/registration-form/:regFormId/question",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"registration-form",
-										":regFormId",
-										"question"
-									],
-									"variable": [
-										{
-											"key": "regFormId",
-											"value": "507f1f77bcf86cd799439011"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get all",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{API_URL}}/registration-form/:regFormId/question",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"registration-form",
-										":regFormId",
-										"question"
-									],
-									"query": [
-										{
-											"key": "title",
-											"value": "",
-											"disabled": true
-										}
-									],
-									"variable": [
-										{
-											"key": "regFormId",
-											"value": "2e063109a88495b45758ccd2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update by id",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"view\": \"507f1f77bcf86cd799439012\",\n    \"isRequired\": \"true\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"registration-form",
-										":regFormId",
-										"question",
-										":questionId"
-									],
-									"variable": [
-										{
-											"key": "regFormId",
-											"value": "2e063109a88495b45758ccd2"
-										},
-										{
-											"key": "questionId",
-											"value": "636d603af4779c11ba8f6012"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get by id",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"registration-form",
-										":regFormId",
-										"question",
-										":questionId"
-									],
-									"query": [
-										{
-											"key": "isActive",
-											"value": "false",
-											"disabled": true
-										}
-									],
-									"variable": [
-										{
-											"key": "regFormId",
-											"value": "507f1f77bcf86cd799439011"
-										},
-										{
-											"key": "questionId",
-											"value": "636db53fe6836985625e39f0"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete by id",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
-									"host": [
-										"{{API_URL}}"
-									],
-									"path": [
-										"registration-form",
-										":regFormId",
-										"question",
-										":questionId"
-									],
-									"variable": [
-										{
-											"key": "regFormId",
-											"value": "507f1f77bcf86cd799439011"
-										},
-										{
-											"key": "questionId",
-											"value": "636db53fe6836985625e39f0"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"course\": \"633731b3a943619145e6f020\",\n    \"title\": \"Registration Form\",\n    \"description\": \"This is a description\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        }\n    ],\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/registration-form",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/registration-form?isActive=true",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form"
-							],
-							"query": [
-								{
-									"key": "isActive",
-									"value": "true"
-								},
-								{
-									"key": "description",
-									"value": "est",
-									"disabled": true
-								},
-								{
-									"key": "title",
-									"value": "Dev",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"course\": \"633731b3a943619145e6f020\",\n    \"title\": \"Registration Form Updated\",\n    \"description\": \"This form was updated\",\n    \"views\": [\n        {\n            \"_id\": \"507f1f77bcf86cd799439012\",\n            \"name\": \"General\"\n        }\n    ],\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/registration-form/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/registration-form/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/registration-form/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/registration-form/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"registration-form",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2e063109a88495b45758ccd2"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Admission test",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/admission-test",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/admission-test",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test"
-							],
-							"query": [
-								{
-									"key": "isActive",
-									"value": "false",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/admission-test/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/admission-test/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/admission-test/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/admission-test/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"admission-test",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Postulant",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Julius\",\n    \"email\": \"julius.demeglio@radiumrocket.com\",\n    \"lastName\": \"Demeglio\",\n    \"location\":\"Rosario\",\n    \"phone\":\"3416425766\",\n    \"birthDate\":\"01/01/1990\",\n    \"dni\": \"37208586\",\n    \"isActive\": true\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/postulant",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/postulant",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant"
-							],
-							"query": [
-								{
-									"key": "isActive",
-									"value": "true",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Iara\",\n    \"email\": \"editted.user@radiumrocket.com\",\n    \"lastName\": \"Demeglio\",\n    \"location\":\"Rosario\",\n    \"phone\":\"3416425766\",\n    \"birthDate\":\"01/01/1990\",\n    \"dni\": \"37208581\",\n    \"isActive\": true\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/postulant/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c001"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/postulant/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c001"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by dni",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/postulant/:dni",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant",
-								":dni"
-							],
-							"variable": [
-								{
-									"key": "dni",
-									"value": "33456456"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/postulant/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Export Csv",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/postulant/export/csv",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"postulant",
-								"export",
-								"csv"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"franco.marinii@radiumrocket.com\",\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"isInternal\": false,\n    \"isActive\": true,\n    \"isNewUser\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/user",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create manual",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"bruno.diaz@radiumrocket.com\",\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"firstName\": \"Bruno\",\n    \"lastName\": \"Diaz\",\n    \"dni\": \"33456456\",\n    \"phone\": \"3415444444\",\n    \"location\": \"Rosario\",\n    \"birthDate\": \"2001-01-05T20:17:04.581Z\",\n    \"isInternal\": false,\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/user/manual",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								"manual"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/user?postulant.firstName=gui&isActive=true",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user"
-							],
-							"query": [
-								{
-									"key": "postulant.firstName",
-									"value": "gui"
-								},
-								{
-									"key": "isActive",
-									"value": "true"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by id",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"isNewUser\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical delete by id",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400001"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400001"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by id",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400004"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Export Csv",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/user/export/csv?isActive=true",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"user",
-								"export",
-								"csv"
-							],
-							"query": [
-								{
-									"key": "isActive",
-									"value": "true"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "CourseUser",
-			"item": [
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user\": \"507f1f77bcf86cd799400001\",\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course-user",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by UserId",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course-user/by-user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								"by-user",
-								":id"
-							],
-							"query": [
-								{
-									"key": "course._id",
-									"value": "1e063109a88495b45758c000",
-									"disabled": true
-								}
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get by CourseId",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course-user/by-course/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								"by-course",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update by UserId",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course-user/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logical disable by UserId",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"course\": \"1e063109a88495b45758c003\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course-user/",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete by UserId and CourseId",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"course\": \"1e063109a88495b45758c002\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_URL}}/course-user/",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Export Csv by UserId",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course-user/export-by-user/csv/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								"export-by-user",
-								"csv",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799400000"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Export Csv by CourseId",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "token",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{API_URL}}/course-user/export-by-course/csv/:id",
-							"host": [
-								"{{API_URL}}"
-							],
-							"path": [
-								"course-user",
-								"export-by-course",
-								"csv",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1e063109a88495b45758c000"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var res=pm.response.json();",
-									"pm.collectionVariables.set(\"token\",res.idToken);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"{{PASSWORD}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{GOOGLE_API_KEY}}",
-							"protocol": "https",
-							"host": [
-								"identitytoolkit",
-								"googleapis",
-								"com"
-							],
-							"path": [
-								"v1",
-								"accounts:signInWithPassword"
-							],
-							"query": [
-								{
-									"key": "key",
-									"value": "{{GOOGLE_API_KEY}}"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "API_URL",
-			"value": "http://localhost:4000",
-			"type": "string"
-		},
-		{
-			"key": "token",
-			"value": ""
-		},
-		{
-			"key": "EMAIL",
-			"value": "super.admin@radiumrocket.com",
-			"type": "string"
-		},
-		{
-			"key": "PASSWORD",
-			"value": "Passw0rd1234",
-			"type": "string"
-		},
-		{
-			"key": "GOOGLE_API_KEY",
-			"value": "AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "d26eaea2-d318-4cc3-b424-92ce931bc99a",
+    "name": "RadiumLearning",
+    "description": "This is the api documentation of Radium Learning API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23305867"
+  },
+  "item": [
+    {
+      "name": "SuperAdmin",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"The super\",\n    \"lastName\": \"Admin\",\n    \"email\": \"the.super.admin@radiumrocket.com\"\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/super-admin",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/super-admin",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n        \"firstName\": \"Editado\",\n        \"lastName\": \"Loreal\",\n        \"email\": \"editado.loreal@radiumrocket.com\",\n        \"isActive\": true\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/super-admin/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "635da6dfbc32d0c9b290cf46"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/super-admin/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "635da6dfbc32d0c9b290cf46"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/super-admin/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "635da6dfbc32d0c9b290cf46"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/super-admin/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["super-admin", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5e063109a88495b45758ccd1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Course",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTests\": [\n        \"1e063109a88495b45758c000\"\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course",
+              "host": ["{{API_URL}}"],
+              "path": ["course"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course?isActive=true&name=A",
+              "host": ["{{API_URL}}"],
+              "path": ["course"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "name",
+                  "value": "A"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"React course edited\",\n    \"inscriptionStartDate\": \"2023-05-03T00:00:00.000Z\",\n    \"inscriptionEndDate\": \"2023-06-03T00:00:00.000Z\",\n    \"startDate\": \"2023-07-03T00:00:00.000Z\",\n    \"endDate\": \"2023-11-03T00:00:00.000Z\",\n    \"description\": \"this is a description\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Csv",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course/export/csv?name=qa",
+              "host": ["{{API_URL}}"],
+              "path": ["course", "export", "csv"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "qa"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration Form",
+      "item": [
+        {
+          "name": "Question",
+          "item": [
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 2\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question"],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "507f1f77bcf86cd799439011"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "2e063109a88495b45758ccd2"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update by id",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"view\": \"507f1f77bcf86cd799439012\",\n    \"isRequired\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question", ":questionId"],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "2e063109a88495b45758ccd2"
+                    },
+                    {
+                      "key": "questionId",
+                      "value": "636d603af4779c11ba8f6012"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question", ":questionId"],
+                  "query": [
+                    {
+                      "key": "isActive",
+                      "value": "false",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "507f1f77bcf86cd799439011"
+                    },
+                    {
+                      "key": "questionId",
+                      "value": "636db53fe6836985625e39f0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question/:questionId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question", ":questionId"],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "507f1f77bcf86cd799439011"
+                    },
+                    {
+                      "key": "questionId",
+                      "value": "636db53fe6836985625e39f0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"633731b3a943619145e6f020\",\n    \"title\": \"Registration Form\",\n    \"description\": \"This is a description\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        }\n    ],\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/registration-form",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/registration-form?isActive=true",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "description",
+                  "value": "est",
+                  "disabled": true
+                },
+                {
+                  "key": "title",
+                  "value": "Dev",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"633731b3a943619145e6f020\",\n    \"title\": \"Registration Form Updated\",\n    \"description\": \"This form was updated\",\n    \"views\": [\n        {\n            \"_id\": \"507f1f77bcf86cd799439012\",\n            \"name\": \"General\"\n        }\n    ],\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/registration-form/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799439011"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/registration-form/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799439011"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/registration-form/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799439011"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/registration-form/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["registration-form", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2e063109a88495b45758ccd2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admission test",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/admission-test",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-test",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "false",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Figma\",\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-test/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-test", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Postulant",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Julius\",\n    \"email\": \"julius.demeglio@radiumrocket.com\",\n    \"lastName\": \"Demeglio\",\n    \"location\":\"Rosario\",\n    \"phone\":\"3416425766\",\n    \"birthDate\":\"01/01/1990\",\n    \"dni\": \"37208586\",\n    \"isActive\": true\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/postulant",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Iara\",\n    \"email\": \"editted.user@radiumrocket.com\",\n    \"lastName\": \"Demeglio\",\n    \"location\":\"Rosario\",\n    \"phone\":\"3416425766\",\n    \"birthDate\":\"01/01/1990\",\n    \"dni\": \"37208581\",\n    \"isActive\": true\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c001"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c001"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by dni",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant/:dni",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":dni"],
+              "variable": [
+                {
+                  "key": "dni",
+                  "value": "33456456"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Csv",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/postulant/export/csv",
+              "host": ["{{API_URL}}"],
+              "path": ["postulant", "export", "csv"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"franco.marinii@radiumrocket.com\",\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"isInternal\": false,\n    \"isActive\": true,\n    \"isNewUser\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/user",
+              "host": ["{{API_URL}}"],
+              "path": ["user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"bruno.diaz@radiumrocket.com\",\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"firstName\": \"Bruno\",\n    \"lastName\": \"Diaz\",\n    \"dni\": \"33456456\",\n    \"phone\": \"3415444444\",\n    \"location\": \"Rosario\",\n    \"birthDate\": \"2001-01-05T20:17:04.581Z\",\n    \"isInternal\": false,\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/user/manual",
+              "host": ["{{API_URL}}"],
+              "path": ["user", "manual"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/user?postulant.firstName=gui&isActive=true",
+              "host": ["{{API_URL}}"],
+              "path": ["user"],
+              "query": [
+                {
+                  "key": "postulant.firstName",
+                  "value": "gui"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"postulant\": \"1e063109a88495b45758c000\",\n    \"isInternal\": true,\n    \"isActive\": true,\n    \"isNewUser\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical delete by id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400001"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400001"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400004"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Csv",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/user/export/csv?isActive=true",
+              "host": ["{{API_URL}}"],
+              "path": ["user", "export", "csv"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CourseUser",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"507f1f77bcf86cd799400001\",\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by UserId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", "by-user", ":id"],
+              "query": [
+                {
+                  "key": "course._id",
+                  "value": "1e063109a88495b45758c000",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by CourseId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course-user/by-course/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", "by-course", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update by UserId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"1e063109a88495b45758c000\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical disable by UserId",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"1e063109a88495b45758c003\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete by UserId and CourseId",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"1e063109a88495b45758c002\",\n    \"user\": \"507f1f77bcf86cd799400000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Csv by UserId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course-user/export-by-user/csv/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", "export-by-user", "csv", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "507f1f77bcf86cd799400000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Csv by CourseId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/course-user/export-by-course/csv/:id",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", "export-by-course", "csv", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res=pm.response.json();",
+                  "pm.collectionVariables.set(\"token\",res.idToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"{{PASSWORD}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{GOOGLE_API_KEY}}",
+              "protocol": "https",
+              "host": ["identitytoolkit", "googleapis", "com"],
+              "path": ["v1", "accounts:signInWithPassword"],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{GOOGLE_API_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_URL",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "EMAIL",
+      "value": "super.admin@radiumrocket.com",
+      "type": "string"
+    },
+    {
+      "key": "PASSWORD",
+      "value": "Passw0rd1234",
+      "type": "string"
+    },
+    {
+      "key": "GOOGLE_API_KEY",
+      "value": "AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E",
+      "type": "string"
+    }
+  ]
 }
