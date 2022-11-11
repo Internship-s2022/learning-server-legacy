@@ -83,7 +83,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       .messages({
         'array.min': 'Must have at least two course users',
         'array.unique': 'The users must be diferent',
-        'array.has': 'At least there must be one ADMIN and TUTOR',
+        'array.has': 'At least there must be one ADMIN and one TUTOR',
         'any.required': 'It must be a required field',
       }),
   });
