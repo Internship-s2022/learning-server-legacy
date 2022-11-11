@@ -6,9 +6,12 @@ import { CustomError } from 'src/models/custom-error';
 
 const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
   const entries = Object.entries(req.params);
-  const idParams = entries
-    .filter((entry) => entry[0].toLowerCase().includes('id'))
-    .map((entry) => [entry[0], mongoose.Types.ObjectId.isValid(entry[1])]);
+  const idParams = entries.reduce<[string, boolean][]>((prev, [key, value]) => {
+    if (key.toLowerCase().includes('id')) {
+      prev.push([key, mongoose.Types.ObjectId.isValid(value)]);
+    }
+    return prev;
+  }, []);
   if (!idParams.length) {
     throw new CustomError(400, 'Missing mongo id parameter');
   }

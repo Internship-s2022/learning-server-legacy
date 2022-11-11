@@ -88,6 +88,38 @@ const courses: CourseType[] = [
     isInternal: false,
     isActive: false,
   },
+  {
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c005'),
+    name: 'Dev 2022',
+    admissionTests: [
+      new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+      new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
+    ],
+    description: 'Become a Software Developer',
+    inscriptionStartDate: new Date(new Date().setDate(today.getDate() - daysDiff * 2)),
+    inscriptionEndDate: new Date(new Date().setDate(today.getDate() - daysDiff * 1)),
+    startDate: new Date(new Date().setDate(today.getDate() - daysDiff * 1)),
+    endDate: new Date(new Date().setDate(today.getDate() - daysDiff + 20)),
+    type: 'Software Dev',
+    isInternal: false,
+    isActive: true,
+  },
+  {
+    _id: new mongoose.Types.ObjectId('1e063109a88495b45758c006'),
+    name: 'Angular',
+    admissionTests: [
+      new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+      new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
+    ],
+    description: 'Curso express de Angular',
+    inscriptionStartDate: new Date(new Date().setDate(today.getDate() - daysDiff)),
+    inscriptionEndDate: new Date(new Date().setDate(today.getDate() - daysDiff / 2)),
+    startDate: new Date(new Date().setDate(today.getDate() - 2)),
+    endDate: new Date(new Date().setDate(today.getDate() + daysDiff)),
+    type: 'Express',
+    isInternal: true,
+    isActive: true,
+  },
 ];
 
 export default courses;

@@ -15,7 +15,6 @@ router.get(
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   registrationFormControllers.getById,
-  firebaseValidations.superAdmin,
 );
 router.post(
   '/',

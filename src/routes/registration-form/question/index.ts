@@ -13,7 +13,6 @@ router.post(
   '/',
   validations.courseInscriptionDate,
   validations.questionValidation('array'),
-  validations.optionsValues('array'),
   questionControllers.create,
 );
 router.put(
@@ -21,7 +20,6 @@ router.put(
   globalValidations.validateMongoId,
   validations.courseInscriptionDate,
   validations.questionValidation('object'),
-  validations.optionsValues('object'),
   questionControllers.updateById,
 );
 router.delete(

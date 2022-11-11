@@ -6,6 +6,10 @@ import { CustomError } from 'src/models/custom-error';
 import { Option, QuestionType } from 'src/models/question';
 import RegistrationForm from 'src/models/registration-form';
 
+const option = Joi.object<Option>({
+  value: Joi.string().min(3).max(24).required(),
+}).required();
+
 const question = Joi.object<QuestionType>({
   title: Joi.string().min(3).max(50).required().messages({
     'string.min': 'Invalid title, it must contain more than 3 letters',
@@ -19,17 +23,15 @@ const question = Joi.object<QuestionType>({
       'string.valid': 'Invalid type, should be one of the valids types',
       'any.required': 'Type is a required field',
     }),
-  options: Joi.array()
-    .items(
-      Joi.object({
-        value: Joi.string().min(3).max(24).required(),
-      }).optional(),
-    )
-    .required()
-    .messages({
-      'string.max': 'Invalid option name, it must not contain more than 24 characters',
-      'string.min': 'Invalid option name, it must contain more than 3 characters',
-    }),
+  options: Joi.when('type', {
+    is: Joi.string().valid('SHORT_ANSWER', 'PARAGRAPH'),
+    then: Joi.valid(null),
+    otherwise: Joi.array().items(option).unique('value').required(),
+  }).messages({
+    'string.max': 'Invalid option name, it must not contain more than 24 characters',
+    'string.min': 'Invalid option name, it must contain more than 3 characters',
+    'any.required': 'Options is a required field',
+  }),
   view: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required()
@@ -38,7 +40,7 @@ const question = Joi.object<QuestionType>({
       'any.required': 'View id is a required field',
     }),
   isRequired: Joi.boolean().required().messages({
-    'any.required': 'Is required is required',
+    'any.required': 'Is required is a required field',
   }),
 });
 
@@ -68,39 +70,10 @@ const courseInscriptionDate = async (req: Request, res: Response, next: NextFunc
     } else {
       throw new CustomError(
         404,
-        'The course inscription has already started, questions cannot be added, removed, or edited.',
+        'The course inscription has already started, questions cannot be added, removed, nor edited.',
       );
     }
   }
 };
 
-const checkOptionsUnique = (options: Option[]) => {
-  if (!options) {
-    return true;
-  }
-  const optionsValues = options.map((opt) => opt.value);
-  return optionsValues.length === new Set(optionsValues).size;
-};
-
-const optionsValues = (bodyType: 'array' | 'object') => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    let optionsUnique = { index: 0, unique: true };
-    if (bodyType === 'object') {
-      if (!checkOptionsUnique(req.body.options)) {
-        throw new CustomError(400, 'Options values must be unique.');
-      }
-    } else {
-      req.body.forEach((question: QuestionType, index: number) => {
-        if (!checkOptionsUnique(question.options)) {
-          optionsUnique = { index: index, unique: false };
-        }
-      });
-    }
-    if (optionsUnique.unique) {
-      return next();
-    }
-    throw new CustomError(400, `Question[${optionsUnique.index}] option values must be unique.`);
-  };
-};
-
-export default { questionValidation, courseInscriptionDate, optionsValues };
+export default { questionValidation, courseInscriptionDate };

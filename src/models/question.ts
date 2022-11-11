@@ -18,7 +18,7 @@ export interface QuestionType {
   registrationForm?: mongoose.Types.ObjectId;
   title: string;
   type: QuestionTypes;
-  options: Option[];
+  options?: Option[];
   view: mongoose.Types.ObjectId;
   isRequired: boolean;
 }
@@ -40,16 +40,19 @@ const questionSchema = new Schema<QuestionType, Model<QuestionType>>(
     },
     type: {
       type: String,
+      required: true,
+    },
+    options: {
+      type: [
+        {
+          value: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
       required: false,
     },
-    options: [
-      {
-        value: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
     view: {
       type: Schema.Types.ObjectId,
       required: true,

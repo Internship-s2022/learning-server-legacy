@@ -5,14 +5,12 @@ import Question, { QuestionType } from 'src/models/question';
 import RegistrationForm from 'src/models/registration-form';
 import { filterByIncludes } from 'src/utils/query';
 
-const getQuestionPipeline = (query: qs.ParsedQs) => [{ $match: query }];
-
 const getAll = async (req: Request, res: Response) => {
   const query = filterByIncludes({
     ...req.query,
     registrationForm: req.params.regFormId,
   });
-  const docs = await Question.aggregate(getQuestionPipeline(query));
+  const docs = await Question.find(query);
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of questions',
