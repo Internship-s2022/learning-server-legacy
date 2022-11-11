@@ -4,7 +4,6 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 export type Option = {
   _id?: mongoose.Types.ObjectId;
   value: string;
-  isActive: boolean;
 };
 
 export type QuestionTypes =
@@ -47,10 +46,6 @@ const questionSchema = new Schema<QuestionType, Model<QuestionType>>(
       {
         value: {
           type: String,
-          required: true,
-        },
-        isActive: {
-          type: Boolean,
           required: true,
         },
       },

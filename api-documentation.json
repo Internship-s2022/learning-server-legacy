@@ -383,7 +383,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "[\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\",\n                \"isActive\": \"true\"\n            },\n            {\n                \"value\": \"Option 2\",\n                \"isActive\": \"true\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 2\",\n        \"type\": \"SHORT_ANSWER\",\n        \"options\": [],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    }\n]",
+                  "raw": "[\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 1\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"value\": \"Option 1\"\n            },\n            {\n                \"value\": \"Option 2\"\n            }\n        ],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    },\n    {\n        \"title\": \"Question 2\",\n        \"type\": \"SHORT_ANSWER\",\n        \"options\": [],\n        \"view\": \"507f1f77bcf86cd799439012\",\n        \"isRequired\": \"true\"\n    }\n]",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -449,7 +449,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"options\": [\n        {\n            \"value\": \"Option 3\",\n            \"isActive\": \"true\"\n        },\n        {\n            \"value\": \"Option 4\",\n            \"isActive\": \"true\"\n        }\n    ],\n    \"view\": \"507f1f77bcf86cd799439012\",\n    \"isRequired\": \"true\"\n}",
+                  "raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"options\": [],\n    \"view\": \"507f1f77bcf86cd799439012\",\n    \"isRequired\": \"true\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -467,7 +467,7 @@
                     },
                     {
                       "key": "questionId",
-                      "value": "636db53fe6836985625e39f0"
+                      "value": "636e6642fcc38a1ea04ed799"
                     }
                   ]
                 }

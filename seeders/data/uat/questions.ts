@@ -12,17 +12,14 @@ const questions: QuestionType[] = [
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6001'),
         value: 'Option 1',
-        isActive: true,
       },
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6002'),
         value: 'Option 2',
-        isActive: true,
       },
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6003'),
         value: 'Option 3',
-        isActive: true,
       },
     ],
     view: new mongoose.Types.ObjectId('507f1f77bcf86cd799439012'),
@@ -37,17 +34,14 @@ const questions: QuestionType[] = [
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6001'),
         value: 'Option 1',
-        isActive: true,
       },
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6002'),
         value: 'Option 2',
-        isActive: true,
       },
       {
         _id: new mongoose.Types.ObjectId('636d603af4779000ba8f6003'),
         value: 'Option 3',
-        isActive: true,
       },
     ],
     view: new mongoose.Types.ObjectId('507f1f77bcf86cd799439013'),
