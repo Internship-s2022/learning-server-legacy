@@ -4,7 +4,7 @@ import Joi from 'joi';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import { Option, QuestionType } from 'src/models/question';
-import RegistrationForm from 'src/models/registration-form';
+import RegistrationForm, { RegistrationFormDocument } from 'src/models/registration-form';
 
 const option = Joi.object<Option>({
   value: Joi.string().min(3).max(24).required(),
@@ -56,10 +56,9 @@ const questionValidation = (bodyType: 'array' | 'object') => {
 };
 
 const courseInscriptionDate = async (req: Request, res: Response, next: NextFunction) => {
-  const registrationForm = await RegistrationForm.findById(req.params.regFormId);
-  if (!registrationForm) {
-    throw new CustomError(404, `Registration form with id ${req.params.regFormId} was not found.`);
-  }
+  const registrationForm = (await RegistrationForm.findById(
+    req.params.regFormId,
+  )) as RegistrationFormDocument;
   const course = await Course.findById(registrationForm.course);
   if (!course) {
     throw new CustomError(404, `Course with id ${registrationForm.course} was not found.`);
@@ -69,7 +68,7 @@ const courseInscriptionDate = async (req: Request, res: Response, next: NextFunc
       return next();
     } else {
       throw new CustomError(
-        404,
+        400,
         'The course inscription has already started, questions cannot be added, removed, nor edited.',
       );
     }

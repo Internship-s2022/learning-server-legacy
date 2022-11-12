@@ -6,9 +6,16 @@ import questionRouter from 'src/routes/registration-form/question';
 
 import registrationFormControllers from './controllers';
 import validations from './validations';
+
 const router = express.Router();
 
-router.use('/:regFormId/question', firebaseValidations.superAdmin, questionRouter);
+router.use(
+  '/:regFormId/question',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.registrationFormId,
+  questionRouter,
+);
 router.get('/', firebaseValidations.superAdmin, registrationFormControllers.getAll);
 router.get(
   '/:id',
