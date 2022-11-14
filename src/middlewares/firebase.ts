@@ -15,7 +15,7 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
     response = await firebase.auth().verifyIdToken(String(token));
   } catch {
     throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
-      errorType: 'TOKEN_EXPIRED',
+      type: 'TOKEN_EXPIRED',
     });
   }
 
@@ -37,7 +37,7 @@ const normalUser = async (req: Request, res: Response, next: NextFunction) => {
     response = await firebase.auth().verifyIdToken(String(token));
   } catch {
     throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
-      errorType: 'TOKEN_EXPIRED',
+      type: 'TOKEN_EXPIRED',
     });
   }
 
