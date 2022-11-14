@@ -12,7 +12,7 @@ const getAll = async (req: Request, res: Response) => {
   const docs = await Question.find(query);
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of questions',
+      message: 'Showing the list of questions.',
       data: docs,
       error: false,
     });
@@ -24,7 +24,7 @@ const getById = async (req: Request, res: Response) => {
   const question = await Question.findById(req.params.questionId);
   if (question) {
     return res.status(200).json({
-      message: 'The question has been successfully found',
+      message: 'The question has been successfully found.',
       data: question,
       error: false,
     });
@@ -64,7 +64,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await Question.findByIdAndDelete(req.params.questionId);
   if (result) {
     return res.status(200).json({
-      message: `The question with id ${req.params.questionId} has been successfully deleted`,
+      message: `The question with id ${req.params.questionId} has been successfully deleted.`,
       data: result,
       error: false,
     });

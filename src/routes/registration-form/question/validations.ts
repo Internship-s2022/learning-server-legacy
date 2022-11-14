@@ -8,39 +8,42 @@ import RegistrationForm, { RegistrationFormDocument } from 'src/models/registrat
 
 const option = Joi.object<Option>({
   value: Joi.string().min(3).max(24).required(),
-}).required();
+})
+  .required()
+  .messages({
+    'string.max': 'Invalid option value, it must not contain more than 24 characters.',
+    'string.min': 'Invalid option value, it must contain more than 3 characters.',
+  });
 
 const question = Joi.object<QuestionType>({
   title: Joi.string().min(3).max(50).required().messages({
-    'string.min': 'Invalid title, it must contain more than 3 letters',
-    'string.max': 'Invalid title, it must not contain more than 50 letters',
-    'any.required': 'Title is a required field',
+    'string.min': 'Invalid title, it must contain more than 3 letters.',
+    'string.max': 'Invalid title, it must not contain more than 50 letters.',
+    'any.required': 'Title is a required field.',
   }),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()
     .messages({
-      'string.valid': 'Invalid type, should be one of the valids types',
-      'any.required': 'Type is a required field',
+      'string.valid': 'Invalid type, should be one of the valids types.',
+      'any.required': 'Type is a required field.',
     }),
   options: Joi.when('type', {
     is: Joi.string().valid('SHORT_ANSWER', 'PARAGRAPH'),
     then: Joi.valid(null),
     otherwise: Joi.array().items(option).unique('value').required(),
   }).messages({
-    'string.max': 'Invalid option name, it must not contain more than 24 characters',
-    'string.min': 'Invalid option name, it must contain more than 3 characters',
-    'any.required': 'Options is a required field',
+    'any.required': 'Options is a required field.',
   }),
   view: Joi.string()
     .pattern(/^[0-9a-fA-F]{24}$/)
     .required()
     .messages({
-      'string.pattern.base': 'Invalid view id, ObjectId expected',
-      'any.required': 'View id is a required field',
+      'string.pattern.base': 'Invalid view id, ObjectId expected.',
+      'any.required': 'View id is a required field.',
     }),
   isRequired: Joi.boolean().required().messages({
-    'any.required': 'Is required is a required field',
+    'any.required': 'Is required is a required field.',
   }),
 });
 
