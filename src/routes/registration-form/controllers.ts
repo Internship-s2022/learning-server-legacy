@@ -26,7 +26,7 @@ const getAll = async (req: Request, res: Response) => {
   );
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of registration forms',
+      message: 'Showing the list of registration forms.',
       data: docs,
       pagination,
       error: false,
@@ -39,7 +39,7 @@ const getById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (registrationForm) {
     return res.status(200).json({
-      message: 'The registration form has been successfully found',
+      message: 'The registration form has been successfully found.',
       data: registrationForm,
       error: false,
     });
@@ -84,7 +84,7 @@ const updateById = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (!registrationForm?.isActive) {
-    throw new CustomError(404, 'Registration form has already been deleted');
+    throw new CustomError(404, 'Registration form has already been deleted.');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
@@ -95,7 +95,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The registration form has been successfully deleted',
+      message: 'The registration form has been successfully deleted.',
       data: result,
       error: false,
     });
@@ -108,7 +108,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await RegistrationForm.findByIdAndDelete(req.params.id);
   if (result) {
     return res.status(200).json({
-      message: `The registration form with id ${req.params.id} has been successfully deleted`,
+      message: `The registration form with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });

@@ -22,7 +22,7 @@ const getById = async (req: Request, res: Response) => {
   const admissionTest = await AdmissionTest.findById(req.params.id);
   if (admissionTest) {
     return res.status(200).json({
-      message: 'The admission test has been successfully found',
+      message: 'The admission test has been successfully found.',
       data: admissionTest,
       error: false,
     });
@@ -60,7 +60,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const admissionTest = await AdmissionTest.findById(req.params.id);
   if (!admissionTest?.isActive) {
-    throw new CustomError(404, 'Admission test has already been deleted');
+    throw new CustomError(404, 'Admission test has already been deleted.');
   }
   const result = await AdmissionTest.findByIdAndUpdate(
     req.params.id,
@@ -71,7 +71,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The admission test has been successfully deleted',
+      message: 'The admission test has been successfully deleted.',
       data: result,
       error: false,
     });
@@ -83,7 +83,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await AdmissionTest.findByIdAndDelete(req.params.id);
   if (result) {
     return res.status(200).json({
-      message: `The admisison test with id ${req.params.id} has been successfully deleted`,
+      message: `The admisison test with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });

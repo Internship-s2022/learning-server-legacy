@@ -10,25 +10,25 @@ const getAll = async (req: Request, res: Response) => {
   const { docs, ...pagination } = await SuperAdmin.paginate(query, { page, limit });
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of super admins',
+      message: 'Showing the list of super admins.',
       data: docs,
       pagination,
       error: false,
     });
   }
-  throw new CustomError(404, 'Cannot find super admins');
+  throw new CustomError(404, 'Cannot find super admins.');
 };
 
 const getById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
   if (superAdmin) {
     return res.status(200).json({
-      message: 'The super admin has been successfully found',
+      message: 'The super admin has been successfully found.',
       data: superAdmin,
       error: false,
     });
   }
-  throw new CustomError(404, `Could not found the super admin with id ${req.params.id}`);
+  throw new CustomError(404, `Could not found the super admin with id ${req.params.id}.`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -64,18 +64,18 @@ const update = async (req: Request, res: Response) => {
   }
   if (updatedSuperAdmin) {
     return res.status(200).json({
-      message: 'The super admin has been successfully updated',
+      message: 'The super admin has been successfully updated.',
       data: updatedSuperAdmin,
       error: false,
     });
   }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`);
+  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
   if (!superAdmin?.isActive) {
-    throw new CustomError(404, 'Super Admin has already been deleted');
+    throw new CustomError(404, 'Super Admin has already been deleted.');
   }
   const result = await SuperAdmin.findByIdAndUpdate(
     req.params.id,
@@ -89,12 +89,12 @@ const deleteById = async (req: Request, res: Response) => {
   }
   if (result) {
     return res.status(200).json({
-      message: 'The super admin has been successfully deleted',
+      message: 'The super admin has been successfully deleted.',
       data: result,
       error: false,
     });
   }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found`);
+  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found.`);
 };
 
 const physicalDeleteById = async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   if (result?.firebaseUid) {
     await firebase.auth().deleteUser(result.firebaseUid);
     return res.status(200).json({
-      message: `The super admin with id ${req.params.id} has been successfully deleted`,
+      message: `The super admin with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });

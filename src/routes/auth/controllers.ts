@@ -25,7 +25,7 @@ const updatePassword = async (req: Request, res: Response) => {
 
     if (updatedUser) {
       return res.status(200).json({
-        message: 'The user password has been successfully updated',
+        message: 'The user password has been successfully updated.',
         data: {
           uid: updatedUser.uid,
           email: updatedUser.email,
@@ -35,7 +35,7 @@ const updatePassword = async (req: Request, res: Response) => {
       });
     }
   } else {
-    throw new CustomError(404, `User with firebase uid: ${req.body.firebaseUid} was not found`);
+    throw new CustomError(404, `User with firebase uid: ${req.body.firebaseUid} was not found.`);
   }
 };
 
