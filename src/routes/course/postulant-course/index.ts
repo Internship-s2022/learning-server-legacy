@@ -14,5 +14,10 @@ router.post(
   postulantCourseControllers.correctTests,
 );
 router.post('/promote', firebaseValidations.superAdmin, postulantCourseControllers.promoteMany);
+router.delete(
+  '/',
+  firebaseValidations.superAdmin,
+  postulantCourseControllers.physicalDeleteByCourseId,
+);
 
 export default router;

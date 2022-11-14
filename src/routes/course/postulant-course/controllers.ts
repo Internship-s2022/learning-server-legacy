@@ -37,7 +37,7 @@ const create = async (req: Request, res: Response) => {
     // const isRequired = req.body.answer.some(async (a: AnswerType) => {
     //   const questionId = a.question;
     //   const question = await Question.findById(questionId);
-    //   return question.isRequired && !a.value;
+    //   return question.isRequired && !a.value; //toma null por defecto
     // });
     // if (!isRequired) {
     //   throw new CustomError(400, 'All the required questions must be answered.');
@@ -274,9 +274,37 @@ const promoteMany = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
+const physicalDeleteByCourseId = async (req: Request, res: Response) => {
+  const postulant = await Postulant.findById(req.body.postulant);
+  const course = await Course.findById(req.params.courseId);
+  if (postulant && course) {
+    const result = await PostulantCourse.findOneAndDelete({
+      postulant: req.body.postulant,
+      course: req.params.courseId,
+    });
+    if (result) {
+      return res.status(200).json({
+        message: 'The postulant-course been successfully deleted',
+        data: result,
+        error: false,
+      });
+    }
+    throw new CustomError(
+      404,
+      `Postulant with id ${req.body.postulant} was not found in this course.`,
+    );
+  } else {
+    if (!postulant?._id) {
+      throw new CustomError(404, `Postulant with id ${req.body.postulant} was not found.`);
+    }
+    throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
+  }
+};
+
 export default {
   create,
   getByCourseId,
   correctTests,
   promoteMany,
+  physicalDeleteByCourseId,
 };
