@@ -16,7 +16,7 @@ export interface CourseType {
   isActive: boolean;
 }
 export interface CourseWithUsers extends CourseType {
-  courseUsers?: CourseUserType[];
+  courseUsers: CourseUserType[];
 }
 interface CourseDocument extends CourseType, Document {
   _id?: mongoose.Types.ObjectId;

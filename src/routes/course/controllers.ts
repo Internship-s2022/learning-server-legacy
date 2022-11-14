@@ -3,10 +3,15 @@ import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
 import { ResponseBody } from 'src/interfaces/response';
-import Course, { CourseWithUsers } from 'src/models/course';
+import Course, { CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
-import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import User from 'src/models/user';
+import {
+  filterByIncludes,
+  filterIncludeArrayOfIds,
+  paginateAndFilterByIncludes,
+} from 'src/utils/query';
 
 const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean }) => {
   const pipeline: PipelineStage[] = [
@@ -60,11 +65,11 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
-  res: Response<ResponseBody<CourseWithUsers>>,
+  res: Response<ResponseBody<CourseType>>,
 ) => {
-  let newCourse: CourseWithUsers | undefined;
+  let newCourse: CourseType | undefined;
   try {
-    const course = new Course<CourseWithUsers>({
+    const course = new Course<CourseType>({
       name: req.body.name,
       admissionTests: req.body.admissionTests,
       description: req.body.description,
@@ -79,7 +84,13 @@ const create = async (
     await course.save();
     newCourse = course;
   } catch {
-    throw new CustomError(500, 'There was an error during the creation.');
+    throw new CustomError(500, 'There was an error during the creation of the course.');
+  }
+  const existingUsers = await User.find(
+    filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
+  );
+  if (existingUsers?.length !== req.body.courseUsers.length) {
+    throw new CustomError(400, 'Some of the users dont exist.');
   }
   try {
     CourseUser.insertMany(
@@ -97,7 +108,7 @@ const create = async (
     });
   } catch {
     await Course.findByIdAndDelete(newCourse._id);
-    throw new CustomError(500, 'There was an error during the creation.');
+    throw new CustomError(500, 'There was an error during the creation of user in the course.');
   }
 };
 
