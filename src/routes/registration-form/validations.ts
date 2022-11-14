@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
 import { CustomError } from 'src/models/custom-error';
-import { RegistrationFormType } from 'src/models/registration-form';
+import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
 
 const registrationFormValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -62,4 +62,12 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
   };
 };
 
-export default { registrationFormValidation };
+const registrationFormId = async (req: Request, res: Response, next: NextFunction) => {
+  const registrationForm = await RegistrationForm.findById(req.params.regFormId);
+  if (!registrationForm) {
+    throw new CustomError(400, `Registration form with id ${req.params.regFormId} was not found.`);
+  }
+  return next();
+};
+
+export default { registrationFormValidation, registrationFormId };

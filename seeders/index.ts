@@ -9,6 +9,7 @@ import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
 import CourseUser, { CourseUserType } from '../src/models/course-user';
 import Postulant, { PostulantType } from '../src/models/postulant';
+import Question, { QuestionType } from '../src/models/question';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
 import User, { UserType } from '../src/models/user';
@@ -28,6 +29,7 @@ interface data {
   postulants: PostulantType[];
   users: UserType[];
   courseUsers: CourseUserType[];
+  questions: QuestionType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
@@ -41,6 +43,7 @@ const {
   postulants,
   users,
   courseUsers,
+  questions,
 }: data = allData[env];
 
 firebaseAdmin.initializeApp({
@@ -98,7 +101,7 @@ firebaseAdmin.initializeApp({
     pass: process.env.DATABASE_PASS,
     dbName: process.env.DATABASE_NAME,
   });
-  console.log('\n\x1b[37m', padMessage('🚀 Database connected'));
+  console.log('\n\x1b[36m', padMessage('🚀 Database connected'));
   // -------------- DATABASE CONNECTION -------------- [end]
 
   try {
@@ -147,6 +150,12 @@ firebaseAdmin.initializeApp({
         promises.push(CourseUser.collection.deleteMany({}));
         console.log('\x1b[37m', padMessage('🚀 Course users removed'));
       }
+
+      if (config.questions.remove) {
+        promises.push(Question.collection.deleteMany({}));
+        console.log('\x1b[37m', padMessage('🚀 Questions removed'));
+      }
+
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -214,7 +223,14 @@ firebaseAdmin.initializeApp({
         promises.push(CourseUser.collection.insertMany(allCourseUsers));
         console.log('\x1b[37m', padMessage('🚀 Course users added'));
       }
+
+      if (config.questions.create) {
+        promises.push(Question.collection.insertMany(questions));
+        console.log('\x1b[37m', padMessage('🚀 Questions added'));
+      }
+
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]
+
       await Promise.all(promises);
 
       console.log('\x1b[0m');
