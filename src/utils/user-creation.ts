@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
 import sendgridTemplates from 'src/constants/sendgrid-templates';
+import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
 import User, { UserDocument, UserType } from 'src/models/user';
 
@@ -33,7 +34,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
   } catch (err: any) {
     if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
-    throw new Error(err.message);
+    throw new CustomError(400, err.message, { ...err });
   }
   let newMongoUser: UserDocument;
   try {
@@ -49,7 +50,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
   } catch (err: any) {
     if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
     await firebase.auth().deleteUser(firebaseUid);
-    throw new Error(err.message);
+    throw new CustomError(500, err.message, { ...err, type: 'USER_MONGO_ERROR' });
   }
 
   await sendEmail(
@@ -64,7 +65,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
         if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
         await User.findByIdAndDelete(newMongoUser._id);
         await firebase.auth().deleteUser(firebaseUid);
-        throw new Error(`Sendgrid error: ${err.message}`);
+        throw new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
       }
     },
   );
