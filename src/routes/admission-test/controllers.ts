@@ -31,28 +31,37 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const admissionTest = new AdmissionTest<AdmissionTestType>({
-    name: req.body.name,
-    isActive: req.body.isActive,
-  });
-  await admissionTest.save();
-  return res.status(201).json({
-    message: 'Admission test successfully created.',
-    data: admissionTest,
-    error: false,
-  });
+  const admissionTest = await AdmissionTest.findOne({ name: req.body.name });
+  if (!admissionTest?.name) {
+    const newAdmissionTest = new AdmissionTest<AdmissionTestType>({
+      name: req.body.name,
+      isActive: req.body.isActive,
+    });
+    await newAdmissionTest.save();
+    return res.status(201).json({
+      message: 'Admission test successfully created.',
+      data: newAdmissionTest,
+      error: false,
+    });
+  }
+  throw new CustomError(400, `An admission test with name ${req.body.name} already exists.`);
 };
 
 const update = async (req: Request, res: Response) => {
-  const updatedAdmissionTest = await AdmissionTest.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (updatedAdmissionTest) {
-    return res.status(200).json({
-      message: 'The admission test has been successfully updated.',
-      data: updatedAdmissionTest,
-      error: false,
+  const admissionTest = await AdmissionTest.findOne({ name: req.body.name });
+  if (!admissionTest?.name) {
+    const updatedAdmissionTest = await AdmissionTest.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
     });
+    if (updatedAdmissionTest) {
+      return res.status(200).json({
+        message: 'The admission test has been successfully updated.',
+        data: updatedAdmissionTest,
+        error: false,
+      });
+    }
+  } else {
+    throw new CustomError(400, `An admission test with name ${req.body.name} already exists.`);
   }
   throw new CustomError(404, `Admission test with id ${req.params.id} was not found.`);
 };
