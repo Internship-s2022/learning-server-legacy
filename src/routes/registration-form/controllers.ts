@@ -84,7 +84,7 @@ const updateById = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (!registrationForm?.isActive) {
-    throw new CustomError(404, 'Registration form has already been deleted.');
+    throw new CustomError(400, 'This registration form has already been deleted.');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,

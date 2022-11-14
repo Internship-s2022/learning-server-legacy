@@ -136,7 +136,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user?.isActive === false) {
-    throw new CustomError(404, 'The user has already been deleted.');
+    throw new CustomError(400, 'This user has already been deleted.');
   }
   const result = await User.findByIdAndUpdate(
     req.params.id,

@@ -75,7 +75,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
   if (!superAdmin?.isActive) {
-    throw new CustomError(404, 'Super Admin has already been deleted.');
+    throw new CustomError(400, 'This super admin has already been deleted.');
   }
   const result = await SuperAdmin.findByIdAndUpdate(
     req.params.id,

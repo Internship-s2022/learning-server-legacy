@@ -165,7 +165,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (!course?.isActive) {
-    throw new CustomError(404, 'Course has already been deleted.');
+    throw new CustomError(400, 'This course has already been deleted.');
   }
   const result = await Course.findByIdAndUpdate(
     req.params.id,
