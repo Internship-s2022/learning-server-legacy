@@ -22,6 +22,22 @@ const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
+const validateDni = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.dni) {
+    throw new CustomError(400, 'Missing dni parameter');
+  }
+  const dniValid = Joi.string()
+    .min(6)
+    .max(9)
+    .pattern(/^[0-9]+$/);
+  const validation = dniValid.validate(req.params.dni);
+
+  if (validation.error) {
+    throw new CustomError(400, `The dni: ${req.params.dni} is not valid`);
+  }
+  return next();
+};
+
 const validateFirebaseUid = (req: Request, res: Response, next: NextFunction) => {
   if (!req.params.uid) {
     throw new CustomError(400, 'Missing firebase uid parameter.');
@@ -42,4 +58,5 @@ const validateFirebaseUid = (req: Request, res: Response, next: NextFunction) =>
 export default {
   validateMongoId,
   validateFirebaseUid,
+  validateDni,
 };
