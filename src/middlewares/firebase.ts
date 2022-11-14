@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
@@ -6,28 +7,44 @@ import { CustomError } from 'src/models/custom-error';
 const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.headers;
   if (!token) {
-    throw new CustomError(401, 'Unauthorized. Provide a token');
+    throw new CustomError(401, 'Unauthorized. Provide a token.');
   }
 
-  const response = await firebase.auth().verifyIdToken(String(token));
+  let response: DecodedIdToken;
+  try {
+    response = await firebase.auth().verifyIdToken(String(token));
+  } catch {
+    throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
+      errorType: 'TOKEN_EXPIRED',
+    });
+  }
 
   if (response.userType !== 'SUPER_ADMIN') {
-    throw new CustomError(401, 'Unauthorized. You must be an superadmin to access.');
+    throw new CustomError(401, 'Unauthorized. You must have permission to access.');
   }
+
   return next();
 };
 
 const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.headers;
   if (!token) {
-    throw new CustomError(401, 'Unauthorized. Provide a token');
+    throw new CustomError(401, 'Unauthorized. Provide a token.');
   }
 
-  const response = await firebase.auth().verifyIdToken(String(token));
+  let response: DecodedIdToken;
+  try {
+    response = await firebase.auth().verifyIdToken(String(token));
+  } catch {
+    throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
+      errorType: 'TOKEN_EXPIRED',
+    });
+  }
 
   if (response.userType !== 'NORMAL') {
-    throw new CustomError(401, 'Unauthorized. You must be an normal user to access.');
+    throw new CustomError(401, 'Unauthorized. You must have permission to access.');
   }
+
   return next();
 };
 
