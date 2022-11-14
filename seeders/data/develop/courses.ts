@@ -30,7 +30,6 @@ const courses: CourseType[] = [
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     ],
-
     description: 'Curso express de React Native',
     inscriptionStartDate: new Date(new Date().setDate(today.getDate() + daysDiff * 3)),
     inscriptionEndDate: new Date(new Date().setDate(today.getDate() + daysDiff * 4)),
