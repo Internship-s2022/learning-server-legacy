@@ -22,6 +22,10 @@ const userSchema = new Schema<UserType, Model<UserType>>(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
     postulant: {
       type: Schema.Types.ObjectId,
       required: true,

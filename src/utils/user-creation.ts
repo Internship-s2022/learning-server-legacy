@@ -8,7 +8,6 @@ import Postulant from 'src/models/postulant';
 import User, { UserDocument, UserType } from 'src/models/user';
 
 import sendEmail from './send-email';
-
 export const generatePassword = (length: number) => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomPassword = '';
@@ -18,67 +17,78 @@ export const generatePassword = (length: number) => {
   }
   return randomPassword;
 };
-
-const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) => {
+const userCreation = async (req: Request, postulantId: string, promotion = false, timeout = 1) => {
   const newPassword = generatePassword(24);
   let firebaseUid: string;
   const email = req.body.email;
-  try {
-    const newFirebaseUser = await firebase.auth().createUser({
-      email,
-      password: newPassword,
-    });
-    firebaseUid = newFirebaseUser.uid;
-    await firebase
-      .auth()
-      .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
-    if (err?.errorInfo?.code === 'auth/email-already-exists') {
-      throw new CustomError(400, 'The email address is already in use by another account', {
-        ...err,
-        type: 'EMAIL_ALREADY_EXISTS',
-      });
-    }
-    throw new CustomError(500, err.message, { ...err });
-  }
   let newMongoUser: UserDocument;
-  try {
-    newMongoUser = new User<UserType>({
-      firebaseUid,
-      email,
-      postulant: postulantId,
-      isInternal: req.body.isInternal,
-      isActive: req.body.isActive,
-      isNewUser: true,
-    });
-    await newMongoUser.save();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
-    await firebase.auth().deleteUser(firebaseUid);
-    throw new CustomError(500, err.message, { ...err, type: 'USER_MONGO_ERROR' });
-  }
-
-  await sendEmail(
-    req.body.email,
-    sendgridTemplates.sendUserCredentials,
-    {
-      email: req.body.email,
-      password: newPassword,
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (err: any) => {
-      if (err) {
-        if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
-        await User.findByIdAndDelete(newMongoUser._id);
-        await firebase.auth().deleteUser(firebaseUid);
-        throw new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
-      }
-    },
+  return new Promise(
+    (
+      resolve: (value: {
+        newMongoUser: UserDocument;
+        credentials: { email: string; newPassword: string; firebaseUid: string };
+      }) => void,
+      reject,
+    ) =>
+      setTimeout(async () => {
+        try {
+          const newFirebaseUser = await firebase.auth().createUser({
+            email,
+            password: newPassword,
+          });
+          firebaseUid = newFirebaseUser.uid;
+          await firebase
+            .auth()
+            .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
+        } catch (err: any) {
+          if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
+          reject(err);
+          if (err?.errorInfo?.code === 'auth/email-already-exists') {
+            return new CustomError(400, 'The email address is already in use by another account', {
+              ...err,
+              type: 'EMAIL_ALREADY_EXISTS',
+            });
+          }
+          return new CustomError(500, err.message, { ...err });
+        }
+        try {
+          newMongoUser = new User<UserType>({
+            firebaseUid,
+            email,
+            postulant: new mongoose.Types.ObjectId(postulantId),
+            isInternal: promotion ? false : req.body.isInternal,
+            isActive: promotion ? true : req.body.isActive,
+            isNewUser: true,
+          });
+          await newMongoUser.save();
+        } catch (err: any) {
+          if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
+          await firebase.auth().deleteUser(firebaseUid);
+          reject(err);
+          return new CustomError(500, err.message, { ...err, type: 'USER_MONGO_ERROR' });
+        }
+        if (!promotion)
+          await sendEmail(
+            req.body.email,
+            sendgridTemplates.sendUserCredentials,
+            {
+              email: req.body.email,
+              password: newPassword,
+            },
+            async (err: any) => {
+              if (err) {
+                if (!req.body.postulant && !promotion)
+                  await Postulant.findByIdAndDelete(postulantId);
+                await User.findByIdAndDelete(newMongoUser._id);
+                await firebase.auth().deleteUser(firebaseUid);
+                reject(err);
+                return new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
+              }
+            },
+          );
+        resolve({ newMongoUser, credentials: { email, newPassword, firebaseUid } });
+        return { newMongoUser, credentials: { email, newPassword, firebaseUid } };
+      }, timeout),
   );
-  return newMongoUser;
 };
-
 export default userCreation;

@@ -4,25 +4,44 @@ import { Types } from 'mongoose';
 
 import AdmissionResult from 'src/models/admission-result';
 import Course from 'src/models/course';
+import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
 import PostulantCourse, { PostulantCourseType } from 'src/models/postulant-course';
+import User from 'src/models/user';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
+import userCreation from 'src/utils/user-creation';
 
 const create = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.body.postulant);
   const course = await Course.findById(req.params.courseId);
+  const currentDate = new Date();
+
   if (postulant && course) {
     const postulantCourse = await PostulantCourse.find({
       postulant: req.body.postulant,
       course: req.params.courseId,
     });
+    if (currentDate < course.inscriptionStartDate || currentDate > course.inscriptionEndDate) {
+      throw new CustomError(400, 'The postulation must be created between the inscription dates');
+    }
     if (postulantCourse.length) {
       throw new CustomError(
         400,
         `The postulant with id: ${req.body.postulant} has been already postulated in this course.`,
       );
     }
+
+    // TO-DO: must have all the requested answers
+
+    // const isRequired = req.body.answer.some(async (a: AnswerType) => {
+    //   const questionId = a.question;
+    //   const question = await Question.findById(questionId);
+    //   return question.isRequired && !a.value;
+    // });
+    // if (!isRequired) {
+    //   throw new CustomError(400, 'All the required questions must be answered.');
+    // }
     const setAdmissionResults = await AdmissionResult.insertMany(
       course.admissionTests.map((item) => ({
         admissionTest: item,
@@ -94,7 +113,7 @@ const getPostulantBasedOnCoursePipeline = (
     : { $match: query },
 ];
 
-const getCorrectedByCourseId = async (req: Request, res: Response) => {
+const getByCourseId = async (req: Request, res: Response) => {
   const courseId = req.params.courseId;
 
   const corrected = req.query.corrected ? true : false;
@@ -126,7 +145,7 @@ const getCorrectedByCourseId = async (req: Request, res: Response) => {
           error: false,
         });
       }
-      throw new CustomError(404, 'Could not found the list of postulants.');
+      throw new CustomError(404, 'Could not find the list of postulants.');
     }
     throw new CustomError(400, 'This course does not have any postulants.');
   }
@@ -181,8 +200,83 @@ const correctTests = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
+const promoteMany = async (req: Request, res: Response) => {
+  const course = await Course.findById(req.params.courseId);
+  if (course?._id) {
+    const currentDate = new Date();
+    if (currentDate >= course.startDate) {
+      throw new CustomError(
+        400,
+        'The promotion of postulants must be before the course start date.',
+      );
+    }
+    try {
+      let timeout = 0;
+      for (let i = 0; i < req.body.length; i++) {
+        let newMongoUser;
+        const promotion = true;
+        const postulantId = req.body[i].postulantId;
+        const postulant = await Postulant.findById(postulantId);
+        const user = await User.findOne({ postulant: postulantId });
+        const postulantCourse = await PostulantCourse.find({
+          postulant: postulantId,
+          course: req.params.courseId,
+        });
+        if (!postulant?._id) {
+          throw new CustomError(404, `The postulant with id: ${postulantId} was not found`);
+        }
+        if (!postulantCourse) {
+          throw new CustomError(
+            404,
+            `Postulant with id ${postulantId} was not found in this course and could not be promoted.`,
+          );
+        }
+        req.body.email = postulant?.email;
+        if (!user?._id) {
+          timeout = timeout + 1;
+          newMongoUser = await userCreation(req, postulantId, promotion, timeout);
+        } else {
+          newMongoUser = user;
+        }
+        try {
+          const courseUser = await CourseUser.find({
+            user: newMongoUser._id,
+            course: req.params.courseId,
+          });
+          if (courseUser.length) {
+            throw new CustomError(
+              400,
+              `The user with id: ${newMongoUser._id} has already a role in this course.`,
+            );
+          }
+          if (newMongoUser._id) {
+            const NewCourseUser = new CourseUser<CourseUserType>({
+              user: newMongoUser._id,
+              course: new Types.ObjectId(req.params.courseId),
+              role: 'STUDENT',
+              isActive: true,
+            });
+            await NewCourseUser.save();
+          }
+        } catch (err: any) {
+          throw new Error(`Course-user error: ${err.message}`);
+        }
+      }
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+
+    return res.status(201).json({
+      message: 'Users successfully created',
+      error: false,
+    });
+  }
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
+};
+
 export default {
   create,
-  getCorrectedByCourseId,
+  getByCourseId,
   correctTests,
+  promoteMany,
 };
