@@ -13,11 +13,11 @@ const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
     return prev;
   }, []);
   if (!idParams.length) {
-    throw new CustomError(400, 'Missing mongo id parameter');
+    throw new CustomError(400, 'Missing mongo id parameter.');
   }
   const invalidId = idParams.find((param) => param[1] === false);
   if (invalidId) {
-    throw new CustomError(400, `Mongo id: ${invalidId[0]}  is not valid`);
+    throw new CustomError(400, `Mongo id: ${invalidId[0]}  is not valid.`);
   }
   return next();
 };
