@@ -69,7 +69,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const admissionTest = await AdmissionTest.findById(req.params.id);
   if (!admissionTest?.isActive) {
-    throw new CustomError(400, 'This admission test has already been deleted.');
+    throw new CustomError(400, 'This admission test has already been disabled.');
   }
   const result = await AdmissionTest.findByIdAndUpdate(
     req.params.id,
@@ -80,7 +80,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The admission test has been successfully deleted.',
+      message: 'The admission test has been successfully disabled.',
       data: result,
       error: false,
     });

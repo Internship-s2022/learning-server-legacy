@@ -106,7 +106,7 @@ const assignRole = async (req: Request, res: Response) => {
     if (courseUser.length) {
       throw new CustomError(
         400,
-        `The user with id: ${req.body.user} has already a role in this course.`,
+        `The user with id: ${req.body.user} already has a role in this course.`,
       );
     }
     const NewCourseUser = new CourseUser<CourseUserType>({

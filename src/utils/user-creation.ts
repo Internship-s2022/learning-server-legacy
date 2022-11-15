@@ -32,9 +32,16 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
     await firebase
       .auth()
       .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
-    throw new CustomError(400, err.message, { ...err });
+    if (err?.errorInfo?.code === 'auth/email-already-exists') {
+      throw new CustomError(400, 'An user with this email already exists', {
+        ...err,
+        type: 'EMAIL_ALREADY_EXISTS',
+      });
+    }
+    throw new CustomError(500, err.message, { ...err });
   }
   let newMongoUser: UserDocument;
   try {
@@ -47,6 +54,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       isNewUser: true,
     });
     await newMongoUser.save();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
     await firebase.auth().deleteUser(firebaseUid);
@@ -60,6 +68,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
       email: req.body.email,
       password: newPassword,
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (err: any) => {
       if (err) {
         if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);

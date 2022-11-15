@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
@@ -32,24 +33,43 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const newFirebaseSuperAdmin = await firebase.auth().createUser({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  const firebaseUid = newFirebaseSuperAdmin.uid;
-  await firebase.auth().setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPER_ADMIN' });
-  const newSuperadmin = new SuperAdmin<SuperAdminType>({
-    firebaseUid,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    isActive: true,
-  });
-  await newSuperadmin.save();
-  return res.status(201).json({
-    message: 'Super admin successfully created',
-    data: newSuperadmin,
-    error: false,
-  });
+  let newFirebaseSuperAdmin: UserRecord;
+  try {
+    newFirebaseSuperAdmin = await firebase.auth().createUser({
+      email: req.body.email,
+      password: req.body.password,
+    });
+    await firebase
+      .auth()
+      .setCustomUserClaims(newFirebaseSuperAdmin.uid, { userType: 'SUPER_ADMIN' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error?.errorInfo?.code === 'auth/email-already-exists') {
+      throw new CustomError(400, 'An super admin with this email already exists', {
+        ...error,
+        type: 'EMAIL_ALREADY_EXISTS',
+      });
+    }
+    throw new CustomError(500, error.message, { ...error });
+  }
+  try {
+    const newSuperadmin = new SuperAdmin<SuperAdminType>({
+      firebaseUid: newFirebaseSuperAdmin.uid,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      isActive: true,
+    });
+    await newSuperadmin.save();
+    return res.status(201).json({
+      message: 'Super admin successfully created',
+      data: newSuperadmin,
+      error: false,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await firebase.auth().deleteUser(newFirebaseSuperAdmin.uid);
+    throw new CustomError(500, error.message, { ...error });
+  }
 };
 
 const update = async (req: Request, res: Response) => {

@@ -103,7 +103,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.params.id);
   if (!postulant?.isActive) {
-    throw new CustomError(400, 'This postulant has already been deleted.');
+    throw new CustomError(400, 'This postulant has already been disabled.');
   }
   const result = await Postulant.findByIdAndUpdate(
     req.params.id,
@@ -114,7 +114,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The postulant has been successfully deleted.',
+      message: 'The postulant has been successfully disabled.',
       data: result,
       error: false,
     });

@@ -84,7 +84,7 @@ const updateById = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (!registrationForm?.isActive) {
-    throw new CustomError(400, 'This registration form has already been deleted.');
+    throw new CustomError(400, 'This registration form has already been disabled.');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
@@ -95,7 +95,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The registration form has been successfully deleted.',
+      message: 'The registration form has been successfully disabled.',
       data: result,
       error: false,
     });
