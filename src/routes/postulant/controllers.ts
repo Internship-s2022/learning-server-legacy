@@ -1,13 +1,40 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
+import { PipelineStage } from 'mongoose';
 
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
+const getPostulantPipeline = (query: qs.ParsedQs) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $addFields: {
+        age: {
+          $dateDiff: {
+            startDate: {
+              $dateFromString: {
+                dateString: '$birthDate',
+              },
+            },
+            endDate: '$$NOW',
+            unit: 'year',
+          },
+        },
+      },
+    },
+    { $match: query },
+  ];
+  return pipeline;
+};
+
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await Postulant.paginate(query, { page, limit });
+  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query));
+  const { docs, ...pagination } = await Postulant.aggregatePaginate(postulantAggregate, {
+    page,
+    limit,
+  });
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of postulants.',

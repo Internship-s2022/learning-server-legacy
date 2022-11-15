@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface PostulantType {
   _id?: mongoose.Types.ObjectId;
@@ -12,6 +12,8 @@ export interface PostulantType {
   phone: string;
   isActive: boolean;
 }
+
+type PostulantDocument = PostulantType & mongoose.Document;
 
 const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
   {
@@ -53,9 +55,9 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
   { timestamps: true },
 );
 
-postulantSchema.plugin(paginate);
+postulantSchema.plugin(aggregatePaginate);
 
-export default mongoose.model<PostulantType, mongoose.PaginateModel<PostulantType>>(
+export default mongoose.model<PostulantType, mongoose.AggregatePaginateModel<PostulantDocument>>(
   'Postulant',
   postulantSchema,
 );
