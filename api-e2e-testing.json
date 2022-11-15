@@ -1,0 +1,2281 @@
+{
+	"info": {
+		"_postman_id": "aa504c41-72f1-4280-8187-a08ea376478e",
+		"name": "RadiumLearning API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23577583"
+	},
+	"item": [
+		{
+			"name": "SuperAdmin",
+			"item": [
+				{
+					"name": "Create 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.unset(\"firstName\");",
+									"pm.collectionVariables.unset(\"firstNames\");",
+									"pm.collectionVariables.unset(\"lastName\");",
+									"pm.collectionVariables.unset(\"lastNames\");",
+									"pm.collectionVariables.unset(\"email\");",
+									"pm.collectionVariables.unset(\"emails\");",
+									"",
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if unauthorized token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\");",
+									"    pm.expect(responseJson.error).to.eql(true)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Firebase Token User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200.\", ()=>{",
+									"    pm.collectionVariables.set(\"id_token_User\", pm.response.json().idToken);",
+									"})",
+									"pm.test (\"Body if User successfully logued in.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.kind).to.eql(\"identitytoolkit#VerifyPasswordResponse\")",
+									"    pm.expect(responseJson.localId).to.have.lengthOf(28);",
+									"    pm.expect(responseJson.email).to.eql(\"franco.marini@radiumrocket.com\");",
+									"    pm.expect(responseJson.idToken).to.have.lengthOf(1017);",
+									"    pm.expect(responseJson.registered).to.eql(true);",
+									"    pm.expect(responseJson.refreshToken).to.have.lengthOf(247);",
+									"    pm.expect(responseJson.expiresIn).to.eql(\"3600\");   ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"returnSecureToken\": \"true\",\n\"email\": \"{{User_Intern_Account}}\",\n\"password\": \"{{User_Intern_Password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Toolkit_URL}} {{Toolkit_Key}}",
+							"host": [
+								"{{Toolkit_URL}} {{Toolkit_Key}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Firebase Token Super Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200.\", ()=>{",
+									"    pm.collectionVariables.set(\"id_token_SuperAdmin\", pm.response.json().idToken);",
+									"})",
+									"pm.test (\"Body if Superadmin successfully logued in.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.kind).to.eql(\"identitytoolkit#VerifyPasswordResponse\")",
+									"    pm.expect(responseJson.localId).to.have.lengthOf(28);",
+									"    pm.expect(responseJson.email).to.eql(\"super.admin@radiumrocket.com\");",
+									"    pm.expect(responseJson.idToken).to.have.lengthOf(994);",
+									"    pm.expect(responseJson.registered).to.eql(true);",
+									"    pm.expect(responseJson.refreshToken).to.have.lengthOf(247);",
+									"    pm.expect(responseJson.expiresIn).to.eql(\"3600\");   ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{Superadmin_Account}}\",\n  \"password\": \"{{Superadmin_Password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Toolkit_URL}} {{Toolkit_Key}}",
+							"host": [
+								"{{Toolkit_URL}} {{Toolkit_Key}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if unauthorized token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if deprecated token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create 400 | Bad Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const firstNames = pm.collectionVariables.get(\"firstNames\");\r",
+									"const firstName = pm.collectionVariables.get(\"firstName\");\r",
+									"const lastNames = pm.collectionVariables.get(\"lastNames\");\r",
+									"const lastName = pm.collectionVariables.get(\"lastName\");\r",
+									"const emails = pm.collectionVariables.get(\"emails\");\r",
+									"const email = pm.collectionVariables.get(\"email\");\r",
+									"\r",
+									"if (firstNames && firstNames.length && emails > 0){\r",
+									"    postman.setNextRequest(\"Create 400 | Bad Request\");\r",
+									"} else {\r",
+									"    postman.setNextRequest(\"Create 201 | Success\");\r",
+									"}\r",
+									"\r",
+									"if (firstName == \"b\") {\r",
+									"    pm.test (\"Body message if invalid name due to short length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must contain more than 3 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (firstName == 123){\r",
+									"    pm.test (\"Body message if invalid name due to the use of numbers.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must contain only letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (firstName == \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\"){\r",
+									"        pm.test (\"Body message if invalid name due to long length\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must not contain more than 50 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}\r",
+									"\r",
+									"if (lastName == \"a\") {\r",
+									"    pm.test (\"Body message if invalid Last name due to short length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must contain more than 3 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (lastName == 123){\r",
+									"    pm.test (\"Body message if invalid last name due to use of numbers.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must contain only letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (lastName == \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\"){\r",
+									"        pm.test (\"Body message if invalid last name due to long length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must not contain more than 50 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}\r",
+									"\r",
+									"if (email == \"the.super.adminradiumrocket.com\") {\r",
+									"    pm.test (\"Body message if invalid email due to invalid format. (1)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"@radiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to invalid format. (2)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.admin@radiumrocket\"){\r",
+									"        pm.test (\"Body message if invalid email due to invalid format. (3)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.adminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadmin@radiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to long length before the @.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Longer possible email is 64 characters + @ + 255 characters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.admin@radiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to long length after the @.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Longer possible email is 64 characters + @ + 255 characters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}    \r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code should be 400\", ()=>{\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let firstNames = pm.collectionVariables.get(\"firstNames\");\r",
+									"let lastNames = pm.collectionVariables.get(\"lastNames\");\r",
+									"let emails = pm.collectionVariables.get(\"emails\");\r",
+									"\r",
+									"\r",
+									"if (!firstNames || firstNames.length == 0) {\r",
+									"    firstNames = [\"aaaa\", \"b\", \"cccc\", \"123\", \"eeee\",\"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\",\"gggg\",\"gggg\",\"gggg\",\"gggg\",\"gggg\"];\r",
+									"}\r",
+									"\r",
+									"if (!lastNames || lastNames.length == 0) {\r",
+									"    lastNames = [\"a\", \"bbbb\", \"123\", \"dddd\", \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\", \"ffff\",\"gggg\",\"gggg\",\"gggg\",\"gggg\",\"gggg\"];\r",
+									"}\r",
+									"if (!emails || emails.length == 0) {\r",
+									"    emails = [\"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"the.super.adminradiumrocket.com\",\"@radiumrocket.com\",\"the.super.admin@radiumrocket\",\"the.super.adminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadmin@radiumrocket.com\",\"the.super.admin@radiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocket.com\"];\r",
+									"}\r",
+									"\r",
+									"let currentFirstName = firstNames.shift();\r",
+									"pm.collectionVariables.set(\"firstName\", currentFirstName);\r",
+									"pm.collectionVariables.set(\"firstNames\", firstNames);\r",
+									"\r",
+									"let currentlastName = lastNames.shift();\r",
+									"pm.collectionVariables.set(\"lastName\", currentlastName);\r",
+									"pm.collectionVariables.set(\"lastNames\", lastNames);\r",
+									"\r",
+									"let currentemail = emails.shift();\r",
+									"pm.collectionVariables.set(\"email\", currentemail);\r",
+									"pm.collectionVariables.set(\"emails\", emails);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"isActive\": false\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create 201 | Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 201.\", ()=>{\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.collectionVariables.set(\"id_SuperAdmin\", pm.response.json().data._id);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Super admin successfully created\")\r",
+									"    pm.expect(responseJson.data.firebaseUid.length).to.eql(28)\r",
+									"    pm.expect(responseJson.data.firstName).to.eql(\"Super Admin\")\r",
+									"    pm.expect(responseJson.data.lastName).to.eql(\"Test\")\r",
+									"    pm.expect(responseJson.data.isActive).to.eql(true)\r",
+									"    pm.expect(responseJson.data._id.length).to.eql(24)\r",
+									"    pm.expect(responseJson.error).to.eql(false)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": true\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create 400 | Already existing SA",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 400.\", ()=>{\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin with an already existing email.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"The email address is already in use by another Superadmin\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": true\n}\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if no token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if unauthorized token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if deprecated token.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all 204 | No content to return",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should not be 204.\", ()=>{",
+									"    pm.response.to.not.have.status(204);",
+									"})",
+									"pm.test(\"Response time is less than 800.\" , () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)",
+									"})",
+									"pm.test (\"Body message if there is no content to return.\", () => {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.not.eql(\"Empty Database. There is no content to return.\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all 200 | Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200.\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Showing the list of super admins.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if no token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if unauthorized token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if deprecated token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id 404 | Id Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 404.\", ()=>{\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if Super Admin does not exist.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Could not found the super admin with id 634ec207ca20e6dd7d5010cd.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "634ec207ca20e6dd7d5010cd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id 200 | Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200.\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"The super admin has been successfully found.\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.unset(\"firstName\");\r",
+									"pm.collectionVariables.unset(\"firstNames\");\r",
+									"pm.collectionVariables.unset(\"lastName\");\r",
+									"pm.collectionVariables.unset(\"lastNames\");\r",
+									"pm.collectionVariables.unset(\"email\");\r",
+									"pm.collectionVariables.unset(\"emails\");\r",
+									"\r",
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})\r",
+									"pm.test (\"Body message if no token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})\r",
+									"pm.test (\"Body message if unauthorized token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})\r",
+									"pm.test (\"Body message if deprecated token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test\",\n    \"email\": \"Super.Admin.Test@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 400 | Bad Request Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const firstNames = pm.collectionVariables.get(\"firstNames\");\r",
+									"const firstName = pm.collectionVariables.get(\"firstName\");\r",
+									"const lastNames = pm.collectionVariables.get(\"lastNames\");\r",
+									"const lastName = pm.collectionVariables.get(\"lastName\");\r",
+									"const emails = pm.collectionVariables.get(\"emails\");\r",
+									"const email = pm.collectionVariables.get(\"email\");\r",
+									"\r",
+									"if (firstNames && firstNames.length && emails > 0){\r",
+									"    postman.setNextRequest(\"Update 400 | Bad Request\");\r",
+									"} else {\r",
+									"    postman.setNextRequest(\"Update 400 | Already existing SA\");\r",
+									"}\r",
+									"\r",
+									"if (firstName == \"b\") {\r",
+									"    pm.test (\"Body message if invalid name due to short length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must contain more than 3 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (firstName == 123){\r",
+									"    pm.test (\"Body message if invalid name due to the use of numbers.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must contain only letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (firstName == \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\"){\r",
+									"        pm.test (\"Body message if invalid name due to long length\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid name, it must not contain more than 50 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}\r",
+									"\r",
+									"if (lastName == \"a\") {\r",
+									"    pm.test (\"Body message if invalid Last name due to short length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must contain more than 3 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (lastName == 123){\r",
+									"    pm.test (\"Body message if invalid last name due to use of numbers.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must contain only letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (lastName == \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\"){\r",
+									"        pm.test (\"Body message if invalid last name due to long length.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid last name, it must not contain more than 50 letters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}\r",
+									"\r",
+									"if (email == \"the.super.adminradiumrocket.com\") {\r",
+									"    pm.test (\"Body message if invalid email due to invalid format. (1)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"@radiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to invalid format. (2)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.admin@radiumrocket\"){\r",
+									"        pm.test (\"Body message if invalid email due to invalid format. (3)\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Invalid email format.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.adminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadmin@radiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to long length before the @.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Longer possible email is 64 characters + @ + 255 characters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"} else if (email == \"the.super.admin@radiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocket.com\"){\r",
+									"    pm.test (\"Body message if invalid email due to long length after the @.\", () => {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson.message).to.eql(\"Longer possible email is 64 characters + @ + 255 characters.\")\r",
+									"        pm.expect(responseJson.error).to.eql(true)\r",
+									"    })\r",
+									"}    \r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code should be 400\", ()=>{\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let firstNames = pm.collectionVariables.get(\"firstNames\");\r",
+									"let lastNames = pm.collectionVariables.get(\"lastNames\");\r",
+									"let emails = pm.collectionVariables.get(\"emails\");\r",
+									"\r",
+									"\r",
+									"if (!firstNames || firstNames.length == 0) {\r",
+									"    firstNames = [\"aaaa\", \"b\", \"cccc\", \"123\", \"eeee\",\"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\",\"gggg\",\"gggg\",\"gggg\",\"gggg\",\"gggg\"];\r",
+									"}\r",
+									"\r",
+									"if (!lastNames || lastNames.length == 0) {\r",
+									"    lastNames = [\"a\", \"bbbb\", \"123\", \"dddd\", \"abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcde\", \"ffff\",\"gggg\",\"gggg\",\"gggg\",\"gggg\",\"gggg\"];\r",
+									"}\r",
+									"if (!emails || emails.length == 0) {\r",
+									"    emails = [\"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"aaaa@radiumrocket.com\", \"the.super.adminradiumrocket.com\",\"@radiumrocket.com\",\"the.super.admin@radiumrocket\",\"the.super.adminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadminadmin@radiumrocket.com\",\"the.super.admin@radiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocketradiumrocket.com\"];\r",
+									"}\r",
+									"\r",
+									"let currentFirstName = firstNames.shift();\r",
+									"pm.collectionVariables.set(\"firstName\", currentFirstName);\r",
+									"pm.collectionVariables.set(\"firstNames\", firstNames);\r",
+									"\r",
+									"let currentlastName = lastNames.shift();\r",
+									"pm.collectionVariables.set(\"lastName\", currentlastName);\r",
+									"pm.collectionVariables.set(\"lastNames\", lastNames);\r",
+									"\r",
+									"let currentemail = emails.shift();\r",
+									"pm.collectionVariables.set(\"email\", currentemail);\r",
+									"pm.collectionVariables.set(\"emails\", emails);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"email\": \"{{email}}\",\n    \"isActive\": false\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 400 | Already existing SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 400.\", ()=>{\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin with an already existing email.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"The email address is already in use by another Superadmin\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"firstName\": \"Super\",\n        \"lastName\": \"Admin\",\n        \"email\": \"{{Superadmin_Account}}\",\n        \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update 200 | Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"The super admin has been successfully updated.\")\r",
+									"    pm.expect(responseJson.data.firebaseUid.length).to.eql(28)\r",
+									"    pm.expect(responseJson.data.firstName).to.eql(\"Super Admin\")\r",
+									"    pm.expect(responseJson.data.lastName).to.eql(\"Test Editado\")\r",
+									"    pm.expect(responseJson.data.isActive).to.eql(true)\r",
+									"    pm.expect(responseJson.data._id.length).to.eql(24)\r",
+									"    pm.expect(responseJson.error).to.eql(false)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Super Admin\",\n    \"lastName\": \"Test Editado\",\n    \"email\": \"Super.Admin.Test.Editado@radiumrocket.com\",\n    \"password\": \"SATest123\",\n    \"isActive\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if no token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})\r",
+									"pm.test (\"Body message if unauthorized token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 200 | Succes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 200.\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"The super admin has been successfully deleted.\")\r",
+									"    pm.expect(responseJson.data.isActive).to.eql(false)\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 400 | Bad Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 400.\", ()=>{\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"This super admin has already been disabled.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 404 | Not existing SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 404\", ()=>{\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"The super admin was not found.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5e063109a88495b68758ccd1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"Unauthorized. Provide a token.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | Unauthorized Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									"})\r",
+									"pm.test (\"Body message if unauthorized token.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Unauthorized. You must have permission to access.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_User}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 401 | Deprecated Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401.\", ()=>{\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800.\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin.\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"Unauthorized. Firebase ID token has expired.\")\r",
+									"    pm.expect(responseJson.error).to.eql(true)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_deprecated}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 200 | Succes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let idToDelete = pm.collectionVariables.get(\"id_SuperAdmin\");\r",
+									"\r",
+									"pm.test(\"Status code should be 200\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if deleted Super Admin\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"The super admin with id \" + idToDelete + \" has been successfully deleted.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logical Delete 404 | Not existing SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let idToDelete = pm.collectionVariables.get(\"id_SuperAdmin\");\r",
+									"\r",
+									"pm.test(\"Status code should be 404\", ()=>{\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"pm.test(\"Response time is less than 800\" , () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1600)\r",
+									"})\r",
+									"pm.test (\"Body message if created Super Admin\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"     pm.expect(responseJson.message).to.eql(\"Super admin with id \" + idToDelete + \" was not found.\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{id_token_SuperAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}{{Superadmin}}/:id",
+							"host": [
+								"{{API_URL}}{{Superadmin}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id_SuperAdmin}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "https://test.learning.server.radiumrocket.com",
+			"type": "string"
+		},
+		{
+			"key": "id_token_deprecated",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ3YjE5MTI0MGZjZmYzMDdkYzQ3NTg1OWEyYmUzNzgzZGMxYWY4OWYiLCJ0eXAiOiJKV1QifQ.eyJ1c2VyVHlwZSI6IlNVUEVSX0FETUlOIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3JhZGl1bS1sZWFybmluZy10ZXN0IiwiYXVkIjoicmFkaXVtLWxlYXJuaW5nLXRlc3QiLCJhdXRoX3RpbWUiOjE2Njc5MzY2OTcsInVzZXJfaWQiOiJNNU1Dekc1YUNLcGYwQjdxcE5Oc2k4UnlqTjEwIiwic3ViIjoiTTVNQ3pHNWFDS3BmMEI3cXBOTnNpOFJ5ak4xMCIsImlhdCI6MTY2NzkzNjY5NywiZXhwIjoxNjY3OTQwMjk3LCJlbWFpbCI6InN1cGVyLmFkbWluQHJhZGl1bXJvY2tldC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsic3VwZXIuYWRtaW5AcmFkaXVtcm9ja2V0LmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.eEW1HDUgQw9zqzE0hDP4KZ7c9-1t1lqIyyTMrTGxccDfYpFz3CseuIJ4kIy-KhbrY2tHXE82fwvN3azkY-5XFu89EgZ-bkIEHQD3t886AuWeSbK5Drr8HVC6Gxh6PwODGwbd7bnUhJ8DXqOqeiv5qBr3tZLhzgecentzmfdvfNa4fk2_WzwDuHnNwf3LxfqahZtWgrTba9OJrpflMOC-KTsLHfMTCnQBzmkpSlN9BdWsvTXiYAVTwDRfD-QezAenuJr4z51kotxDwPIDAy5-ro0m0nhDBuCFQowl2kzUPyod8HALWhw3GCWAdZGmfQftboFw46WO-n5Vx6aL5UpKCQ"
+		},
+		{
+			"key": "Toolkit_URL",
+			"value": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
+			"type": "string"
+		},
+		{
+			"key": "Toolkit_Key",
+			"value": "AIzaSyDAeTQsjcg83FZVZwSSjvR2UyD544Ii4ns",
+			"type": "string"
+		},
+		{
+			"key": "Superadmin",
+			"value": "/super-admin",
+			"type": "string"
+		},
+		{
+			"key": "User",
+			"value": "/user",
+			"type": "string"
+		},
+		{
+			"key": "Superadmin_Account",
+			"value": "super.admin@radiumrocket.com",
+			"type": "string"
+		},
+		{
+			"key": "Superadmin_Password",
+			"value": "Passw0rd1234",
+			"type": "string"
+		},
+		{
+			"key": "User_Intern_Account",
+			"value": "franco.marini@radiumrocket.com",
+			"type": "string"
+		},
+		{
+			"key": "User_Intern_Password",
+			"value": "password123",
+			"type": "string"
+		},
+		{
+			"key": "New_Superadmin_Account",
+			"value": "Superadmin.Test@radiumrocket.com",
+			"type": "string"
+		},
+		{
+			"key": "New_Superadmin_Password",
+			"value": "asdf1234",
+			"type": "string"
+		},
+		{
+			"key": "id_token_User",
+			"value": ""
+		},
+		{
+			"key": "id_token_SuperAdmin",
+			"value": ""
+		},
+		{
+			"key": "id_SuperAdmin",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "firstNames",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "lastNames",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "emails",
+			"value": ""
+		}
+	]
+}
