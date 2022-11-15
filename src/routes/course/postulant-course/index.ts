@@ -31,5 +31,10 @@ router.delete(
   firebaseValidations.superAdmin,
   postulantCourseControllers.physicalDeleteByCourseId,
 );
+router.get(
+  '/export/csv',
+  firebaseValidations.superAdmin,
+  postulantCourseControllers.exportToCsvByCourseId,
+);
 
 export default router;
