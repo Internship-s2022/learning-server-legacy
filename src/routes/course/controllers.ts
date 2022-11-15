@@ -133,7 +133,7 @@ const create = async (
     filterIncludeArrayOfIds(req.body.admissionTests.map((aTest) => aTest.toString())),
   );
   if (existingAdmissionTest?.length !== req.body.admissionTests.length) {
-    throw new CustomError(400, 'Does not exist an Admission test with that id');
+    throw new CustomError(400, 'Does not exist an Admission test with that id.');
   }
   try {
     CourseUser.insertMany(
@@ -172,7 +172,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (!course?.isActive) {
-    throw new CustomError(400, 'This course has already been disabled.');
+    throw new CustomError(404, 'Course has already been deleted.');
   }
   const result = await Course.findByIdAndUpdate(
     req.params.id,
@@ -183,7 +183,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The course has been successfully disabled.',
+      message: 'The course has been successfully deleted.',
       data: result,
       error: false,
     });
