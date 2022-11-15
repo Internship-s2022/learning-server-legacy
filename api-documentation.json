@@ -184,7 +184,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"MongoDB course\",\n    \"admissionTests\": [\n        \"1e063109a88495b45758c000\"\n    ],\n    \"inscriptionStartDate\": \"2023-05-03\",\n    \"inscriptionEndDate\": \"2023-06-03\",\n    \"startDate\": \"2023-07-03\",\n    \"endDate\": \"2023-08-03\",\n    \"description\": \"this is a description\",\n    \"type\": \"DEV\",\n    \"isInternal\": true,\n    \"isActive\": true\n}",
+              "raw": "{\n \"name\": \"MongoDB course\",\n \"admissionTests\": [\n \"1e063109a88495b45758c000\"\n ],\n \"inscriptionStartDate\": \"2023-05-03\",\n \"inscriptionEndDate\": \"2023-06-03\",\n \"startDate\": \"2023-07-03\",\n \"endDate\": \"2023-08-03\",\n \"description\": \"this is a description\",\n \"type\": \"EXPRESS\",\n \"isInternal\": true,\n \"isActive\": true,\n \"courseUsers\":[\n{\n \"user\": \"507f1f77bcf86cd799400001\",\n \"role\": \"TUTOR\",\n \"isActive\": true\n\n},\n{\n \"user\": \"507f1f77bcf86cd799400000\",\n \"role\": \"ADMIN\",\n \"isActive\": true\n}\n]\n}",
               "options": {
                 "raw": {
                   "language": "json"
