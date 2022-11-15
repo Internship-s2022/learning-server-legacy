@@ -31,7 +31,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   });
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of users',
+      message: 'Showing the list of users.',
       data: docs,
       pagination,
       error: false,
@@ -44,12 +44,12 @@ const getUserById = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id).populate({ path: 'postulant' });
   if (user) {
     return res.status(200).json({
-      message: 'The user has been successfully found',
+      message: 'The user has been successfully found.',
       data: user,
       error: false,
     });
   }
-  throw new CustomError(404, `Could not found the user with id ${req.params.id}`);
+  throw new CustomError(404, `Could not found the user with id ${req.params.id}.`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -58,11 +58,14 @@ const create = async (req: Request, res: Response) => {
   if (postulant?._id) {
     newMongoUser = await userCreation(req, req.body.postulant);
   } else {
-    throw new CustomError(400, `The postulant with the id of ${req.body.postulant} does not exist`);
+    throw new CustomError(
+      400,
+      `The postulant with the id of ${req.body.postulant} does not exist.`,
+    );
   }
 
   return res.status(201).json({
-    message: 'User successfully created',
+    message: 'User successfully created.',
     data: newMongoUser,
     error: false,
   });
@@ -86,17 +89,17 @@ const createManual = async (req: Request, res: Response) => {
   } else {
     const postulantById = await Postulant.findById(req.body.postulant);
     if (!postulantById?._id) {
-      throw new CustomError(404, 'The postulant id was not found');
+      throw new CustomError(404, 'The postulant id was not found.');
     }
     if (!(postulantById?.dni === req.body.dni)) {
-      throw new CustomError(404, 'The dni of the postulant must not change');
+      throw new CustomError(404, 'The dni of the postulant must not change.');
     }
     postulant = req.body.postulant;
   }
   const newMongoUser = await userCreation(req, postulant);
 
   return res.status(201).json({
-    message: 'User successfully created',
+    message: 'User successfully created.',
     data: newMongoUser,
     error: false,
   });
@@ -116,21 +119,24 @@ const update = async (req: Request, res: Response) => {
     }
     if (updatedUser) {
       return res.status(200).json({
-        message: 'The user has been successfully updated',
+        message: 'The user has been successfully updated.',
         data: updatedUser,
         error: false,
       });
     }
-    throw new CustomError(404, `User with id: ${req.params.id} was not found`);
+    throw new CustomError(404, `User with id: ${req.params.id} was not found.`);
   } else {
-    throw new CustomError(400, `The postulant with the id of ${req.body.postulant} does not exist`);
+    throw new CustomError(
+      400,
+      `The postulant with the id of ${req.body.postulant} does not exist.`,
+    );
   }
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user?.isActive === false) {
-    throw new CustomError(404, 'The user has already been deleted');
+    throw new CustomError(400, 'This user has already been disabled.');
   }
   const result = await User.findByIdAndUpdate(
     req.params.id,
@@ -144,12 +150,12 @@ const deleteById = async (req: Request, res: Response) => {
   }
   if (result) {
     return res.status(200).json({
-      message: 'The user has been successfully deleted',
+      message: 'The user has been successfully disabled.',
       data: result,
       error: false,
     });
   }
-  throw new CustomError(404, `User with id: ${req.params.id} was not found`);
+  throw new CustomError(404, `User with id: ${req.params.id} was not found.`);
 };
 
 const physicalDeleteById = async (req: Request, res: Response) => {
@@ -157,7 +163,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   if (result?.firebaseUid) {
     await firebase.auth().deleteUser(result.firebaseUid);
     return res.status(200).json({
-      message: `The user with id ${req.params.id} has been successfully deleted`,
+      message: `The user with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });

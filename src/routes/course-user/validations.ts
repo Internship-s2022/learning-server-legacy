@@ -11,8 +11,8 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
-          'string.pattern.base': 'Invalid course id, ObjectId expected',
-          'any.required': 'Course id is a required field',
+          'string.pattern.base': 'Invalid course id, ObjectId expected.',
+          'any.required': 'Course id is a required field.',
         }),
 
       user:
@@ -21,8 +21,8 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
               .pattern(/^[0-9a-fA-F]{24}$/)
               .required()
               .messages({
-                'string.pattern.base': 'Invalid user id, ObjectId expected',
-                'any.required': 'User id is a required field',
+                'string.pattern.base': 'Invalid user id, ObjectId expected.',
+                'any.required': 'User id is a required field.',
               })
           : Joi.string()
               .pattern(/^[0-9a-fA-F]{24}$/)
@@ -30,8 +30,8 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
                 'string.pattern.base': 'Invalid course id, ObjectId expected',
               }),
       role: Joi.string().required().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT').messages({
-        'any.only': 'The role must be one of: ADMIN, TUTOR, AUXILIARY or STUDENT',
-        'any.required': 'Role is a required field',
+        'any.only': 'The role must be one of: ADMIN, TUTOR, AUXILIARY or STUDENT.',
+        'any.required': 'Role is a required field.',
       }),
       isActive: Joi.boolean().messages({
         'any.required': 'Is active is required',
@@ -53,15 +53,15 @@ const courseUserDelete = (req: Request, res: Response, next: NextFunction) => {
       .pattern(/^[0-9a-fA-F]{24}$/)
       .required()
       .messages({
-        'string.pattern.base': 'Invalid course id, ObjectId expected',
-        'any.required': 'Course id is a required field',
+        'string.pattern.base': 'Invalid course id, ObjectId expected.',
+        'any.required': 'Course id is a required field.',
       }),
     user: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
       .required()
       .messages({
-        'string.pattern.base': 'Invalid user id, ObjectId expected',
-        'any.required': 'User id is a required field',
+        'string.pattern.base': 'Invalid user id, ObjectId expected.',
+        'any.required': 'User id is a required field.',
       }),
   });
 

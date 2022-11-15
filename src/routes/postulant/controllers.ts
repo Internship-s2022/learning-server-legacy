@@ -50,7 +50,7 @@ const getByDni = async (req: Request, res: Response) => {
   const postulant = await Postulant.findOne({ dni: req.params.dni });
   if (postulant) {
     return res.status(200).json({
-      message: 'The postulant has been successfully found',
+      message: 'The postulant has been successfully found.',
       data: postulant,
       error: false,
     });
@@ -92,7 +92,7 @@ const update = async (req: Request, res: Response) => {
       new: true,
     });
     return res.status(200).json({
-      message: 'Postulant successfully updated',
+      message: 'Postulant successfully updated.',
       data: updatedPostulant,
       error: false,
     });
@@ -103,7 +103,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.params.id);
   if (!postulant?.isActive) {
-    throw new CustomError(404, 'Postulant has already been deleted');
+    throw new CustomError(400, 'This postulant has already been disabled.');
   }
   const result = await Postulant.findByIdAndUpdate(
     req.params.id,
@@ -114,7 +114,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The postulant has been successfully deleted',
+      message: 'The postulant has been successfully disabled.',
       data: result,
       error: false,
     });
@@ -126,7 +126,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await Postulant.findByIdAndDelete(req.params.id);
   if (result) {
     return res.status(200).json({
-      message: `The postulant with id ${req.params.id} has been successfully deleted`,
+      message: `The postulant with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });

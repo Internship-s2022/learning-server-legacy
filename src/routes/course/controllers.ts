@@ -75,7 +75,7 @@ const getAll = async (req: Request, res: Response) => {
   });
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of courses',
+      message: 'Showing the list of courses.',
       data: docs,
       pagination,
       error: false,
@@ -88,7 +88,7 @@ const getById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
   if (course) {
     return res.status(200).json({
-      message: 'The course has been successfully found',
+      message: 'The course has been successfully found.',
       data: course,
       error: false,
     });
@@ -165,7 +165,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (!course?.isActive) {
-    throw new CustomError(404, 'Course has already been deleted');
+    throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(
     req.params.id,
@@ -176,7 +176,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The course has been successfully deleted',
+      message: 'The course has been successfully disabled.',
       data: result,
       error: false,
     });
@@ -188,7 +188,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await Course.findByIdAndDelete(req.params.id);
   if (result) {
     return res.status(200).json({
-      message: `The course with id ${req.params.id} has been successfully deleted`,
+      message: `The course with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });
