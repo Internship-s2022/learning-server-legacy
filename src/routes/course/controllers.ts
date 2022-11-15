@@ -7,6 +7,7 @@ import Course, { CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
+import { createDefaultRegistrationForm } from 'src/utils/default-registration-form';
 import {
   filterByIncludes,
   filterIncludeArrayOfIds,
@@ -15,6 +16,38 @@ import {
 
 const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean }) => {
   const pipeline: PipelineStage[] = [
+    {
+      $addFields: {
+        status: {
+          $switch: {
+            branches: [
+              {
+                case: {
+                  $gte: ['$inscriptionStartDate', '$$NOW'],
+                },
+                then: 'SOON',
+              },
+              {
+                case: {
+                  $and: [
+                    { $lt: ['$inscriptionStartDate', '$$NOW'] },
+                    { $gte: ['$inscriptionEndDate', '$$NOW'] },
+                  ],
+                },
+                then: 'OPEN_INSCRIPTION',
+              },
+              {
+                case: {
+                  $and: [{ $lt: ['$startDate', '$$NOW'] }, { $gte: ['$endDate', '$$NOW'] }],
+                },
+                then: 'IN_PROGRESS',
+              },
+            ],
+            default: 'COMPLETED',
+          },
+        },
+      },
+    },
     {
       $lookup: {
         from: 'admissiontests',
@@ -86,6 +119,9 @@ const create = async (
   } catch {
     throw new CustomError(500, 'There was an error during the creation of the course.');
   }
+
+  await createDefaultRegistrationForm(newCourse._id);
+
   const existingUsers = await User.find(
     filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
   );
