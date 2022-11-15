@@ -35,9 +35,9 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
     location: Joi.string().min(3).max(50).required(),
     email: Joi.string()
       .required()
-      .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+      .pattern(/^[\w-.]{2,64}@([\w-]{1,255}\.)+[\w-]{2,4}$/)
       .messages({
-        'string.pattern.base': 'Invalid email format.',
+        'string.pattern.base': 'Longer possible email is 64 characters + @ + 255 characters',
       }),
     birthDate: Joi.date().max(cutoffDateMax).min(cutoffDateMin).required().messages({
       'date.max': 'You need to be more than 18 years old.',
