@@ -172,7 +172,7 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (!course?.isActive) {
-    throw new CustomError(404, 'Course has already been deleted.');
+    throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(
     req.params.id,
@@ -183,7 +183,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The course has been successfully deleted.',
+      message: 'The course has been successfully disabled.',
       data: result,
       error: false,
     });
