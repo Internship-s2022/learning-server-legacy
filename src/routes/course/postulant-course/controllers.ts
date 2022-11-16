@@ -10,7 +10,7 @@ import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
 import PostulantCourse, {
   AnswerType,
-  PopulatedPostulatCourseType,
+  PopulatedPostulantCourseType,
   PostulantCourseType,
 } from 'src/models/postulant-course';
 import Question from 'src/models/question';
@@ -38,19 +38,64 @@ const create = async (req: Request, res: Response) => {
       );
     }
 
-    const isRequired = async () => {
+    try {
+      const answers: AnswerType[] = req.body.answer;
       const enteredQuestions = await Question.find(
-        filterIncludeArrayOfIds(req.body.answer.map((a: AnswerType) => a.question.toString())),
+        filterIncludeArrayOfIds(answers.map((a: AnswerType) => a.question.toString())),
       );
-      const isRequired = req.body.answer.some(
-        (a: AnswerType) =>
-          enteredQuestions.find((q) => a.question == q._id)?.isRequired && !a.value,
-      );
-      return isRequired;
-    };
-
-    if (await isRequired()) {
-      throw new CustomError(400, 'All the required questions must be answered.');
+      answers.forEach((a) => {
+        const question = enteredQuestions.find((q) => a.question == q._id);
+        if (question?.isRequired && !a.value)
+          throw new CustomError(
+            400,
+            `The question with id ${question._id} is required and must be answered.`,
+          );
+        if (a.value) {
+          switch (question?.type) {
+            case 'SHORT_ANSWER':
+            case 'PARAGRAPH':
+              if (typeof a.value !== 'string')
+                throw new CustomError(
+                  400,
+                  `For the question with id ${question._id}, answer value must be a string.`,
+                );
+              break;
+            case 'MULTIPLE_CHOICES':
+            case 'DROPDOWN':
+              if (typeof a.value !== 'object' || a.value.length > 1)
+                throw new CustomError(
+                  400,
+                  `For the question with id ${question._id}, answer value must be an array of one string.`,
+                );
+              if (!question.options?.some((op) => a.value.includes(op.value)))
+                throw new CustomError(
+                  400,
+                  `Answer value must be one of the options: ${question.options?.map(
+                    (op) => op.value,
+                  )}.`,
+                );
+              break;
+            case 'CHECKBOXES':
+              if (typeof a.value !== 'object')
+                throw new CustomError(
+                  400,
+                  `For this question with id ${question._id}, answer value must be an array one or many strings.`,
+                );
+              if (!question.options?.some((op) => a.value.includes(op.value)))
+                throw new CustomError(
+                  400,
+                  `Answer value must be one of the options: ${question.options?.map(
+                    (op) => op.value,
+                  )}.`,
+                );
+              break;
+            default:
+              break;
+          }
+        }
+      });
+    } catch (err: any) {
+      throw new Error(err.message);
     }
     const setAdmissionResults = await AdmissionResult.insertMany(
       course.admissionTests.map((item) => ({
@@ -173,7 +218,7 @@ const getPostulantBasedOnCoursePipeline = (
     : { $match: query },
 ];
 
-const getCorrected = (docs: PopulatedPostulatCourseType[]) => {
+const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
   return docs.reduce(
     (prev = [{}], obj, index) => {
       let correctedTests = {};
@@ -230,7 +275,7 @@ const getByCourseId = async (req: Request, res: Response) => {
 const correctTests = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.courseId);
   const updatedPostulations = [];
-  let updatedPostulantCourse: PopulatedPostulatCourseType | null;
+  let updatedPostulantCourse: PopulatedPostulantCourseType | null;
   if (course?._id) {
     try {
       for (let i = 0; i < req.body.length; i++) {
@@ -241,18 +286,19 @@ const correctTests = async (req: Request, res: Response) => {
           });
           if (postulantCourse) {
             for (let j = 0; j < req.body[i].scores.length; j++) {
-              const notBelong = postulantCourse.admissionResults.some(
-                (ar) => ar._id.toString() != req.body[i].scores[j].admissionTestResult,
+              const notBelong = req.body[i].scores.some(
+                (item: { admissionResult: Types.ObjectId }) =>
+                  !postulantCourse.admissionResults.includes(item.admissionResult),
               );
               if (notBelong) {
                 throw new CustomError(
                   400,
-                  `The admissionTestResult with id ${req.body[i].scores[j].admissionTestResult} does not belong to the postulant with id ${req.body[i].postulantId}.`,
+                  `One of the admissionResult id does not belong to the postulation with id ${postulantCourse._id}.`,
                 );
               }
               await AdmissionResult.findOneAndUpdate(
                 {
-                  _id: req.body[i].scores[j].admissionTestResult,
+                  _id: req.body[i].scores[j].admissionResult,
                 },
                 { score: req.body[i].scores[j].score },
                 { new: true },
