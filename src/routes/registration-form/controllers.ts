@@ -48,6 +48,11 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const formName = await RegistrationForm.findOne({ title: req.body.title });
+
+  if (formName?.title) {
+    throw new CustomError(400, `An registration form with name ${req.body.title} already exists.`);
+  }
   const registrationForm = new RegistrationForm<RegistrationFormType>({
     course: req.body.course,
     title: req.body.title,

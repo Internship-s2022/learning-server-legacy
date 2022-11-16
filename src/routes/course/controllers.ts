@@ -87,6 +87,7 @@ const getAll = async (req: Request, res: Response) => {
 
 const getById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
+
   if (course) {
     return res.status(200).json({
       message: 'The course has been successfully found.',
@@ -101,6 +102,10 @@ const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
   res: Response<ResponseBody<CourseType>>,
 ) => {
+  const courseName = await Course.findOne({ name: req.body.name });
+  if (courseName?.name) {
+    throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+  }
   let newCourse: CourseType | undefined;
   try {
     const course = new Course<CourseType>({
