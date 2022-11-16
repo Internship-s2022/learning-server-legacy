@@ -15,18 +15,38 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
         'any.required': 'Postulant id is a required field.',
       }),
     admissionResults: Joi.array(),
-    answer: Joi.array().items(
-      Joi.object<AnswerType>({
-        question: Joi.string()
-          .pattern(/^[0-9a-fA-F]{24}$/)
-          .required()
-          .messages({
-            'string.pattern.base': 'Invalid question id, ObjectId expected.',
-            'any.required': 'Question id is a required field.',
-          }),
-        value: Joi.string().allow(null),
+    answer: Joi.array()
+      .items(
+        Joi.object<AnswerType>({
+          question: Joi.string()
+            .pattern(/^[0-9a-fA-F]{24}$/)
+            .required()
+            .messages({
+              'string.pattern.base': 'Invalid question id, ObjectId expected.',
+              'string.empty': 'Question id is not allowed to be empty.',
+              'any.required': 'Question id is a required field.',
+            }),
+          value: [
+            Joi.string().allow(null).messages({
+              'string.empty': 'Value is not allowed to be empty.',
+            }),
+            Joi.array().items(Joi.string()).messages({
+              'string.base': 'Invalid value array. It must contain only elements of type string.',
+              'string.empty': 'Value is not allowed to be an empty array.',
+            }),
+          ],
+        }).messages({
+          'alternatives.types': 'Invalid value. It must be a string or an array of strings.',
+        }),
+      )
+      .unique('question')
+      .required()
+      .messages({
+        'array.base': 'Answer field must be an array.',
+        'array.unique': 'Question id repeated. There should not be two similar QuestionIds.',
+        'array.includesRequiredUnknowns': 'Answer should include question id field.',
+        'any.required': 'Answer is a required field.',
       }),
-    ),
     view: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
       .required()
@@ -39,53 +59,63 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
   const validation = validateCreation.validate(req.body);
 
   if (validation.error) {
+    console.log(validation.error);
     throw new CustomError(400, validation.error.details[0].message);
   }
   return next();
 };
 
 const validateCorrection = (req: Request, res: Response, next: NextFunction) => {
-  const validateCorrection = Joi.array().items(
-    Joi.object({
-      postulantId: Joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .messages({
-          'string.pattern.base': 'Invalid postulant id, ObjectId expected.',
-          'any.required': 'Postulant id is a required field.',
-        }),
-      scores: Joi.array()
-        .items(
-          Joi.object({
-            admissionTestResult: Joi.string()
-              .pattern(/^[0-9a-fA-F]{24}$/)
+  const validateCorrection = Joi.array()
+    .items(
+      Joi.object({
+        postulantId: Joi.string()
+          .pattern(/^[0-9a-fA-F]{24}$/)
+          .required()
+          .messages({
+            'string.pattern.base': 'Invalid postulant id, ObjectId expected.',
+            'string.empty': 'Postulant is not allowed to be empty.',
+            'any.required': 'Postulant id is a required field.',
+          }),
+        scores: Joi.array()
+          .items(
+            Joi.object({
+              admissionResult: Joi.string()
+                .pattern(/^[0-9a-fA-F]{24}$/)
+                .required()
+                .messages({
+                  'string.pattern.base': 'Invalid admission result id, ObjectId expected.',
+                  'string.empty': 'Admission result is not allowed to be empty.',
+                  'any.required': 'Admission result id is a required field inside Scores array.',
+                }),
+              score: Joi.number().min(0).max(10).required().messages({
+                'number.min': 'The score must be a positive number.',
+                'number.max': 'The score must be lower than 10.',
+                'any.required': 'Score is a required field inside Scores array.',
+              }),
+            })
               .required()
               .messages({
-                'string.pattern.base': 'Invalid admission result id, ObjectId expected.',
-                'any.required': 'Admission result id is a required field inside Scores array.',
+                'object.base':
+                  'Scores must contain an object with two fields: admissionResult and score.',
               }),
-            score: Joi.number().min(0).max(10).required().messages({
-              'number.min': 'The score must be a positive number.',
-              'number.max': 'The score must be lower than 10.',
-              'any.required': 'Score is a required field inside Scores array.',
-            }),
-          })
-            .required()
-            .messages({
-              'object.base':
-                'Scores must contain an object with two fields: admissionTestResult and score.',
-            }),
-        )
-        .required()
-        .messages({
-          'array.base': 'Scores must be an array.',
-          'array.includesRequiredUnknowns':
-            'Scores should include two fields: admissionTestResult and score.',
-          'any.required': 'Scores is a required field.',
-        }),
-    }),
-  );
-
+          )
+          .unique('admissionResult')
+          .required()
+          .messages({
+            'array.base': 'Scores must be an array.',
+            'array.unique':
+              'Admission test result id repeated. There should not be two similar ids.',
+            'array.includesRequiredUnknowns':
+              'Scores should include two fields: admissionResult and score.',
+            'any.required': 'Scores is a required field.',
+          }),
+      }),
+    )
+    .unique('postulantId')
+    .messages({
+      'array.unique': 'Postulant id repeated. There should not be two similar postulantIds.',
+    });
   const validation = validateCorrection.validate(req.body);
 
   if (validation.error) {
@@ -103,6 +133,7 @@ const validatePromotion = (req: Request, res: Response, next: NextFunction) => {
           .required()
           .messages({
             'string.pattern.base': 'Invalid postulant id, ObjectId expected.',
+            'string.empty': 'Postulant is not allowed to be empty.',
             'any.required': 'PostulantId is a required field.',
           }),
       })
@@ -111,8 +142,10 @@ const validatePromotion = (req: Request, res: Response, next: NextFunction) => {
           'object.base': 'The array must contain only objects.',
         }),
     )
+    .unique('postulantId')
     .messages({
       'array.base': 'The data must be an array.',
+      'array.unique': 'Postulant id repeated. There should not be two similar postulantIds.',
       'array.includesRequiredUnknowns': 'The data should include at least one postulant id.',
     });
 

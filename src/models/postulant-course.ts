@@ -1,13 +1,16 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
+import { PopulatedAdmissionResultType } from './admission-result';
+import { CourseType } from './course';
+import { PostulantType } from './postulant';
+
 export interface AnswerType {
   _id?: mongoose.Types.ObjectId;
   question: mongoose.Types.ObjectId;
-  value: string;
+  value: string | string[];
   isActive: boolean;
 }
-
 export interface PostulantCourseType {
   _id?: mongoose.Types.ObjectId;
   course: mongoose.Types.ObjectId;
@@ -15,7 +18,15 @@ export interface PostulantCourseType {
   answer: AnswerType[];
   admissionResults: mongoose.Types.ObjectId[];
   view: mongoose.Types.ObjectId;
-  isActive: boolean;
+}
+
+export interface PopulatedPostulantCourseType {
+  _id?: mongoose.Types.ObjectId;
+  course: CourseType;
+  postulant: PostulantType;
+  answer: AnswerType[];
+  admissionResults: PopulatedAdmissionResultType[];
+  view: mongoose.Types.ObjectId;
 }
 
 interface PostulantCourseDocument extends PostulantCourseType, Document {
@@ -51,21 +62,14 @@ const PostulantCourseSchema = new Schema<PostulantCourseType, Model<PostulantCou
           ref: 'Question',
         },
         value: {
-          type: String,
-          required: true,
+          type: Schema.Types.Mixed,
+          default: null,
         },
-        isActive: {
-          type: Boolean,
-          required: true,
-        },
+        _id: false,
       },
     ],
     view: {
       type: Schema.Types.ObjectId,
-      required: true,
-    },
-    isActive: {
-      type: Boolean,
       required: true,
     },
   },
