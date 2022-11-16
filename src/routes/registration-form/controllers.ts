@@ -48,8 +48,7 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const formName = await RegistrationForm.findOne({ title: req.body.title });
-
+  const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
   if (formName?.title) {
     throw new CustomError(400, `An registration form with name ${req.body.title} already exists.`);
   }
@@ -69,6 +68,10 @@ const create = async (req: Request, res: Response) => {
 };
 
 const updateById = async (req: Request, res: Response) => {
+  const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
+  if (formName?.title) {
+    throw new CustomError(400, `A registration form with name ${req.body.title} already exists.`);
+  }
   const updatedRegistrationForm = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
     req.body,
