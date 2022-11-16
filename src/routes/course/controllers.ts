@@ -170,7 +170,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
-  if (!course?.isActive) {
+  if (course?.isActive === false) {
     throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(

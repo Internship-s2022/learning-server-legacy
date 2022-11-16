@@ -102,7 +102,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.params.id);
-  if (!postulant?.isActive) {
+  if (postulant?.isActive === false) {
     throw new CustomError(400, 'This postulant has already been disabled.');
   }
   const result = await Postulant.findByIdAndUpdate(

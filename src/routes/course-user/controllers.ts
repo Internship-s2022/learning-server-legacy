@@ -170,7 +170,7 @@ const disableByUserId = async (req: Request, res: Response) => {
       user: req.body.user,
       course: req.body.course,
     });
-    if (!courseUser?.isActive) {
+    if (courseUser?.isActive === false) {
       throw new CustomError(400, 'This user has already been disabled from the course.');
     }
     if (courseUser) {

@@ -98,7 +98,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const superAdmin = await SuperAdmin.findById(req.params.id);
-  if (!superAdmin?.isActive) {
+  if (superAdmin?.isActive === false) {
     throw new CustomError(400, 'This super admin has already been disabled.');
   }
   const result = await SuperAdmin.findByIdAndUpdate(

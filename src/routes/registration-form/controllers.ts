@@ -88,7 +88,7 @@ const updateById = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
-  if (!registrationForm?.isActive) {
+  if (registrationForm?.isActive === false) {
     throw new CustomError(400, 'This registration form has already been disabled.');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
