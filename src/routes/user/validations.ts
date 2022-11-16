@@ -76,7 +76,7 @@ const userManualValidation = (req: Request, res: Response, next: NextFunction) =
       .required()
       .pattern(/^[\w-.]{2,64}@([\w-]{1,255}\.)+[\w-]{2,4}$/)
       .messages({
-        'string.pattern.base': 'Longer possible email is 64 characters + @ + 255 characters.',
+        'string.pattern.base': 'Invalid email format.',
       }),
     dni: Joi.string()
       .min(6)
