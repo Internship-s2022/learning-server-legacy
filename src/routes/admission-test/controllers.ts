@@ -31,7 +31,7 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const admissionTest = await AdmissionTest.findOne({ name: req.body.name });
+  const admissionTest = await AdmissionTest.findOne({ name: req.body.name, isActive: true });
   if (!admissionTest?.name) {
     const newAdmissionTest = new AdmissionTest<AdmissionTestType>({
       name: req.body.name,
@@ -48,7 +48,7 @@ const create = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const admissionTest = await AdmissionTest.findOne({ name: req.body.name });
+  const admissionTest = await AdmissionTest.findOne({ name: req.body.name, isActive: true });
   if (!admissionTest?.name) {
     const updatedAdmissionTest = await AdmissionTest.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
