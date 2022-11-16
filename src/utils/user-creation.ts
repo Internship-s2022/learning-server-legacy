@@ -36,7 +36,7 @@ const userCreation = async (req: Request, postulantId: mongoose.Types.ObjectId) 
   } catch (err: any) {
     if (!req.body.postulant) await Postulant.findByIdAndDelete(postulantId);
     if (err?.errorInfo?.code === 'auth/email-already-exists') {
-      throw new CustomError(400, 'An user with this email already exists', {
+      throw new CustomError(400, 'The email address is already in use by another account', {
         ...err,
         type: 'EMAIL_ALREADY_EXISTS',
       });

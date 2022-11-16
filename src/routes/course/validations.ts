@@ -14,7 +14,6 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
     admissionTests: Joi.array().items(
       Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
-        .required()
         .messages({
           'string.pattern.base': 'Invalid admission test id, ObjectId expected.',
           'any.required': 'Admission tests id is a required field.',
