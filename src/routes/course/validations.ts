@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-import { CourseWithUsers } from 'src/models/course';
+import Course, { CourseWithUsers } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 
 const courseValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -102,4 +102,12 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
-export default { courseValidation };
+const courseId = async (req: Request, res: Response, next: NextFunction) => {
+  const course = await Course.findById(req.params.courseId);
+  if (!course) {
+    throw new CustomError(400, `Course with id ${req.params.courseId} was not found.`);
+  }
+  return next();
+};
+
+export default { courseValidation, courseId };

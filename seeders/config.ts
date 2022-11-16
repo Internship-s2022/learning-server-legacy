@@ -41,4 +41,8 @@ export default {
     remove: true,
     create: true,
   },
+  modules: {
+    remove: true,
+    create: true,
+  },
 };
