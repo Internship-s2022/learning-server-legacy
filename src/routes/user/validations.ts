@@ -12,7 +12,7 @@ const userValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object<UserType>({
     firebaseUid: Joi.string(),
     email: Joi.string()
-      .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+      .pattern(/^[\w-.]{2,64}@([\w-]{1,255}\.)+[\w-]{2,4}$/)
       .messages({
         'string.pattern.base': 'Invalid email format.',
       }),
@@ -74,7 +74,7 @@ const userManualValidation = (req: Request, res: Response, next: NextFunction) =
       }),
     email: Joi.string()
       .required()
-      .pattern(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
+      .pattern(/^[\w-.]{2,64}@([\w-]{1,255}\.)+[\w-]{2,4}$/)
       .messages({
         'string.pattern.base': 'Invalid email format.',
       }),

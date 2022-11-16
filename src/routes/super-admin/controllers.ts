@@ -73,6 +73,10 @@ const create = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
+  const superAdmin = await SuperAdmin.findOne({ email: req.body.email });
+  if (superAdmin) {
+    throw new CustomError(400, `Super Admin with email ${req.body.email} already exist.`);
+  }
   const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });

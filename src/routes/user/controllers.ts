@@ -180,6 +180,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         '_id',
         'isInternal',
         'isActive',
+        'email',
         'postulant._id',
         'postulant.firstName',
         'postulant.lastName',
@@ -187,7 +188,6 @@ const exportToCsv = async (req: Request, res: Response) => {
         'postulant.location',
         'postulant.dni',
         'postulant.phone',
-        'postulant.email',
       ],
     });
     if (csv) {
@@ -196,7 +196,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot find the list of users.');
+  throw new CustomError(404, 'There are no users to export');
 };
 
 export default {

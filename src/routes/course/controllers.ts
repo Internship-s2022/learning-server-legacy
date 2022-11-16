@@ -3,6 +3,7 @@ import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
 import { ResponseBody } from 'src/interfaces/response';
+import admissionTest from 'src/models/admission-test';
 import Course, { CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
@@ -128,6 +129,12 @@ const create = async (
   if (existingUsers?.length !== req.body.courseUsers.length) {
     throw new CustomError(400, 'Some of the users dont exist.');
   }
+  const existingAdmissionTest = await admissionTest.find(
+    filterIncludeArrayOfIds(req.body.admissionTests.map((aTest) => aTest.toString())),
+  );
+  if (existingAdmissionTest?.length !== req.body.admissionTests.length) {
+    throw new CustomError(400, 'Does not exist an Admission test with that id.');
+  }
   try {
     CourseUser.insertMany(
       req.body.courseUsers?.map((e) => ({
@@ -223,7 +230,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot export the list of courses.');
+  throw new CustomError(404, 'There are no courses to export.');
 };
 
 export default {

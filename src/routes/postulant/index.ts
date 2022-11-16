@@ -9,7 +9,12 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', firebaseValidations.superAdmin, postulantsControllers.getAll);
-router.get('/:dni', firebaseValidations.superAdmin, postulantsControllers.getByDni);
+router.get(
+  '/:dni',
+  globalValidations.validateDni,
+  firebaseValidations.superAdmin,
+  postulantsControllers.getByDni,
+);
 router.post(
   '/',
   firebaseValidations.superAdmin,
