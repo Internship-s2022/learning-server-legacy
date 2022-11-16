@@ -9,7 +9,7 @@ const superAdminValidation = (req: Request, res: Response, next: NextFunction) =
     email: Joi.string()
       .pattern(/^\w+([.-]?\w+)*@radiumrocket.com$/)
       .messages({
-        'string.pattern.base': 'Longer possible email is 64 characters + @ + 255 characters.',
+        'string.pattern.base': 'Invalid email format.',
       }),
     password: Joi.string()
       .min(8)
