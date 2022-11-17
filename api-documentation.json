@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "8f6d49a4-7af3-4028-8594-4d4dc9f9ca85",
+    "_postman_id": "c6f02916-723d-4030-8829-a3e0634e1d17",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -171,6 +171,209 @@
     {
       "name": "Course",
       "item": [
+        {
+          "name": "Module",
+          "item": [
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Module 1\",\n    \"description\": \"This is the first module\",\n    \"status\": \"PENDING\",\n    \"type\": \"DEV\",\n    \"groups\": [\n        \"1e063109a88495b45758c000\"\n    ],\n    \"contents\": [\n        \"Node JS\",\n        \"React\"\n    ],\n    \"isActive\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update by id",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Module 1\",\n    \"description\": \"This is the first module\",\n    \"status\": \"PENDING\",\n    \"type\": \"DEV\",\n    \"groups\": [\n        \"1e063109a88495b45758c000\",\n        \"1e063109a88495b45758c001\"\n    ],\n    \"contents\": [\n        \"Node JS 1\",\n        \"React\"\n    ],\n    \"isActive\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module/:moduleId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module", ":moduleId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "6375179a650676f3da006f40"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module/:moduleId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module", ":moduleId"],
+                  "query": [
+                    {
+                      "key": "isActive",
+                      "value": "false",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "637517380419a5552a9bcf99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logical delete by id",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module/:moduleId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module", ":moduleId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "637517380419a5552a9bcf99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/module/:moduleId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "module", ":moduleId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "637517380419a5552a9bcf99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Create",
           "request": {

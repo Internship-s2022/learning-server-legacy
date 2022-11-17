@@ -2,12 +2,20 @@ import express from 'express';
 
 import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
+import moduleRouter from 'src/routes/course/module';
 
 import coursesControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
 
+router.use(
+  '/:courseId/module',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.courseId,
+  moduleRouter,
+);
 router.get('/', firebaseValidations.superAdmin, coursesControllers.getAll);
 router.get('/export/csv', firebaseValidations.superAdmin, coursesControllers.exportToCsv);
 router.get(
