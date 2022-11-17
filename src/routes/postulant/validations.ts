@@ -41,8 +41,8 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
         //TO-DO: try to implement diferent cases for pattern validation. It is not possible to make this at this moment. It will be investigated with another tecnologies.
       }),
     birthDate: Joi.date().max(cutoffDateMax).min(cutoffDateMin).required().messages({
-      'date.max': 'You need to be more than 18 years old.',
-      'date.min': 'You need to be less than 100 years old.',
+      'date.max': 'You need to be older than 18 years old.',
+      'date.min': 'You need to be younger than 100 years old.',
       'any.required': 'Date is a required field.',
     }),
     dni: Joi.string()

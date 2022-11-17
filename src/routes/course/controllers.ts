@@ -3,7 +3,6 @@ import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
 import { ResponseBody } from 'src/interfaces/response';
-import admissionTest from 'src/models/admission-test';
 import Course, { CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
@@ -87,6 +86,7 @@ const getAll = async (req: Request, res: Response) => {
 
 const getById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
+
   if (course) {
     return res.status(200).json({
       message: 'The course has been successfully found.',
@@ -101,11 +101,15 @@ const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
   res: Response<ResponseBody<CourseType>>,
 ) => {
+  const courseName = await Course.findOne({ name: req.body.name, isActive: true });
+  if (courseName?.name) {
+    throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+  }
   let newCourse: CourseType | undefined;
   try {
     const course = new Course<CourseType>({
       name: req.body.name,
-      admissionTests: req.body.admissionTests,
+      admissionTests: [],
       description: req.body.description,
       inscriptionStartDate: req.body.inscriptionStartDate,
       inscriptionEndDate: req.body.inscriptionEndDate,
@@ -129,12 +133,7 @@ const create = async (
   if (existingUsers?.length !== req.body.courseUsers.length) {
     throw new CustomError(400, 'Some of the users dont exist.');
   }
-  const existingAdmissionTest = await admissionTest.find(
-    filterIncludeArrayOfIds(req.body.admissionTests.map((aTest) => aTest.toString())),
-  );
-  if (existingAdmissionTest?.length !== req.body.admissionTests.length) {
-    throw new CustomError(400, 'Does not exist an Admission test with that id.');
-  }
+
   try {
     CourseUser.insertMany(
       req.body.courseUsers?.map((e) => ({
@@ -158,6 +157,7 @@ const create = async (
 const update = async (req: Request, res: Response) => {
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
+    isActive: true,
   });
   if (updatedCourse) {
     return res.status(200).json({
@@ -171,7 +171,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
-  if (!course?.isActive) {
+  if (course?.isActive === false) {
     throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(

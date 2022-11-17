@@ -44,7 +44,7 @@ const create = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(400, `An admission test with name ${req.body.name} already exists.`);
+  throw new CustomError(400, `An active admission test with name ${req.body.name} already exists.`);
 };
 
 const update = async (req: Request, res: Response) => {
@@ -61,14 +61,17 @@ const update = async (req: Request, res: Response) => {
       });
     }
   } else {
-    throw new CustomError(400, `An admission test with name ${req.body.name} already exists.`);
+    throw new CustomError(
+      400,
+      `An active admission test with name ${req.body.name} already exists.`,
+    );
   }
   throw new CustomError(404, `Admission test with id ${req.params.id} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
   const admissionTest = await AdmissionTest.findById(req.params.id);
-  if (!admissionTest?.isActive) {
+  if (admissionTest?.isActive === false) {
     throw new CustomError(400, 'This admission test has already been disabled.');
   }
   const result = await AdmissionTest.findByIdAndUpdate(

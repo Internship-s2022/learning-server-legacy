@@ -59,7 +59,7 @@ const getByDni = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const postulant = await Postulant.findOne({ dni: req.body.dni });
+  const postulant = await Postulant.findOne({ dni: req.body.dni, isActive: true });
   if (postulant) {
     throw new CustomError(400, `Postulant with dni ${req.body.dni} already exist.`);
   }
@@ -82,8 +82,8 @@ const create = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const post = await Postulant.findOne({ dni: req.body.dni });
-  const currentPost = await Postulant.findOne({ _id: req.params.id });
+  const post = await Postulant.findOne({ dni: req.body.dni, isActive: true });
+  const currentPost = await Postulant.findOne({ _id: req.params.id, isActive: true });
   if (!currentPost?._id) {
     throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
   }
@@ -102,7 +102,7 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.params.id);
-  if (!postulant?.isActive) {
+  if (postulant?.isActive === false) {
     throw new CustomError(400, 'This postulant has already been disabled.');
   }
   const result = await Postulant.findByIdAndUpdate(

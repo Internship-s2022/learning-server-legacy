@@ -5,7 +5,7 @@ import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 
 const updatePassword = async (req: Request, res: Response) => {
-  const user = await User.findOne({ firebaseUid: req.body.firebaseUid });
+  const user = await User.findOne({ firebaseUid: req.body.firebaseUid, isActive: true });
   if (user) {
     const updatedUser = await firebase
       .auth()

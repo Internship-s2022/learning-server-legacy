@@ -63,7 +63,6 @@ const create = async (req: Request, res: Response) => {
       `The postulant with the id of ${req.body.postulant} does not exist.`,
     );
   }
-
   return res.status(201).json({
     message: 'User successfully created.',
     data: newMongoUser,
