@@ -5,7 +5,7 @@ import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 
 const updatePassword = async (req: Request, res: Response) => {
-  const user = await User.findOne({ firebaseUid: req.body.firebaseUid });
+  const user = await User.findOne({ firebaseUid: req.body.firebaseUid, isActive: true });
   if (user) {
     const updatedUser = await firebase
       .auth()
@@ -25,7 +25,7 @@ const updatePassword = async (req: Request, res: Response) => {
 
     if (updatedUser) {
       return res.status(200).json({
-        message: 'The user password has been successfully updated',
+        message: 'The user password has been successfully updated.',
         data: {
           uid: updatedUser.uid,
           email: updatedUser.email,
@@ -35,7 +35,7 @@ const updatePassword = async (req: Request, res: Response) => {
       });
     }
   } else {
-    throw new CustomError(404, `User with firebase uid: ${req.body.firebaseUid} was not found`);
+    throw new CustomError(404, `User with firebase uid: ${req.body.firebaseUid} was not found.`);
   }
 };
 

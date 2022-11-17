@@ -15,7 +15,7 @@ export interface RegistrationFormType {
   isActive: boolean;
 }
 
-interface RegistrationFormDocument extends RegistrationFormType, Document {
+export interface RegistrationFormDocument extends RegistrationFormType, Document {
   _id?: mongoose.Types.ObjectId;
 }
 

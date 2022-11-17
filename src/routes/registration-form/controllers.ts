@@ -26,7 +26,7 @@ const getAll = async (req: Request, res: Response) => {
   );
   if (docs.length) {
     return res.status(200).json({
-      message: 'Showing the list of registration forms',
+      message: 'Showing the list of registration forms.',
       data: docs,
       pagination,
       error: false,
@@ -39,7 +39,7 @@ const getById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
   if (registrationForm) {
     return res.status(200).json({
-      message: 'The registration form has been successfully found',
+      message: 'The registration form has been successfully found.',
       data: registrationForm,
       error: false,
     });
@@ -48,6 +48,13 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
+  if (formName?.title) {
+    throw new CustomError(
+      400,
+      `An active registration form with name ${req.body.title} already exists.`,
+    );
+  }
   const registrationForm = new RegistrationForm<RegistrationFormType>({
     course: req.body.course,
     title: req.body.title,
@@ -64,6 +71,13 @@ const create = async (req: Request, res: Response) => {
 };
 
 const updateById = async (req: Request, res: Response) => {
+  const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
+  if (formName?.title) {
+    throw new CustomError(
+      400,
+      `An active registration form with name ${req.body.title} already exists.`,
+    );
+  }
   const updatedRegistrationForm = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -83,8 +97,8 @@ const updateById = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.id);
-  if (!registrationForm?.isActive) {
-    throw new CustomError(404, 'Registration form has already been deleted');
+  if (registrationForm?.isActive === false) {
+    throw new CustomError(400, 'This registration form has already been disabled.');
   }
   const result = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
@@ -95,7 +109,7 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The registration form has been successfully deleted',
+      message: 'The registration form has been successfully disabled.',
       data: result,
       error: false,
     });
@@ -104,4 +118,16 @@ const deleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Registration form with id ${req.params.id} was not found.`);
 };
 
-export default { getAll, getById, create, updateById, deleteById };
+const physicalDeleteById = async (req: Request, res: Response) => {
+  const result = await RegistrationForm.findByIdAndDelete(req.params.id);
+  if (result) {
+    return res.status(200).json({
+      message: `The registration form with id ${req.params.id} has been successfully deleted.`,
+      data: result,
+      error: false,
+    });
+  }
+  throw new CustomError(404, `Registration form with id ${req.params.id} was not found.`);
+};
+
+export default { getAll, getById, create, updateById, deleteById, physicalDeleteById };

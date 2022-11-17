@@ -1,6 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
+import { CourseUserType } from './course-user';
 export interface CourseType {
   _id?: mongoose.Types.ObjectId;
   name: string;
@@ -14,7 +15,9 @@ export interface CourseType {
   isInternal: boolean;
   isActive: boolean;
 }
-
+export interface CourseWithUsers extends CourseType {
+  courseUsers: CourseUserType[];
+}
 interface CourseDocument extends CourseType, Document {
   _id?: mongoose.Types.ObjectId;
 }

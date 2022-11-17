@@ -1,13 +1,40 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
+import { PipelineStage } from 'mongoose';
 
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
 import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 
+const getPostulantPipeline = (query: qs.ParsedQs) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $addFields: {
+        age: {
+          $dateDiff: {
+            startDate: {
+              $dateFromString: {
+                dateString: '$birthDate',
+              },
+            },
+            endDate: '$$NOW',
+            unit: 'year',
+          },
+        },
+      },
+    },
+    { $match: query },
+  ];
+  return pipeline;
+};
+
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await Postulant.paginate(query, { page, limit });
+  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query));
+  const { docs, ...pagination } = await Postulant.aggregatePaginate(postulantAggregate, {
+    page,
+    limit,
+  });
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of postulants.',
@@ -23,7 +50,7 @@ const getByDni = async (req: Request, res: Response) => {
   const postulant = await Postulant.findOne({ dni: req.params.dni });
   if (postulant) {
     return res.status(200).json({
-      message: 'The postulant has been successfully found',
+      message: 'The postulant has been successfully found.',
       data: postulant,
       error: false,
     });
@@ -32,7 +59,7 @@ const getByDni = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const postulant = await Postulant.findOne({ dni: req.body.dni });
+  const postulant = await Postulant.findOne({ dni: req.body.dni, isActive: true });
   if (postulant) {
     throw new CustomError(400, `Postulant with dni ${req.body.dni} already exist.`);
   }
@@ -55,8 +82,8 @@ const create = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const post = await Postulant.findOne({ dni: req.body.dni });
-  const currentPost = await Postulant.findOne({ _id: req.params.id });
+  const post = await Postulant.findOne({ dni: req.body.dni, isActive: true });
+  const currentPost = await Postulant.findOne({ _id: req.params.id, isActive: true });
   if (!currentPost?._id) {
     throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
   }
@@ -65,7 +92,7 @@ const update = async (req: Request, res: Response) => {
       new: true,
     });
     return res.status(200).json({
-      message: 'Postulant successfully updated',
+      message: 'Postulant successfully updated.',
       data: updatedPostulant,
       error: false,
     });
@@ -75,8 +102,8 @@ const update = async (req: Request, res: Response) => {
 
 const deleteById = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.params.id);
-  if (!postulant?.isActive) {
-    throw new CustomError(404, 'Postulant has already been deleted');
+  if (postulant?.isActive === false) {
+    throw new CustomError(400, 'This postulant has already been disabled.');
   }
   const result = await Postulant.findByIdAndUpdate(
     req.params.id,
@@ -87,7 +114,19 @@ const deleteById = async (req: Request, res: Response) => {
   );
   if (result) {
     return res.status(200).json({
-      message: 'The postulant has been successfully deleted',
+      message: 'The postulant has been successfully disabled.',
+      data: result,
+      error: false,
+    });
+  }
+  throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
+};
+
+const physicalDeleteById = async (req: Request, res: Response) => {
+  const result = await Postulant.findByIdAndDelete(req.params.id);
+  if (result) {
+    return res.status(200).json({
+      message: `The postulant with id ${req.params.id} has been successfully deleted.`,
       data: result,
       error: false,
     });
@@ -118,7 +157,7 @@ const exportToCsv = async (req: Request, res: Response) => {
       return res.status(200).send(csv);
     }
   }
-  throw new CustomError(404, 'Cannot find the list of postulants.');
+  throw new CustomError(404, 'There are no postulants to export.');
 };
 
-export default { getAll, getByDni, create, update, deleteById, exportToCsv };
+export default { getAll, getByDni, create, update, deleteById, physicalDeleteById, exportToCsv };

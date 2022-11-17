@@ -9,7 +9,12 @@ import validations from './validations';
 const router = express.Router();
 
 router.get('/', firebaseValidations.superAdmin, postulantsControllers.getAll);
-router.get('/:dni', firebaseValidations.superAdmin, postulantsControllers.getByDni);
+router.get(
+  '/:dni',
+  globalValidations.validateDni,
+  firebaseValidations.superAdmin,
+  postulantsControllers.getByDni,
+);
 router.post(
   '/',
   firebaseValidations.superAdmin,
@@ -28,6 +33,12 @@ router.patch(
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   postulantsControllers.deleteById,
+);
+router.delete(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  postulantsControllers.physicalDeleteById,
 );
 router.get('/export/csv', firebaseValidations.superAdmin, postulantsControllers.exportToCsv);
 

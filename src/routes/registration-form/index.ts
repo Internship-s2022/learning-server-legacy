@@ -2,12 +2,20 @@ import express from 'express';
 
 import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
+import questionRouter from 'src/routes/registration-form/question';
 
 import registrationFormControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
 
+router.use(
+  '/:regFormId/question',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.registrationFormId,
+  questionRouter,
+);
 router.get('/', firebaseValidations.superAdmin, registrationFormControllers.getAll);
 router.get(
   '/:id',
@@ -33,6 +41,12 @@ router.patch(
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   registrationFormControllers.deleteById,
+);
+router.delete(
+  '/:id',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  registrationFormControllers.physicalDeleteById,
 );
 
 export default router;

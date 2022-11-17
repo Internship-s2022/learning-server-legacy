@@ -58,7 +58,7 @@ const getByCourseId = async (req: Request, res: Response) => {
         limit,
       });
       return res.status(200).json({
-        message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found`,
+        message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found.`,
         data: docs,
         pagination,
         error: false,
@@ -84,7 +84,7 @@ const getByUserId = async (req: Request, res: Response) => {
         limit,
       });
       return res.status(200).json({
-        message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found`,
+        message: `The list of courses and roles of the user with id: ${req.params.id} has been successfully found.`,
         data: docs,
         pagination,
         error: false,
@@ -106,7 +106,7 @@ const assignRole = async (req: Request, res: Response) => {
     if (courseUser.length) {
       throw new CustomError(
         400,
-        `The user with id: ${req.body.user} has already a role in this course.`,
+        `The user with id: ${req.body.user} already has a role in this course.`,
       );
     }
     const NewCourseUser = new CourseUser<CourseUserType>({
@@ -117,12 +117,12 @@ const assignRole = async (req: Request, res: Response) => {
     });
     await NewCourseUser.save();
     return res.status(201).json({
-      message: 'Role successfully assigned',
+      message: 'Role successfully assigned.',
       data: NewCourseUser,
       error: false,
     });
   } else {
-    throw new CustomError(404, 'The user or course does not exist');
+    throw new CustomError(404, 'The user or course does not exist.');
   }
 };
 
@@ -148,7 +148,7 @@ const updateByUserId = async (req: Request, res: Response) => {
         },
       );
       return res.status(200).json({
-        message: 'The role has been successfully edited',
+        message: 'The role has been successfully edited.',
         data: updatedCourseUser,
         error: false,
       });
@@ -163,15 +163,15 @@ const updateByUserId = async (req: Request, res: Response) => {
 };
 
 const disableByUserId = async (req: Request, res: Response) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.body.user);
   const course = await Course.findById(req.body.course);
   if (user && course) {
     const courseUser = await CourseUser.findOne({
-      user: req.params.id,
+      user: req.body.user,
       course: req.body.course,
     });
     if (courseUser?.isActive === false) {
-      throw new CustomError(404, 'The user has already been disabled');
+      throw new CustomError(400, 'This user has already been disabled from the course.');
     }
     if (courseUser) {
       const result = await CourseUser.findByIdAndUpdate(
@@ -183,16 +183,40 @@ const disableByUserId = async (req: Request, res: Response) => {
       );
       if (result) {
         return res.status(200).json({
-          message: 'The user has been successfully disabled',
+          message: 'The user has been successfully disabled.',
           data: result,
           error: false,
         });
       }
     }
-    throw new CustomError(400, `User with id ${req.params.id} does not have a rol in this course.`);
+    throw new CustomError(400, `User with id ${req.body.user} does not have a rol in this course.`);
   } else {
     if (!user?._id) {
-      throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+      throw new CustomError(404, `User with id ${req.body.user} was not found.`);
+    }
+    throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
+  }
+};
+
+const physicalDeleteByUserId = async (req: Request, res: Response) => {
+  const user = await User.findById(req.body.user);
+  const course = await Course.findById(req.body.course);
+  if (user && course) {
+    const result = await CourseUser.findOneAndDelete({
+      user: req.body.user,
+      course: req.body.course,
+    });
+    if (result) {
+      return res.status(200).json({
+        message: 'The course-user been successfully deleted.',
+        data: result,
+        error: false,
+      });
+    }
+    throw new CustomError(400, `User with id ${req.body.user} does not have a rol in this course.`);
+  } else {
+    if (!user?._id) {
+      throw new CustomError(404, `User with id ${req.body.user} was not found.`);
     }
     throw new CustomError(404, `Course with id ${req.body.course} was not found.`);
   }
@@ -229,9 +253,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         return res.status(200).send(csv);
       }
     }
-    throw new CustomError(400, 'This course does not have any members');
+    throw new CustomError(400, 'This course does not have any members.');
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `There are no course with id ${req.params.id} to export.`);
 };
 
 const exportToCsvByUserId = async (req: Request, res: Response) => {
@@ -264,9 +288,9 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
         return res.status(200).send(csv);
       }
     }
-    throw new CustomError(400, 'This user does not belong to any course');
+    throw new CustomError(400, 'This user does not belong to any course.');
   }
-  throw new CustomError(404, `User with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `There are no course user with id ${req.params.id} to export.`);
 };
 
 export default {
@@ -275,6 +299,7 @@ export default {
   assignRole,
   updateByUserId,
   disableByUserId,
+  physicalDeleteByUserId,
   exportToCsvByCourseId,
   exportToCsvByUserId,
 };
