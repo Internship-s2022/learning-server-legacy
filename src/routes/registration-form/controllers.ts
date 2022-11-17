@@ -50,7 +50,10 @@ const getById = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
   if (formName?.title) {
-    throw new CustomError(400, `An registration form with name ${req.body.title} already exists.`);
+    throw new CustomError(
+      400,
+      `An active registration form with name ${req.body.title} already exists.`,
+    );
   }
   const registrationForm = new RegistrationForm<RegistrationFormType>({
     course: req.body.course,
@@ -70,7 +73,10 @@ const create = async (req: Request, res: Response) => {
 const updateById = async (req: Request, res: Response) => {
   const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
   if (formName?.title) {
-    throw new CustomError(400, `A registration form with name ${req.body.title} already exists.`);
+    throw new CustomError(
+      400,
+      `An active registration form with name ${req.body.title} already exists.`,
+    );
   }
   const updatedRegistrationForm = await RegistrationForm.findByIdAndUpdate(
     req.params.id,
