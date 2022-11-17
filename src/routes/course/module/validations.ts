@@ -5,13 +5,6 @@ import { CustomError } from 'src/models/custom-error';
 import { ModuleType } from 'src/models/module';
 
 const moduleJoiSchema = Joi.object<ModuleType>({
-  // course: Joi.string()
-  //   .pattern(/^[0-9a-fA-F]{24}$/)
-  //   .required()
-  //   .messages({
-  //     'string.pattern.base': 'Invalid course id, ObjectId expected.',
-  //     'any.required': 'Course id is a required field.',
-  //   }),
   name: Joi.string().min(3).max(50).required().messages({
     'string.min': 'Invalid name, it must contain more than 3 letters.',
     'string.max': 'Invalid name, it must not contain more than 50 letters.',

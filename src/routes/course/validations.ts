@@ -105,7 +105,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
 const courseId = async (req: Request, res: Response, next: NextFunction) => {
   const course = await Course.findById(req.params.courseId);
   if (!course) {
-    throw new CustomError(400, `Course with id ${req.params.courseId} was not found.`);
+    throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
   }
   return next();
 };
