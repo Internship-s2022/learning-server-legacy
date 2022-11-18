@@ -3,25 +3,25 @@ export default {
   create: true,
   // -- FIREBASE --
   firebaseUsers: {
-    remove: true,
-    create: true,
+    remove: false,
+    create: false,
   },
   // -- MONGO --
   superAdmins: {
-    remove: true,
-    create: true,
+    remove: false,
+    create: false,
   },
   courses: {
-    remove: true,
-    create: true,
+    remove: false,
+    create: false,
   },
   registrationForms: {
-    remove: true,
-    create: true,
+    remove: false,
+    create: false,
   },
   admissionTests: {
-    remove: true,
-    create: true,
+    remove: false,
+    create: false,
   },
   postulants: {
     remove: true,
@@ -34,10 +34,18 @@ export default {
     amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '24'),
   },
   courseUsers: {
+    remove: false,
+    create: false,
+  },
+  questions: {
+    remove: false,
+    create: false,
+  },
+  postulantCourses: {
     remove: true,
     create: true,
   },
-  questions: {
+  admissionResults: {
     remove: true,
     create: true,
   },
