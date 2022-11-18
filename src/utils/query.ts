@@ -90,11 +90,18 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
           [key]: new ObjectId(value),
         };
       }
+      if (!isNaN(Number(value))) {
+        return {
+          ...prev,
+          [key]: Number(value),
+        };
+      }
       return {
         ...prev,
         [key]: new RegExp(value.toLowerCase(), 'i'),
       };
     }
+
     return prev;
   }, {});
 };

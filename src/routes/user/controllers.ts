@@ -71,7 +71,7 @@ const create = async (req: Request, res: Response) => {
 };
 
 const createManual = async (req: Request, res: Response) => {
-  let postulant: mongoose.Types.ObjectId;
+  let postulant;
   if (!req.body.postulant) {
     const newPostulant = new Postulant<PostulantType>({
       firstName: req.body.firstName,

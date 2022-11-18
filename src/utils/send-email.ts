@@ -6,7 +6,7 @@ import MailService from '@sendgrid/mail';
 MailService.setApiKey(process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY : '');
 
 const sendEmail = async (
-  to: string,
+  to: string | undefined,
   templateId: string,
   templateData: Record<string, string>,
   callback: (err: Error | ResponseError, result: [ClientResponse, Record<string, never>]) => void,

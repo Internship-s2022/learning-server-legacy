@@ -8,8 +8,7 @@ import { PostulantType } from './postulant';
 export interface AnswerType {
   _id?: mongoose.Types.ObjectId;
   question: mongoose.Types.ObjectId;
-  value: string | string[];
-  isActive: boolean;
+  value?: string | string[];
 }
 export interface PostulantCourseType {
   _id?: mongoose.Types.ObjectId;

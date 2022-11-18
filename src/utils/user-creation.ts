@@ -17,6 +17,7 @@ export const generatePassword = (length: number) => {
   }
   return randomPassword;
 };
+
 const userCreation = async (req: Request, postulantId: string, promotion = false, timeout = 1) => {
   const newPassword = generatePassword(24);
   let firebaseUid: string;

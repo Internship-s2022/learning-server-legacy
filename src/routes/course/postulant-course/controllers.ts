@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import firebaseAdmin from 'firebase-admin';
 import { parseAsync } from 'json2csv';
 import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
 
+import sendgridTemplates from 'src/constants/sendgrid-templates';
 import AdmissionResult from 'src/models/admission-result';
 import Course, { PopulatedCourseType } from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
@@ -14,8 +16,9 @@ import PostulantCourse, {
   PostulantCourseType,
 } from 'src/models/postulant-course';
 import Question from 'src/models/question';
-import User from 'src/models/user';
+import User, { UserDocument } from 'src/models/user';
 import { filterIncludeArrayOfIds, paginateAndFilterByIncludes } from 'src/utils/query';
+import sendEmail from 'src/utils/send-email';
 import userCreation from 'src/utils/user-creation';
 
 const create = async (req: Request, res: Response) => {
@@ -67,7 +70,7 @@ const create = async (req: Request, res: Response) => {
                   400,
                   `For the question with id ${question._id}, answer value must be an array of one string.`,
                 );
-              if (!question.options?.some((op) => a.value.includes(op.value)))
+              if (!question.options?.some((op) => a.value?.includes(op.value)))
                 throw new CustomError(
                   400,
                   `Answer value must be one of the options: ${question.options?.map(
@@ -81,7 +84,7 @@ const create = async (req: Request, res: Response) => {
                   400,
                   `For this question with id ${question._id}, answer value must be an array one or many strings.`,
                 );
-              if (!question.options?.some((op) => a.value.includes(op.value)))
+              if (!question.options?.some((op) => a.value?.includes(op.value)))
                 throw new CustomError(
                   400,
                   `Answer value must be one of the options: ${question.options?.map(
@@ -241,7 +244,7 @@ const getByCourseId = async (req: Request, res: Response) => {
 
   const course = await Course.findById(courseId);
   if (course) {
-    const postulantCourse = await PostulantCourse.find({ course: courseId });
+    const postulantCourse = await PostulantCourse.find({ course: new ObjectId(courseId) });
     if (postulantCourse.length) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
       const postulantCourseAggregate = PostulantCourse.aggregate(
@@ -250,6 +253,8 @@ const getByCourseId = async (req: Request, res: Response) => {
           corrected,
         ),
       );
+      console.log('postulantCourse', postulantCourse.length);
+
       const { docs, ...pagination } = await PostulantCourse.aggregatePaginate(
         postulantCourseAggregate,
         {
@@ -257,6 +262,8 @@ const getByCourseId = async (req: Request, res: Response) => {
           limit,
         },
       );
+      console.log('docs', docs.length);
+
       if (docs.length) {
         return res.status(200).json({
           message: `The list of postulants of the course with id: ${req.params.courseId} has been successfully found.`,
@@ -330,74 +337,179 @@ const correctTests = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
+const promoteOne = async (
+  req: Request,
+  remainPostulants: { postulantId: string }[],
+  step: number,
+  failedPostulants: { postulantId: string | undefined; error: any }[],
+  successfulPostulants: {
+    postulantId: string | undefined;
+    user: UserDocument;
+    credentials: { email: string; newPassword: string; firebaseUid: string } | undefined;
+  }[],
+): Promise<string> => {
+  const index = 0;
+  let postulantId;
+  try {
+    let timeout = 0;
+    for (let i = 0; i < remainPostulants.length; i++) {
+      let newMongoUser;
+      let credentials;
+      let response;
+      const promotion = true;
+      postulantId = remainPostulants[i].postulantId;
+      const postulant = await Postulant.findById(postulantId);
+      // index = i;
+      const postulantCourse = await PostulantCourse.find({
+        postulant: postulantId,
+        course: req.params.courseId,
+      });
+      if (!postulant?._id) {
+        throw new CustomError(404, `The postulant with id: ${postulantId} was not found.`);
+      }
+      if (!postulantCourse) {
+        throw new CustomError(
+          404,
+          `Postulant with id ${postulantId} was not found in this course and could not be promoted.`,
+        );
+      }
+      req.body.email = postulant?.email;
+      const user = await User.findOne({ postulant: postulantId });
+      if (!user?._id) {
+        timeout = timeout + 1;
+        response = await userCreation(req, postulantId, promotion, timeout);
+        newMongoUser = response.newMongoUser;
+        credentials = response.credentials;
+      } else {
+        newMongoUser = user;
+      }
+      try {
+        const courseUser = await CourseUser.find({
+          user: newMongoUser._id,
+          course: req.params.courseId,
+        });
+        if (courseUser.length) {
+          throw new CustomError(
+            400,
+            `The user with id: ${newMongoUser._id} has already a role in this course.`,
+          );
+        }
+        if (newMongoUser._id) {
+          const NewCourseUser = new CourseUser<CourseUserType>({
+            user: newMongoUser._id,
+            course: new Types.ObjectId(req.params.courseId),
+            role: 'STUDENT',
+            isActive: true,
+          });
+          await NewCourseUser.save();
+          successfulPostulants.push({ postulantId, user: newMongoUser, credentials });
+        }
+      } catch (err: any) {
+        throw new Error(`Course-user error: ${err.message}`);
+      }
+    }
+    return 'There was no errors';
+  } catch (err: any) {
+    // remainPostulants = remainPostulants?.slice(index + 1);
+    failedPostulants.push({ postulantId, error: err.message });
+    // if (remainPostulants?.length) {
+    //   step++;
+    //   return await promoteOne(req, remainPostulants, step, failedPostulants, successfulPostulants);
+    // } else {
+    //   if (failedPostulants.length === req.body.length) {
+    throw new Error(`Error: ${err.message}`);
+    //   }
+    //   return `The postulants with id: ${successfulPostulants.map((p) => p)} were promoted.
+    // 		The postulants with id: ${failedPostulants.map((p) => p)} failed to be promoted.`;
+    // }
+  }
+};
+
+const onError = async (
+  users: {
+    postulantId: string | undefined;
+    user: UserDocument;
+    credentials: { email: string; newPassword: string; firebaseUid: string };
+  }[],
+  courseId: string,
+) => {
+  const usersUids: string[] = [];
+  users.forEach(async (obj) => {
+    const deleted = await CourseUser.findOneAndDelete({
+      user: obj.user._id,
+      course: courseId,
+    });
+    console.log('deleted', deleted);
+    if (obj?.credentials?.firebaseUid) {
+      usersUids.push(obj.credentials.firebaseUid);
+      await User.findByIdAndDelete(obj.user._id);
+    }
+  });
+  const usersRemoved = await firebaseAdmin.auth().deleteUsers(usersUids);
+  console.log('uids:', usersUids, usersRemoved);
+};
+
 const promoteMany = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.courseId);
   if (course?._id) {
     const currentDate = new Date();
-    if (currentDate >= course.startDate) {
-      throw new CustomError(
-        400,
-        'The promotion of postulants must be before the course start date.',
-      );
-    }
+    // if (currentDate >= course.startDate) {
+    //   throw new CustomError(
+    //     400,
+    //     'The promotion of postulants must be before the course start date.',
+    //   );
+    // }
+    const step = 0;
+    const remainPostulants = req.body;
+    const failedPostulants: { postulantId: string | undefined; error: any }[] = [];
+    const successfulPostulants: {
+      postulantId: string | undefined;
+      user: UserDocument;
+      credentials: { email: string; newPassword: string; firebaseUid: string };
+    }[] = [];
+    let response: string;
     try {
-      let timeout = 0;
-      for (let i = 0; i < req.body.length; i++) {
-        let newMongoUser;
-        const promotion = true;
-        const postulantId = req.body[i].postulantId;
-        const postulant = await Postulant.findById(postulantId);
-        const user = await User.findOne({ postulant: postulantId });
-        const postulantCourse = await PostulantCourse.find({
-          postulant: postulantId,
-          course: req.params.courseId,
-        });
-        if (!postulant?._id) {
-          throw new CustomError(404, `The postulant with id: ${postulantId} was not found.`);
-        }
-        if (!postulantCourse) {
-          throw new CustomError(
-            404,
-            `Postulant with id ${postulantId} was not found in this course and could not be promoted.`,
-          );
-        }
-        req.body.email = postulant?.email;
-        if (!user?._id) {
-          timeout = timeout + 1;
-          newMongoUser = await userCreation(req, postulantId, promotion, timeout);
-        } else {
-          newMongoUser = user;
-        }
-        try {
-          const courseUser = await CourseUser.find({
-            user: newMongoUser._id,
-            course: req.params.courseId,
-          });
-          if (courseUser.length) {
-            throw new CustomError(
-              400,
-              `The user with id: ${newMongoUser._id} has already a role in this course.`,
-            );
-          }
-          if (newMongoUser._id) {
-            const NewCourseUser = new CourseUser<CourseUserType>({
-              user: newMongoUser._id,
-              course: new Types.ObjectId(req.params.courseId),
-              role: 'STUDENT',
-              isActive: true,
-            });
-            await NewCourseUser.save();
-          }
-        } catch (err: any) {
-          throw new Error(`Course-user error: ${err.message}`);
-        }
-      }
+      response = await promoteOne(
+        req,
+        remainPostulants,
+        step,
+        failedPostulants,
+        successfulPostulants,
+      );
     } catch (err: any) {
-      throw new Error(err.message);
+      console.log('failed', failedPostulants, '\n success', successfulPostulants);
+      await onError(successfulPostulants, req.params.courseId);
+      throw new Error('There was an error.');
     }
-
+    if (!failedPostulants.length) {
+      console.log('enviando mails');
+      successfulPostulants.forEach(async (obj) => {
+        const email = obj?.credentials ? obj.credentials.email : obj.user.email;
+        const template = obj?.credentials
+          ? sendgridTemplates.sendUserCredentials
+          : //TO-DO: Inscription Template
+            sendgridTemplates.sendUserCredentials;
+        await sendEmail(
+          email,
+          template,
+          {
+            email: obj.credentials.email,
+            password: obj.credentials.newPassword,
+          },
+          async (err: any) => {
+            if (err) {
+              await onError(successfulPostulants, req.params.courseId);
+              // await User.findByIdAndDelete(obj.newMongoUser._id);
+              // await firebase.auth().deleteUser(firebaseUid);
+              return new Error(`Sendgrid error: ${err.message}`);
+            }
+          },
+        );
+      });
+    }
     return res.status(201).json({
-      message: 'Users successfully created.',
+      message: response,
+      data: { failedPostulants, successfulPostulants },
       error: false,
     });
   }
@@ -413,6 +525,9 @@ const physicalDeleteByCourseId = async (req: Request, res: Response) => {
       course: req.params.courseId,
     });
     if (result) {
+      result.admissionResults.forEach(async (ar) => {
+        await AdmissionResult.findByIdAndDelete({ _id: ar });
+      });
       return res.status(200).json({
         message: 'The postulant-course been successfully deleted.',
         data: result,
