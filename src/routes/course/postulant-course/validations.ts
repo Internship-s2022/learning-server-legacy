@@ -59,7 +59,6 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
   const validation = validateCreation.validate(req.body);
 
   if (validation.error) {
-    console.log(validation.error);
     throw new CustomError(400, validation.error.details[0].message);
   }
   return next();

@@ -324,15 +324,15 @@ const correctTests = async (req: Request, res: Response) => {
       error: false,
     });
   } catch (err: any) {
-    initialValues.forEach(async (admissionResult) => {
+    for (let a = 0; a < initialValues.length; a++) {
       await AdmissionResult.findByIdAndUpdate(
         {
-          _id: admissionResult?._id,
+          _id: initialValues[a]?._id,
         },
-        { score: admissionResult?.score },
+        { score: initialValues[a]?.score },
         { new: true },
       );
-    });
+    }
     throw new Error(err.message);
   }
 };
@@ -423,9 +423,9 @@ const promoteMany = async (req: Request, res: Response) => {
   const courseId = req.params.courseId;
   const course = await Course.findById(courseId);
   const currentDate = new Date();
-  // if (course && currentDate >= course.startDate) {
-  //   throw new CustomError(400, 'The promotion of postulants must be before the course start date.');
-  // }
+  if (course && currentDate >= course.startDate) {
+    throw new CustomError(400, 'The promotion of postulants must be before the course start date.');
+  }
   const failedPostulants: FailedType[] = [];
   const successfulPostulants: SuccessfulType[] = [];
   let response: string;
@@ -438,20 +438,20 @@ const promoteMany = async (req: Request, res: Response) => {
     throw err;
   }
   if (!failedPostulants.length) {
-    successfulPostulants.forEach(async (obj, index) => {
+    for (let i = 0; i < successfulPostulants.length; i++) {
       let email;
       let template;
       let templateData;
-      if (obj?.credentials) {
-        email = obj.credentials.email;
+      if (successfulPostulants[i]?.credentials) {
+        email = successfulPostulants[i].credentials?.email;
         template = sendgridTemplates.sendUserCredentials;
         templateData = {
-          email: obj.credentials?.email,
-          password: obj?.credentials?.newPassword,
+          email: successfulPostulants[i].credentials?.email,
+          password: successfulPostulants[i]?.credentials?.newPassword,
         };
-        successfulPostulants[index] = { ...obj, credentials: undefined };
+        successfulPostulants[i] = { ...successfulPostulants[i], credentials: undefined };
       } else {
-        email = obj.user.email;
+        email = successfulPostulants[i].user.email;
         //TO-DO: Inscription Template
         template = sendgridTemplates.sendUserCredentials;
         templateData = { data: 'Inscription data' };
@@ -464,7 +464,7 @@ const promoteMany = async (req: Request, res: Response) => {
           return new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
         }
       });
-    });
+    }
   }
   return res.status(201).json({
     message: response,

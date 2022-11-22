@@ -8,7 +8,7 @@ MailService.setApiKey(process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KE
 const sendEmail = async (
   to: string | undefined,
   templateId: string,
-  templateData: Record<string, string>,
+  templateData: Record<string, string | undefined>,
   callback: (err: Error | ResponseError, result: [ClientResponse, Record<string, never>]) => void,
 ) => {
   const msg: MailDataRequired = {
