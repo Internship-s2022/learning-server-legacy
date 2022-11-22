@@ -25,7 +25,7 @@ export const generateRandomCourseUsers = (courses: CourseType[], users: UserType
   console.log('\x1b[36m', padMessage('⚡️ Adding Users in Courses'));
   const courseUsers: CourseUserType[] = [];
 
-  for (let c = 0; c < courses.length; c++) {
+  for (let c = 1; c < courses.length; c++) {
     const course = courses[c];
     for (let u = 0; u < users.length; u++) {
       const user = users[u];
