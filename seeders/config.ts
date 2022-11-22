@@ -26,12 +26,12 @@ export default {
   postulants: {
     remove: true,
     create: true,
-    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '20'),
+    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '100'),
   },
   users: {
     remove: true,
     create: true,
-    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '50'),
+    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '24'),
   },
   courseUsers: {
     remove: true,
