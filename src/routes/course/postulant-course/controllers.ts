@@ -406,17 +406,19 @@ const promoteOne = async (
 
 const onError = async (users: SuccessfulType[], courseId: string) => {
   const usersUids: string[] = [];
-  users.forEach(async (obj) => {
-    if (obj?.credentials?.firebaseUid) {
-      usersUids.push(obj.credentials.firebaseUid);
-      await User.findByIdAndDelete(obj.user._id);
+  for (let u = 0; u < users.length; u++) {
+    console.log('u', u);
+    console.log('users[u]', users[u]);
+    if (users[u]?.credentials?.firebaseUid) {
+      usersUids.push(String(users[u]?.credentials?.firebaseUid));
+      await User.findByIdAndDelete(users[u].user._id);
     }
     await CourseUser.findOneAndDelete({
-      user: obj.user._id,
+      user: users[u].user._id,
       course: courseId,
     });
-  });
-  return usersUids;
+  }
+  await firebaseAdmin.auth().deleteUsers(usersUids);
 };
 
 const promoteMany = async (req: Request, res: Response) => {
@@ -432,9 +434,7 @@ const promoteMany = async (req: Request, res: Response) => {
   try {
     response = await promoteOne(req, failedPostulants, successfulPostulants);
   } catch (err: any) {
-    await onError(successfulPostulants, courseId).then(
-      async (usersUids) => await firebaseAdmin.auth().deleteUsers(usersUids),
-    );
+    await onError(successfulPostulants, courseId);
     throw err;
   }
   if (!failedPostulants.length) {
@@ -458,9 +458,7 @@ const promoteMany = async (req: Request, res: Response) => {
       }
       await sendEmail(email, template, templateData, async (err: any) => {
         if (err) {
-          await onError(successfulPostulants, courseId).then(
-            async (usersUids) => await firebaseAdmin.auth().deleteUsers(usersUids),
-          );
+          await onError(successfulPostulants, courseId);
           return new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
         }
       });
@@ -481,9 +479,10 @@ const physicalDeleteByCourseId = async (req: Request, res: Response) => {
       course: req.params.courseId,
     });
     if (result) {
-      result.admissionResults.forEach(async (ar) => {
+      for (let i = 0; i < result.admissionResults.length; i++) {
+        const ar = result.admissionResults[i];
         await AdmissionResult.findByIdAndDelete({ _id: ar });
-      });
+      }
       return res.status(200).json({
         message: 'The postulant-course been successfully deleted.',
         data: result,
