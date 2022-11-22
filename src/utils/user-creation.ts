@@ -43,14 +43,17 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
             .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
-          reject(err);
           if (err?.errorInfo?.code === 'auth/email-already-exists') {
-            return new CustomError(400, 'The email address is already in use by another account', {
-              ...err,
-              type: 'EMAIL_ALREADY_EXISTS',
-            });
+            reject(
+              new CustomError(400, 'The email address is already in use by another account', {
+                ...err,
+                type: 'EMAIL_ALREADY_EXISTS',
+              }),
+            );
+            return;
           }
-          return new CustomError(500, err.message, { ...err });
+          reject(new CustomError(500, err.message, { ...err }));
+          return;
         }
         try {
           newMongoUser = new User<UserType>({
@@ -65,8 +68,8 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
           await firebase.auth().deleteUser(firebaseUid);
-          reject(err);
-          return new CustomError(500, err.message, { ...err, type: 'USER_MONGO_ERROR' });
+          reject(new CustomError(500, err.message, { ...err, type: 'USER_MONGO_ERROR' }));
+          return;
         }
         if (!promotion)
           await sendEmail(
@@ -82,14 +85,15 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
                   await Postulant.findByIdAndDelete(postulantId);
                 await User.findByIdAndDelete(newMongoUser._id);
                 await firebase.auth().deleteUser(firebaseUid);
-                reject(err);
-                return new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' });
+                reject(new CustomError(500, err.message, { ...err, type: 'SENDGRID_ERROR' }));
+                return;
               }
             },
           );
         resolve({ newMongoUser, credentials: { email, newPassword, firebaseUid } });
-        return { newMongoUser, credentials: { email, newPassword, firebaseUid } };
+        return;
       }, timeout),
   );
 };
+
 export default userCreation;

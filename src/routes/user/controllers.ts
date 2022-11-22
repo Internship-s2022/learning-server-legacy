@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
-import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
@@ -56,7 +55,7 @@ const create = async (req: Request, res: Response) => {
   const postulant = await Postulant.findById(req.body.postulant);
   let newMongoUser;
   if (postulant?._id) {
-    newMongoUser = await userCreation(req, req.body.postulant);
+    ({ newMongoUser } = await userCreation(req, req.body.postulant));
   } else {
     throw new CustomError(
       400,
@@ -95,7 +94,7 @@ const createManual = async (req: Request, res: Response) => {
     }
     postulant = req.body.postulant;
   }
-  const newMongoUser = await userCreation(req, postulant);
+  const { newMongoUser } = await userCreation(req, postulant);
 
   return res.status(201).json({
     message: 'User successfully created.',
