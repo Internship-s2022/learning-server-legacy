@@ -1,15 +1,39 @@
 {
   "info": {
-    "_postman_id": "c6f02916-723d-4030-8829-a3e0634e1d17",
+    "_postman_id": "7924aeab-effc-4ffd-985c-e3ee4f25a029",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23305867"
+    "_exporter_id": "23577717"
   },
   "item": [
     {
       "name": "SuperAdmin",
       "item": [
+        {
+          "name": "Maintenance",
+          "item": [
+            {
+              "name": "Seeders",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/super-admin/maintenance/seeders",
+                  "host": ["{{API_URL}}"],
+                  "path": ["super-admin", "maintenance", "seeders"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Create",
           "request": {
