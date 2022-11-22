@@ -407,8 +407,6 @@ const promoteOne = async (
 const onError = async (users: SuccessfulType[], courseId: string) => {
   const usersUids: string[] = [];
   for (let u = 0; u < users.length; u++) {
-    console.log('u', u);
-    console.log('users[u]', users[u]);
     if (users[u]?.credentials?.firebaseUid) {
       usersUids.push(String(users[u]?.credentials?.firebaseUid));
       await User.findByIdAndDelete(users[u].user._id);
