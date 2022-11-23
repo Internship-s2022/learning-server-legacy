@@ -10,6 +10,7 @@ export interface AnswerType {
   question: mongoose.Types.ObjectId;
   value?: string | string[];
 }
+
 export interface PostulantCourseType {
   _id?: mongoose.Types.ObjectId;
   course: mongoose.Types.ObjectId;

@@ -1,5 +1,7 @@
 import express from 'express';
 
+import globalValidations from 'src/middlewares/validations';
+
 import postulantCourseControllers from './controllers';
 import postulantCourseValidations from './validations';
 
@@ -17,7 +19,11 @@ router.post(
   postulantCourseValidations.validatePromotion,
   postulantCourseControllers.promoteMany,
 );
-router.delete('/', postulantCourseControllers.physicalDeleteByCourseId);
+router.delete(
+  '/:postulantId',
+  globalValidations.validateMongoId,
+  postulantCourseControllers.physicalDeleteByCourseId,
+);
 router.get('/export/csv', postulantCourseControllers.exportToCsvByCourseId);
 
 export default router;

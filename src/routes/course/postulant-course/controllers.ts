@@ -57,6 +57,17 @@ const create = async (req: Request, res: Response) => {
       if (a.value) {
         switch (question?.type) {
           case 'SHORT_ANSWER':
+            if (typeof a.value !== 'string')
+              throw new CustomError(
+                400,
+                `For the question with id ${question._id}, answer value must be a string.`,
+              );
+            if (a.value.length > 50)
+              throw new CustomError(
+                400,
+                `For the question with id ${question._id}, answer can't have more than 50 characters.`,
+              );
+            break;
           case 'PARAGRAPH':
             if (typeof a.value !== 'string')
               throw new CustomError(
@@ -275,47 +286,44 @@ const correctTests = async (req: Request, res: Response) => {
   const corrections = req.body;
   try {
     for (let i = 0; i < corrections.length; i++) {
-      try {
-        const postulantCourse = await PostulantCourse.findOne({
-          postulant: corrections[i].postulantId,
-          course: req.params.courseId,
-        });
-        if (postulantCourse) {
-          const notBelong = corrections[i].scores.some(
-            (item: { admissionResult: Types.ObjectId }) =>
-              !postulantCourse.admissionResults.includes(item.admissionResult),
-          );
-          if (notBelong) {
-            throw new CustomError(
-              400,
-              `One of the admissionResult id does not belong to the postulation with id ${postulantCourse._id}.`,
-            );
-          }
-          for (let j = 0; j < corrections[i].scores.length; j++) {
-            const currentAR = await AdmissionResult.findById(
-              corrections[i].scores[j].admissionResult,
-            );
-            initialValues.push(currentAR);
-            await AdmissionResult.findByIdAndUpdate(
-              {
-                _id: currentAR?._id,
-              },
-              { score: corrections[i].scores[j].score },
-              { new: true },
-            );
-          }
-        } else {
+      const postulantCourse = await PostulantCourse.findOne({
+        postulant: corrections[i].postulantId,
+        course: req.params.courseId,
+      });
+      if (postulantCourse) {
+        const notBelong = corrections[i].scores.some(
+          (item: { admissionResult: Types.ObjectId }) =>
+            !postulantCourse.admissionResults.includes(item.admissionResult),
+        );
+        if (notBelong) {
           throw new CustomError(
-            404,
-            `Postulant with id ${req.body[i].postulantId} was not found in this course and could not be updated.`,
+            400,
+            `One of the admissionResult id does not belong to the postulation with id ${postulantCourse._id}.`,
           );
         }
-        updatedPostulantCourse = await PostulantCourse.findById(postulantCourse._id).populate({
-          path: 'admissionResults',
-        });
-      } catch (err: any) {
-        throw new Error(err.message);
+        for (let j = 0; j < corrections[i].scores.length; j++) {
+          const currentAR = await AdmissionResult.findById(
+            corrections[i].scores[j].admissionResult,
+          );
+          initialValues.push(currentAR);
+          await AdmissionResult.findByIdAndUpdate(
+            {
+              _id: currentAR?._id,
+            },
+            { score: corrections[i].scores[j].score },
+            { new: true },
+          );
+        }
+      } else {
+        throw new CustomError(
+          404,
+          `Postulant with id ${req.body[i].postulantId} was not found in this course and could not be updated.`,
+        );
       }
+      updatedPostulantCourse = await PostulantCourse.findById(postulantCourse._id).populate({
+        path: 'admissionResults',
+      });
+
       updatedPostulations[i] = updatedPostulantCourse;
     }
     return res.status(201).json({
@@ -333,7 +341,7 @@ const correctTests = async (req: Request, res: Response) => {
         { new: true },
       );
     }
-    throw new Error(err.message);
+    throw err;
   }
 };
 
@@ -470,10 +478,10 @@ const promoteMany = async (req: Request, res: Response) => {
 };
 
 const physicalDeleteByCourseId = async (req: Request, res: Response) => {
-  const postulant = await Postulant.findById(req.body.postulant);
+  const postulant = await Postulant.findById(req.params.postulantId);
   if (postulant?._id) {
     const result = await PostulantCourse.findOneAndDelete({
-      postulant: req.body.postulant,
+      postulant: req.params.postulantId,
       course: req.params.courseId,
     });
     if (result) {
@@ -489,10 +497,10 @@ const physicalDeleteByCourseId = async (req: Request, res: Response) => {
     }
     throw new CustomError(
       404,
-      `Postulant with id ${req.body.postulant} was not found in this course.`,
+      `Postulant with id ${req.params.postulantId} was not found in this course.`,
     );
   }
-  throw new CustomError(404, `Postulant with id ${req.body.postulant} was not found.`);
+  throw new CustomError(404, `Postulant with id ${req.params.postulantId} was not found.`);
 };
 
 const exportToCsvByCourseId = async (req: Request, res: Response) => {

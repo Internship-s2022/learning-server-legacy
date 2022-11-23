@@ -6,7 +6,6 @@ import { AnswerType, PostulantCourseType } from 'src/models/postulant-course';
 
 const validateCreation = (req: Request, res: Response, next: NextFunction) => {
   const validateCreation = Joi.object<PostulantCourseType>({
-    course: Joi.string(),
     postulant: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
       .required()
@@ -14,7 +13,6 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
         'string.pattern.base': 'Invalid postulant id, ObjectId expected.',
         'any.required': 'Postulant id is a required field.',
       }),
-    admissionResults: Joi.array(),
     answer: Joi.array()
       .items(
         Joi.object<AnswerType>({
@@ -27,8 +25,9 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
               'any.required': 'Question id is a required field.',
             }),
           value: [
-            Joi.string().allow(null).messages({
+            Joi.string().allow(null).max(200).messages({
               'string.empty': 'Value is not allowed to be empty.',
+              'string.max': 'Answer can not have more than 200 characters.',
             }),
             Joi.array().items(Joi.string()).messages({
               'string.base': 'Invalid value array. It must contain only elements of type string.',
