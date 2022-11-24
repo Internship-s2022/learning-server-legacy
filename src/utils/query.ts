@@ -19,7 +19,8 @@ export const filterIncludeArrayOfIds = (includeIds: string[] | string) => {
 };
 
 export const filterByIncludes = (query: qs.ParsedQs) => {
-  return Object.entries(query).reduce((prev: any = {}, [key, value]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return Object.entries(query).reduce<Record<string, any>>((prev = {}, [key, value]) => {
     if (key.includes('min')) {
       const newKeys = key.split('.');
       if (key.toLowerCase().includes('date')) {
