@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "7924aeab-effc-4ffd-985c-e3ee4f25a029",
+    "_postman_id": "6cb98010-8a9c-46e1-bd6a-29e32efbe7da",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577717"
+    "_exporter_id": "23577719"
   },
   "item": [
     {
@@ -438,17 +438,27 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course?isActive=true&name=A",
+              "raw": "{{API_URL}}/course?startDate.min=2023-04-11&inscriptionStartDate.min=2023-03-11",
               "host": ["{{API_URL}}"],
               "path": ["course"],
               "query": [
                 {
                   "key": "isActive",
-                  "value": "true"
+                  "value": "true",
+                  "disabled": true
                 },
                 {
                   "key": "name",
-                  "value": "A"
+                  "value": "A",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate.min",
+                  "value": "2023-04-11"
+                },
+                {
+                  "key": "inscriptionStartDate.min",
+                  "value": "2023-03-11"
                 }
               ]
             }
@@ -1153,7 +1163,7 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/postulant",
+              "raw": "{{API_URL}}/postulant?age.max=25",
               "host": ["{{API_URL}}"],
               "path": ["postulant"],
               "query": [
@@ -1161,6 +1171,15 @@
                   "key": "isActive",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "age.min",
+                  "value": "40",
+                  "disabled": true
+                },
+                {
+                  "key": "age.max",
+                  "value": "25"
                 }
               ]
             }
