@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "6cb98010-8a9c-46e1-bd6a-29e32efbe7da",
-    "name": "RadiumLearning",
+    "_postman_id": "cf207c2d-bd54-4a8c-aa25-d269168f77ed",
+    "name": "RadiumLearning Copy",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577719"
+    "_exporter_id": "23500192"
   },
   "item": [
     {
@@ -1797,6 +1797,25 @@
     {
       "name": "Auth",
       "item": [
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Login",
           "event": [
