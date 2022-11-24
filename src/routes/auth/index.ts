@@ -1,5 +1,7 @@
 import express from 'express';
 
+import globalValidations from 'src/middlewares/validations';
+
 import controllers from './controllers';
 import validations from './validations';
 
@@ -10,5 +12,6 @@ router.patch(
   validations.updatePasswordValidation,
   controllers.updatePassword,
 );
+router.get('/me/:uid', globalValidations.validateFirebaseUid, controllers.getMeInfo);
 
 export default router;
