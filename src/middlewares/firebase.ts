@@ -32,13 +32,14 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
 
 const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.headers;
+  // const { uid } = req.firebaseUid;
   if (!token) {
     throw new CustomError(401, 'Unauthorized. Provide a token.');
   }
-
   let response: DecodedIdToken;
   try {
     response = await firebase.auth().verifyIdToken(String(token));
+    req.firebaseUid = response.uid;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.errorInfo?.code === 'auth/id-token-expired') {

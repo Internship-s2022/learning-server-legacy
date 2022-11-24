@@ -41,7 +41,7 @@ const updatePassword = async (req: Request, res: Response) => {
 };
 
 const getMeInfo = async (req: Request, res: Response) => {
-  const userUID = req.params.uid;
+  const userUID = req.firebaseUid;
   const user = await User.findOne({ firebaseUid: userUID }).populate({ path: 'postulant' });
   if (user?._id) {
     const currentCourses = await CourseUser.find({ user: user._id }).populate({ path: 'course' });
