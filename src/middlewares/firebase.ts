@@ -32,7 +32,6 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
 
 const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.headers;
-  // const { uid } = req.firebaseUid;
   if (!token) {
     throw new CustomError(401, 'Unauthorized. Provide a token.');
   }
