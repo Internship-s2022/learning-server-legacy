@@ -2,19 +2,36 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
 import { CustomError } from 'src/models/custom-error';
+import Group, { GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
-import { filterByIncludes } from 'src/utils/query';
+import { paginateAndFilterByIncludes } from 'src/utils/query';
+
+const getModulePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => [
+  {
+    $lookup: {
+      from: 'groups',
+      localField: 'groups',
+      foreignField: '_id',
+      as: 'groups',
+    },
+  },
+  { $match: query },
+];
 
 const getAll = async (req: Request, res: Response) => {
-  const query = filterByIncludes({
-    ...req.query,
-    course: req.params.courseId,
+  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const moduleAggregate = Module.aggregate(
+    getModulePipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }),
+  );
+  const { docs, ...pagination } = await Module.aggregatePaginate(moduleAggregate, {
+    page,
+    limit,
   });
-  const docs = await Module.find(query);
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of modules.',
       data: docs,
+      pagination,
       error: false,
     });
   }
@@ -22,11 +39,13 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const module = await Module.findById(req.params.moduleId);
-  if (module) {
+  const module = await Module.aggregate(
+    getModulePipeline({ _id: new mongoose.Types.ObjectId(req.params.groupId) }),
+  );
+  if (module.length) {
     return res.status(200).json({
       message: 'The module has been successfully found.',
-      data: module,
+      data: module[0],
       error: false,
     });
   }
@@ -81,7 +100,36 @@ const updateById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Module with id ${req.params.moduleId} was not found.`);
 };
 
+const deleteModuleFromGroups = async (moduleId: string) => {
+  try {
+    const groupsIncludeModule = await Group.find({
+      modules: { $in: moduleId },
+    });
+    const groupsWithoutModule: GroupType[] = groupsIncludeModule.map((group) => {
+      const groupWithoutModule: GroupType = {
+        ...group.toObject(),
+        modules: group.modules.filter((_id) => _id.toString() !== moduleId),
+      };
+      return groupWithoutModule;
+    });
+    await Promise.all(
+      groupsWithoutModule.map(async (group) => {
+        await Group.findByIdAndUpdate(group._id, group, {
+          new: true,
+        });
+      }),
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const physicalDeleteById = async (req: Request, res: Response) => {
+  const successDeleteFromGroups = await deleteModuleFromGroups(req.params.moduleId);
+  if (!successDeleteFromGroups) {
+    throw new CustomError(500, 'There was an error while deleting the module from the groups.');
+  }
   const result = await Module.findByIdAndDelete(req.params.moduleId);
   if (result) {
     return res.status(200).json({
@@ -94,6 +142,10 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const deleteById = async (req: Request, res: Response) => {
+  const successDeleteFromGroups = await deleteModuleFromGroups(req.params.moduleId);
+  if (!successDeleteFromGroups) {
+    throw new CustomError(500, 'There was an error while deleting the module from the groups');
+  }
   const module = await Module.findById(req.params.moduleId);
   if (!module?.isActive) {
     throw new CustomError(400, 'This module has already been disabled.');

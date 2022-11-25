@@ -1,36 +1,43 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
-import { ObjectId } from 'mongodb';
+import mongoose, { PipelineStage } from 'mongoose';
 
 import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { getCourseUsersExcludeByModules } from 'src/utils/validateCourseUsers';
 
-const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: ObjectId }) => [
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'user',
-      foreignField: '_id',
-      as: 'user',
+const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
     },
-  },
-  { $unwind: { path: '$user' } },
-  {
-    $lookup: {
-      from: 'postulants',
-      localField: 'user.postulant',
-      foreignField: '_id',
-      as: 'user.postulant',
+    { $unwind: { path: '$user' } },
+    {
+      $lookup: {
+        from: 'postulants',
+        localField: 'user.postulant',
+        foreignField: '_id',
+        as: 'user.postulant',
+      },
     },
-  },
-  { $unwind: { path: '$user.postulant' } },
-  { $match: query },
-];
+    { $unwind: { path: '$user.postulant' } },
+    { $match: query },
+  ];
 
-const geCourseBasedOnUserPipeline = (query: qs.ParsedQs | { [k: string]: ObjectId }) => [
+  return pipeline;
+};
+
+const getCourseBasedOnUserPipeline = (
+  query: qs.ParsedQs | { [k: string]: mongoose.Types.ObjectId },
+) => [
   {
     $lookup: {
       from: 'courses',
@@ -51,7 +58,7 @@ const getByCourseId = async (req: Request, res: Response) => {
     if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        getUserBasedOnCoursePipeline({ ...query, course: new ObjectId(courseId) }),
+        getUserBasedOnCoursePipeline({ ...query, course: new mongoose.Types.ObjectId(courseId) }),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -77,7 +84,7 @@ const getByUserId = async (req: Request, res: Response) => {
     if (courseUser) {
       const { page, limit, query } = paginateAndFilterByIncludes(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        geCourseBasedOnUserPipeline({ ...query, user: new ObjectId(userId) }),
+        getCourseBasedOnUserPipeline({ ...query, user: new mongoose.Types.ObjectId(userId) }),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -226,7 +233,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
     const docs = await CourseUser.aggregate(
-      getUserBasedOnCoursePipeline({ course: new ObjectId(req.params.id) }),
+      getUserBasedOnCoursePipeline({ course: new mongoose.Types.ObjectId(req.params.id) }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -262,7 +269,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
     const docs = await CourseUser.aggregate(
-      geCourseBasedOnUserPipeline({ user: new ObjectId(req.params.id) }),
+      getCourseBasedOnUserPipeline({ user: new mongoose.Types.ObjectId(req.params.id) }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -293,6 +300,26 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
   throw new CustomError(404, `There are no course user with id ${req.params.id} to export.`);
 };
 
+const getWithoutGroup = async (req: Request, res: Response) => {
+  const courseUsers = await getCourseUsersExcludeByModules(
+    new mongoose.Types.ObjectId(req.params.courseId),
+    req.body.modules,
+    req.query,
+  );
+  if (!courseUsers.docs.length) {
+    throw new CustomError(
+      404,
+      'CourseUsers without an assigned group on this modules has not been found.',
+    );
+  }
+  return res.status(200).json({
+    message: 'List with courseUsers without an assigned group on this modules has been found.',
+    data: courseUsers.docs,
+    pagination: courseUsers.pagination,
+    error: false,
+  });
+};
+
 export default {
   getByCourseId,
   getByUserId,
@@ -302,4 +329,5 @@ export default {
   physicalDeleteByUserId,
   exportToCsvByCourseId,
   exportToCsvByUserId,
+  getWithoutGroup,
 };
