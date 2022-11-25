@@ -16,6 +16,7 @@ import config from './config';
 import allData from './data';
 import { generateRandomCourseUsers } from './random-data/course-users';
 import { generateRandomPostulants } from './random-data/postulants';
+import { generateRegistrationFormPerCourse } from './random-data/registration-form';
 import { generateRandomUsers } from './random-data/users';
 import { listAndAddAllUsers, listAndRemoveAllUsers, padMessage } from './utils';
 
@@ -38,12 +39,10 @@ const {
   admissionTests,
   courses,
   firebaseUsers,
-  registrationForms,
   superAdmins,
   postulants,
   users,
   courseUsers,
-  questions,
   modules,
 }: data = allData[env];
 
@@ -87,6 +86,7 @@ const seedDatabase = async (endProcess = true) => {
   const allUsers = [...users, ...randomUsers];
   const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
+  const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
 
   try {
     if (config.remove) {
