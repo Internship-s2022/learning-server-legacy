@@ -257,7 +257,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "1e063109a88495b45758c000"
+                      "value": "1e063109a88495b45758c006"
                     }
                   ]
                 }
@@ -389,7 +389,242 @@
                     },
                     {
                       "key": "moduleId",
-                      "value": "637517380419a5552a9bcf99"
+                      "value": "637517be650676f3da006f00"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "item": [
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Grupo 14\",\n    \"type\": \"DEV\",\n    \"modules\": [\n        \"637517be650676f3da006f00\",\n        \"637517be650676f3da006f01\"\n    ],\n    \"courseUsers\": [\n        \"507f1f77bcf86cdcc4400000\",\n        \"507f1f77bcf86cdcc4400003\"\n    ],\n    \"isActive\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update by id",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Grupo 14\",\n    \"type\": \"DEV\",\n    \"modules\": [\"637517be650676f3da006f00\"],\n    \"courseUsers\": [\"507f1f77bcf86cdcc4400000\"],\n    \"isActive\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "query": [
+                    {
+                      "key": "isActive",
+                      "value": "false",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logical delete by id",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export to csv",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
                     }
                   ]
                 }
@@ -1999,6 +2234,56 @@
                 {
                   "key": "id",
                   "value": "1e063109a88495b45758c000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get without group by courseId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"modules\": [\n        \"637517be650676f3da006f01\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/:courseId/without-group",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ":courseId", "without-group"],
+              "query": [
+                {
+                  "key": "user.postulant.firstName",
+                  "value": "a",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "1e063109a88495b45758c006"
                 }
               ]
             }
