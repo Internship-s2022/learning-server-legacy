@@ -16,7 +16,7 @@ mongoose.connect(MONGODB_URL, (error) => {
   } else {
     console.log('✅ Database connected');
     app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`);
+      console.log(`Radium Learning server listening on port ${port}`);
     });
   }
 });
