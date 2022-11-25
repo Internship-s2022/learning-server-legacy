@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && yarn babel",
     "babel": "babel dist -d ./dist/",
-    "start:build": "ts-node -r tsconfig-paths/register ./dist/index.js",
+    "start:build": "ts-node --files -r tsconfig-paths/register ./dist/index.js",
     "start": "nodemon",
     "test": "IS_TEST=true jest",
     "type-check": "tsc --noEmit",
