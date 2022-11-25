@@ -41,6 +41,14 @@ export default {
     remove: true,
     create: true,
   },
+  postulantCourses: {
+    remove: true,
+    create: true,
+  },
+  admissionResults: {
+    remove: true,
+    create: true,
+  },
   modules: {
     remove: true,
     create: true,

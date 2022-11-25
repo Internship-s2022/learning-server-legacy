@@ -2,6 +2,9 @@ import 'dotenv/config';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import { DeleteResult } from 'mongodb';
 
+import AdmissionResult, { AdmissionResultType } from 'src/models/admission-result';
+import PostulantCourse, { PostulantCourseType } from 'src/models/postulant-course';
+
 import { FirebaseUser } from '../src/interfaces/firebase';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
@@ -16,6 +19,7 @@ import config from './config';
 import allData from './data';
 import { generateRandomCourseUsers } from './random-data/course-users';
 import { generateRandomPostulants } from './random-data/postulants';
+import { generateRegistrationFormPerCourse } from './random-data/registration-form';
 import { generateRandomUsers } from './random-data/users';
 import { listAndAddAllUsers, listAndRemoveAllUsers, padMessage } from './utils';
 
@@ -30,6 +34,8 @@ interface data {
   courseUsers: CourseUserType[];
   questions: QuestionType[];
   modules: ModuleType[];
+  postulantCourses: PostulantCourseType[];
+  admissionResults: AdmissionResultType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
@@ -38,13 +44,13 @@ const {
   admissionTests,
   courses,
   firebaseUsers,
-  registrationForms,
   superAdmins,
   postulants,
   users,
   courseUsers,
-  questions,
   modules,
+  postulantCourses,
+  admissionResults,
 }: data = allData[env];
 
 const seedDatabase = async (endProcess = true) => {
@@ -87,6 +93,7 @@ const seedDatabase = async (endProcess = true) => {
   const allUsers = [...users, ...randomUsers];
   const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
+  const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
 
   try {
     if (config.remove) {
@@ -142,6 +149,16 @@ const seedDatabase = async (endProcess = true) => {
       if (config.modules.remove) {
         promises.push(Module.collection.deleteMany({}));
         console.log('\x1b[37m', padMessage('🚀 Modules removed'));
+      }
+
+      if (config.postulantCourses.remove) {
+        promises.push(PostulantCourse.collection.deleteMany({}));
+        console.log('\x1b[37m', padMessage('🚀 Postulant courses removed'));
+      }
+
+      if (config.admissionResults.remove) {
+        promises.push(AdmissionResult.collection.deleteMany({}));
+        console.log('\x1b[37m', padMessage('🚀 Admission results removed'));
       }
 
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
@@ -220,6 +237,16 @@ const seedDatabase = async (endProcess = true) => {
       if (config.modules.create) {
         promises.push(Module.collection.insertMany(modules));
         console.log('\x1b[37m', padMessage('🚀 Modules added'));
+      }
+
+      if (config.postulantCourses.create) {
+        promises.push(PostulantCourse.collection.insertMany(postulantCourses));
+        console.log('\x1b[37m', padMessage('🚀 Postulant courses added'));
+      }
+
+      if (config.admissionResults.create) {
+        promises.push(AdmissionResult.collection.insertMany(admissionResults));
+        console.log('\x1b[37m', padMessage('🚀 Admission results added'));
       }
 
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]

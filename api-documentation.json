@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "cf207c2d-bd54-4a8c-aa25-d269168f77ed",
-    "name": "RadiumLearning Copy",
+    "_postman_id": "3e391dba-cea1-41be-9c7e-c70269aecc76",
+    "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23500192"
+    "_exporter_id": "23577719"
   },
   "item": [
     {
@@ -390,6 +390,219 @@
                     {
                       "key": "moduleId",
                       "value": "637517380419a5552a9bcf99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PostulantCourse",
+          "item": [
+            {
+              "name": "Get by CourseId",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation"],
+                  "query": [
+                    {
+                      "key": "corrected",
+                      "value": "true",
+                      "disabled": true
+                    },
+                    {
+                      "key": "postulant.firstName",
+                      "value": "Ag",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"postulant\": \"637b9c4e442cb499f3b614bc\",\n    \"view\": \"1e063109a88495b45758c000\",\n    \"answer\": [\n        {\n            \"question\": \"636d603af4779c11ba8f6009\"\n        },\n        {\n            \"question\": \"636d603af4779c11ba8f6001\",\n            \"value\": \"fddsf\"\n        },\n        {\n            \"question\": \"636d603af4779c11ba8f6006\",\n            \"value\": [\n                \"Argentina\"\n            ]\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Csv",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/export/csv?corrected=true",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "corrected",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Correct Tests",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"postulantId\": \"637bff5ec0421b651de9b800\",\n        \"scores\": [\n            {\n                \"admissionResult\": \"637aff8cc0421b651de9b81a\",\n                \"score\": 10\n            }\n        ]\n    },\n    {\n        \"postulantId\": \"637b9c4e442cb499f3b614bc\",\n        \"scores\": [\n            {\n                \"admissionResult\": \"637bffb1c0421b651de9b840\",\n                \"score\": 6\n            }\n        ]\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/admission-test",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "admission-test"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Promote postulants",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"postulantId\": \"637bff3ec0421b651de9b7ef\"\n    },\n    {\n        \"postulantId\": \"637bff5ec0421b651de9b800\"\n    },\n    {\n        \"postulantId\": \"637b9c4e442cb499f3b614bc\"\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/promote",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "promote"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/:postulantId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", ":postulantId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c003"
+                    },
+                    {
+                      "key": "postulantId",
+                      "value": "1e063109a88495b45758c002"
                     }
                   ]
                 }
@@ -1851,6 +2064,37 @@
                 {
                   "key": "key",
                   "value": "{{GOOGLE_API_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admission Result",
+      "item": [
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-result",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-result"],
+              "query": [
+                {
+                  "key": "score",
+                  "value": "9",
+                  "disabled": true
                 }
               ]
             }
