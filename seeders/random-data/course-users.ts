@@ -27,23 +27,25 @@ export const generateRandomCourseUsers = (courses: CourseType[], users: UserType
 
   for (let c = 0; c < courses.length; c++) {
     const course = courses[c];
-    for (let u = 0; u < users.length; u++) {
-      const user = users[u];
-      let courseUser: CourseUserType;
-      if (course.isInternal && user.isInternal) {
-        courseUser = randomCourseUser(
-          true,
-          course._id as mongoose.Types.ObjectId,
-          user._id as mongoose.Types.ObjectId,
-        );
-        courseUsers.push(courseUser);
-      } else if (!course.isInternal) {
-        courseUser = randomCourseUser(
-          user.isInternal,
-          course._id as mongoose.Types.ObjectId,
-          user._id as mongoose.Types.ObjectId,
-        );
-        courseUsers.push(courseUser);
+    if (course._id?.toString() !== '1e063109a88495b45758c006') {
+      for (let u = 0; u < users.length; u++) {
+        const user = users[u];
+        let courseUser: CourseUserType;
+        if (course.isInternal && user.isInternal) {
+          courseUser = randomCourseUser(
+            true,
+            new mongoose.Types.ObjectId(course._id),
+            new mongoose.Types.ObjectId(user._id),
+          );
+          courseUsers.push(courseUser);
+        } else if (!course.isInternal) {
+          courseUser = randomCourseUser(
+            user.isInternal,
+            new mongoose.Types.ObjectId(course._id),
+            new mongoose.Types.ObjectId(user._id),
+          );
+          courseUsers.push(courseUser);
+        }
       }
     }
   }
