@@ -48,6 +48,7 @@ const moduleSchema = new Schema<ModuleType, Model<ModuleType>>(
         {
           type: Schema.Types.ObjectId,
           required: true,
+          ref: 'Group',
         },
       ],
       required: false,

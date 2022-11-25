@@ -29,13 +29,13 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const module = await Module.aggregate(
-    getModulePipeline({ _id: new mongoose.Types.ObjectId(req.params.groupId) }),
-  );
-  if (module.length) {
+  const module = await Module.findOne({
+    _id: new mongoose.Types.ObjectId(req.params.moduleId),
+  }).populate({ path: 'groups' });
+  if (module) {
     return res.status(200).json({
       message: 'The module has been successfully found.',
-      data: module[0],
+      data: module,
       error: false,
     });
   }
