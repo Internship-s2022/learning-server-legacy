@@ -1,54 +1,15 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
-import mongoose, { PipelineStage } from 'mongoose';
+import mongoose from 'mongoose';
 
 import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
-import { getCourseUsersExcludeByModules } from 'src/utils/validateCourseUsers';
+import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users';
 
-const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
-  const pipeline: PipelineStage[] = [
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-    { $unwind: { path: '$user' } },
-    {
-      $lookup: {
-        from: 'postulants',
-        localField: 'user.postulant',
-        foreignField: '_id',
-        as: 'user.postulant',
-      },
-    },
-    { $unwind: { path: '$user.postulant' } },
-    { $match: query },
-  ];
-
-  return pipeline;
-};
-
-const getCourseBasedOnUserPipeline = (
-  query: qs.ParsedQs | { [k: string]: mongoose.Types.ObjectId },
-) => [
-  {
-    $lookup: {
-      from: 'courses',
-      localField: 'course',
-      foreignField: '_id',
-      as: 'course',
-    },
-  },
-  { $unwind: { path: '$course' } },
-  { $match: query },
-];
+import { getCourseBasedOnUserPipeline, getUserBasedOnCoursePipeline } from './aggregations';
 
 const getByCourseId = async (req: Request, res: Response) => {
   const courseId = req.params.id;

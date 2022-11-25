@@ -10,8 +10,8 @@ import {
   filterIncludeArrayOfIds,
   paginateAndFilterByIncludes,
 } from 'src/utils/query';
-import { getCourseUsersExcludeByModules } from 'src/utils/validateCourseUsers';
-import { validateAtLeastOneRole } from 'src/utils/validateRole';
+import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users';
+import { validateAtLeastOneRole } from 'src/utils/validate-role';
 
 import { exportGroupPipeline, getGroupPipeline } from './aggregations';
 
@@ -218,7 +218,6 @@ const exportToCsv = async (req: Request, res: Response) => {
   );
   if (docs.length) {
     const csv = await parseAsync(docs, {
-      //fields: ['_id', 'name', 'course', 'type', 'courseUsers', 'modules', 'isActive'],
       fields: [
         { value: '_id', label: 'group._id' },
         { value: 'name', label: 'group.name' },

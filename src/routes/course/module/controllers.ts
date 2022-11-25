@@ -6,17 +6,7 @@ import Group, { GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
 
-const getModulePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => [
-  {
-    $lookup: {
-      from: 'groups',
-      localField: 'groups',
-      foreignField: '_id',
-      as: 'groups',
-    },
-  },
-  { $match: query },
-];
+import { getModulePipeline } from './aggregations';
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
