@@ -3,6 +3,7 @@ import admissionTests from './admission-test';
 import courseUsers from './course-users';
 import courses from './courses';
 import firebaseUsers from './firebase';
+import groups from './groups';
 import modules from './modules';
 import postulantCourses from './postulant-course';
 import postulants from './postulants';
@@ -24,4 +25,5 @@ export default {
   modules,
   admissionResults,
   postulantCourses,
+  groups,
 };

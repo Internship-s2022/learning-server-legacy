@@ -53,4 +53,8 @@ export default {
     remove: true,
     create: true,
   },
+  groups: {
+    remove: true,
+    create: true,
+  },
 };

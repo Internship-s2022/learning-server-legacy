@@ -57,5 +57,12 @@ router.get(
   globalValidations.validateMongoId,
   courseUserControllers.exportToCsvByUserId,
 );
+router.get(
+  '/:courseId/without-group',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.courseUserByModuleIds,
+  courseUserControllers.getWithoutGroup,
+);
 
 export default router;

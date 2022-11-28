@@ -9,6 +9,7 @@ import { FirebaseUser } from '../src/interfaces/firebase';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
 import CourseUser, { CourseUserType } from '../src/models/course-user';
+import Group, { GroupType } from '../src/models/group';
 import Module, { ModuleType } from '../src/models/module';
 import Postulant, { PostulantType } from '../src/models/postulant';
 import Question, { QuestionType } from '../src/models/question';
@@ -36,6 +37,7 @@ interface data {
   modules: ModuleType[];
   postulantCourses: PostulantCourseType[];
   admissionResults: AdmissionResultType[];
+  groups: GroupType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
@@ -51,6 +53,7 @@ const {
   modules,
   postulantCourses,
   admissionResults,
+  groups,
 }: data = allData[env];
 
 const seedDatabase = async (endProcess = true) => {
@@ -91,7 +94,11 @@ const seedDatabase = async (endProcess = true) => {
   );
   const allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
   const allUsers = [...users, ...randomUsers];
-  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
+  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(
+    courses,
+    allUsers,
+    courseUsers,
+  );
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
 
@@ -159,6 +166,11 @@ const seedDatabase = async (endProcess = true) => {
       if (config.admissionResults.remove) {
         promises.push(AdmissionResult.collection.deleteMany({}));
         console.log('\x1b[37m', padMessage('🚀 Admission results removed'));
+      }
+
+      if (config.groups.remove) {
+        promises.push(Group.collection.deleteMany({}));
+        console.log('\x1b[37m', padMessage('🚀 Groups removed'));
       }
 
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
@@ -247,6 +259,11 @@ const seedDatabase = async (endProcess = true) => {
       if (config.admissionResults.create) {
         promises.push(AdmissionResult.collection.insertMany(admissionResults));
         console.log('\x1b[37m', padMessage('🚀 Admission results added'));
+      }
+
+      if (config.groups.create) {
+        promises.push(Group.collection.insertMany(groups));
+        console.log('\x1b[37m', padMessage('🚀 Groups added'));
       }
 
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]

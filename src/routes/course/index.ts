@@ -2,6 +2,7 @@ import express from 'express';
 
 import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
+import groupRouter from 'src/routes/course/group';
 import moduleRouter from 'src/routes/course/module';
 
 import coursesControllers from './controllers';
@@ -23,6 +24,13 @@ router.use(
   globalValidations.validateMongoId,
   validations.courseId,
   postulantCourseRoute,
+);
+router.use(
+  '/:courseId/group',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.courseId,
+  groupRouter,
 );
 router.get('/', firebaseValidations.superAdmin, coursesControllers.getAll);
 router.get('/export/csv', firebaseValidations.superAdmin, coursesControllers.exportToCsv);
