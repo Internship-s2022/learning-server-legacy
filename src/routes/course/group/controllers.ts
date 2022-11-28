@@ -194,8 +194,15 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const deleteById = async (req: Request, res: Response) => {
+  const successDeleteFromModules = await deleteGroupFromModules(req.params.groupId);
+  if (!successDeleteFromModules) {
+    throw new CustomError(500, 'There was an error while deleting the group from the modules.');
+  }
   const group = await Group.findById(req.params.groupId);
   if (!group?.isActive) {
+    if (!group) {
+      throw new CustomError(404, `Group with id ${req.params.groupId} was not found.`);
+    }
     throw new CustomError(400, 'This group has already been disabled.');
   }
   const result = await Group.findByIdAndUpdate(
@@ -212,7 +219,6 @@ const deleteById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Group with id ${req.params.groupId} was not found.`);
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
