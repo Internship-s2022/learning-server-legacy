@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "3e391dba-cea1-41be-9c7e-c70269aecc76",
+    "_postman_id": "ba458492-6ecf-4428-9576-28e8e7ea55a7",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577719"
+    "_exporter_id": "23305867"
   },
   "item": [
     {
@@ -616,8 +616,27 @@
                   "path": ["course", ":courseId", "group", "export", "csv"],
                   "query": [
                     {
-                      "key": "title",
+                      "key": "name",
                       "value": "",
+                      "description": "filter by course name",
+                      "disabled": true
+                    },
+                    {
+                      "key": "courseUsers.user.postulant.firstName",
+                      "value": "",
+                      "description": "filter by courseUser firstName",
+                      "disabled": true
+                    },
+                    {
+                      "key": "courseUsers.role",
+                      "value": "",
+                      "description": "filter by courseUser role",
+                      "disabled": true
+                    },
+                    {
+                      "key": "modules.name",
+                      "value": "",
+                      "description": "filter by module name",
                       "disabled": true
                     }
                   ],

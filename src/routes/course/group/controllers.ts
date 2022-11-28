@@ -61,7 +61,7 @@ const create = async (req: Request, res: Response) => {
 
   const modules = await Module.find(filterIncludeArrayOfIds(req.body.modules));
   if (modules.length !== req.body.modules.length) {
-    throw new CustomError(404, 'Some of the modules does not exist.');
+    throw new CustomError(404, 'One or more of the of the modules do not exist.');
   }
 
   // Validate if courseUsers are able to be in this group in this modules
@@ -75,7 +75,10 @@ const create = async (req: Request, res: Response) => {
     courseUsersIds.includes(id),
   );
   if (!availableCourseUsers) {
-    throw new CustomError(404, 'One or more of the courseUsers could not be on this group.');
+    throw new CustomError(
+      404,
+      'One or more courseUsers do not exist or are already assigned to another group.',
+    );
   }
   const validCourseUsersRole = await validateAtLeastOneRole('TUTOR', req.body.courseUsers);
   if (!validCourseUsersRole) {
