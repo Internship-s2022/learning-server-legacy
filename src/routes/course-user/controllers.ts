@@ -6,7 +6,7 @@ import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
 import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users';
 
 import { getCourseBasedOnUserPipeline, getUserBasedOnCoursePipeline } from './aggregations';
@@ -193,8 +193,12 @@ const physicalDeleteByUserId = async (req: Request, res: Response) => {
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.id);
   if (course) {
+    const query = filterByIncludes(req.query);
     const docs = await CourseUser.aggregate(
-      getUserBasedOnCoursePipeline({ course: new mongoose.Types.ObjectId(req.params.id) }),
+      getUserBasedOnCoursePipeline({
+        ...query,
+        course: new mongoose.Types.ObjectId(req.params.id),
+      }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -229,8 +233,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
 const exportToCsvByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
+    const query = filterByIncludes(req.query);
     const docs = await CourseUser.aggregate(
-      getCourseBasedOnUserPipeline({ user: new mongoose.Types.ObjectId(req.params.id) }),
+      getCourseBasedOnUserPipeline({ ...query, user: new mongoose.Types.ObjectId(req.params.id) }),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {

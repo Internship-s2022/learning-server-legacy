@@ -94,7 +94,11 @@ const seedDatabase = async (endProcess = true) => {
   );
   const allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
   const allUsers = [...users, ...randomUsers];
-  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
+  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(
+    courses,
+    allUsers,
+    courseUsers,
+  );
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
 

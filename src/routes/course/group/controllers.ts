@@ -59,6 +59,11 @@ const create = async (req: Request, res: Response) => {
     throw new CustomError(404, `The group name: "${req.body.name}" already exist in this course.`);
   }
 
+  const modules = await Module.find(filterIncludeArrayOfIds(req.body.modules));
+  if (modules.length !== req.body.modules.length) {
+    throw new CustomError(404, 'Some of the modules does not exist.');
+  }
+
   // Validate if courseUsers are able to be in this group in this modules
   const courseUsers = await getCourseUsersExcludeByModules(
     new mongoose.Types.ObjectId(req.params.courseId),
@@ -89,7 +94,6 @@ const create = async (req: Request, res: Response) => {
     throw new CustomError(404, 'There was an error during the creation of the group.');
   }
   try {
-    const modules = await Module.find(filterIncludeArrayOfIds(req.body.modules));
     const modulesWithGroup: ModuleType[] = modules.map((module) => {
       const groups = [...module.groups, newGroup._id];
       const moduleWithGroup: ModuleType = {

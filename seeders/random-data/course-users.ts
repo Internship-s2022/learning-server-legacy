@@ -21,7 +21,11 @@ const randomCourseUser = (
   };
 };
 
-export const generateRandomCourseUsers = (courses: CourseType[], users: UserType[]) => {
+export const generateRandomCourseUsers = (
+  courses: CourseType[],
+  users: UserType[],
+  defaultCourseUsers: CourseUserType[],
+) => {
   console.log('\x1b[36m', padMessage('⚡️ Adding Users in Courses'));
   const courseUsers: CourseUserType[] = [];
 
@@ -31,20 +35,28 @@ export const generateRandomCourseUsers = (courses: CourseType[], users: UserType
       for (let u = 0; u < users.length; u++) {
         const user = users[u];
         let courseUser: CourseUserType;
-        if (course.isInternal && user.isInternal) {
-          courseUser = randomCourseUser(
-            true,
-            new mongoose.Types.ObjectId(course._id),
-            new mongoose.Types.ObjectId(user._id),
-          );
-          courseUsers.push(courseUser);
-        } else if (!course.isInternal) {
-          courseUser = randomCourseUser(
-            user.isInternal,
-            new mongoose.Types.ObjectId(course._id),
-            new mongoose.Types.ObjectId(user._id),
-          );
-          courseUsers.push(courseUser);
+        if (
+          !defaultCourseUsers.some(
+            (cUser) =>
+              cUser.user.toString() === user._id?.toString() &&
+              cUser.course.toString() === course._id?.toString(),
+          )
+        ) {
+          if (course.isInternal && user.isInternal) {
+            courseUser = randomCourseUser(
+              true,
+              new mongoose.Types.ObjectId(course._id),
+              new mongoose.Types.ObjectId(user._id),
+            );
+            courseUsers.push(courseUser);
+          } else if (!course.isInternal) {
+            courseUser = randomCourseUser(
+              user.isInternal,
+              new mongoose.Types.ObjectId(course._id),
+              new mongoose.Types.ObjectId(user._id),
+            );
+            courseUsers.push(courseUser);
+          }
         }
       }
     }
