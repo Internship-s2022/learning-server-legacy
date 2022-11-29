@@ -57,4 +57,8 @@ export default {
     remove: true,
     create: true,
   },
+  reports: {
+    remove: true,
+    create: true,
+  },
 };

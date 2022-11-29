@@ -2,18 +2,18 @@ import 'dotenv/config';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import { DeleteResult } from 'mongodb';
 
-import AdmissionResult, { AdmissionResultType } from 'src/models/admission-result';
-import PostulantCourse, { PostulantCourseType } from 'src/models/postulant-course';
-
 import { FirebaseUser } from '../src/interfaces/firebase';
+import AdmissionResult, { AdmissionResultType } from '../src/models/admission-result';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
 import CourseUser, { CourseUserType } from '../src/models/course-user';
 import Group, { GroupType } from '../src/models/group';
 import Module, { ModuleType } from '../src/models/module';
 import Postulant, { PostulantType } from '../src/models/postulant';
+import PostulantCourse, { PostulantCourseType } from '../src/models/postulant-course';
 import Question, { QuestionType } from '../src/models/question';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
+import Report, { ReportType } from '../src/models/report';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
 import User, { UserType } from '../src/models/user';
 import config from './config';
@@ -38,6 +38,7 @@ interface data {
   postulantCourses: PostulantCourseType[];
   admissionResults: AdmissionResultType[];
   groups: GroupType[];
+  reports: ReportType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
@@ -54,6 +55,7 @@ const {
   postulantCourses,
   admissionResults,
   groups,
+  reports,
 }: data = allData[env];
 
 const seedDatabase = async (endProcess = true) => {
@@ -173,6 +175,11 @@ const seedDatabase = async (endProcess = true) => {
         console.log('\x1b[37m', padMessage('🚀 Groups removed'));
       }
 
+      if (config.reports.remove) {
+        promises.push(Report.collection.deleteMany({}));
+        console.log('\x1b[37m', padMessage('🚀 Reports removed'));
+      }
+
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -264,6 +271,11 @@ const seedDatabase = async (endProcess = true) => {
       if (config.groups.create) {
         promises.push(Group.collection.insertMany(groups));
         console.log('\x1b[37m', padMessage('🚀 Groups added'));
+      }
+
+      if (config.reports.create) {
+        promises.push(Report.collection.insertMany(reports));
+        console.log('\x1b[37m', padMessage('🚀 Reports added'));
       }
 
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]
