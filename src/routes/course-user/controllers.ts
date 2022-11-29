@@ -67,11 +67,28 @@ const assignRole = async (req: Request, res: Response) => {
   const user = await User.findById(req.body.user);
   const course = await Course.findById(req.body.course);
   if (user && course) {
-    const courseUser = await CourseUser.find({
+    const courseUser = await CourseUser.findOne({
       user: req.body.user,
       course: req.body.course,
     });
-    if (courseUser.length) {
+    if (courseUser) {
+      if (!courseUser.isActive && courseUser.role !== 'STUDENT') {
+        const updatedCourseUser = await CourseUser.findByIdAndUpdate(
+          courseUser._id,
+          {
+            user: req.body.user,
+            course: req.body.course,
+            role: req.body.role,
+            isActive: req.body.isActive,
+          },
+          { new: true },
+        );
+        return res.status(200).json({
+          message: 'Role successfully assigned.',
+          data: updatedCourseUser,
+          error: false,
+        });
+      }
       throw new CustomError(
         400,
         `The user with id: ${req.body.user} already has a role in this course.`,

@@ -26,7 +26,7 @@ export default {
   postulants: {
     remove: true,
     create: true,
-    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '100'),
+    amountRandom: parseInt(process.env.RANDOM_POSTULANTS_AMOUNT || '100'),
   },
   users: {
     remove: true,
