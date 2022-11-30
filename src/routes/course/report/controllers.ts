@@ -284,7 +284,7 @@ const update = async (req: Request, res: Response) => {
       if (index === -1) {
         throw new CustomError(
           404,
-          'One or more of the report exams id is not in the report or is missing in body..',
+          'One or more of the report exams id is not in the report or is missing in body.',
         );
       }
       reports[i].exams[index].grade = reportsBody[i].exams[j].grade;
