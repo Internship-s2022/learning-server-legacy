@@ -9,6 +9,7 @@ import postulantCourses from './postulant-course';
 import postulants from './postulants';
 import questions from './questions';
 import registrationForms from './registration-forms';
+import reports from './reports';
 import superAdmins from './super-admins';
 import users from './users';
 
@@ -26,4 +27,5 @@ export default {
   admissionResults,
   postulantCourses,
   groups,
+  reports,
 };

@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { CustomError } from 'src/models/custom-error';
 import Group, { GroupIdType, GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
+import { createReports, deleteReportsByGroupId } from 'src/routes/course/report/controllers';
 import {
   filterByIncludes,
   filterIncludeArrayOfIds,
@@ -118,6 +119,10 @@ const create = async (req: Request, res: Response) => {
       'There was an error during the update of the modules in the group creation.',
     );
   }
+  const reportsCreated = await createReports(req.body.courseUsers, req.body.modules);
+  if (!reportsCreated) {
+    throw new CustomError(500, 'There was an error creating the reports for this group.');
+  }
   return res.status(201).json({
     message: 'Group successfully created.',
     data: newGroup,
@@ -184,6 +189,10 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   const successDeleteFromModules = await deleteGroupFromModules(req.params.groupId);
   if (!successDeleteFromModules) {
     throw new CustomError(500, 'There was an error while deleting the group from the modules.');
+  }
+  const successDeleteReports = await deleteReportsByGroupId(req.params.groupId);
+  if (!successDeleteReports) {
+    throw new CustomError(500, 'There was an error while deleting the reports of this group.');
   }
   const result = await Group.findByIdAndDelete(req.params.groupId);
   if (result) {

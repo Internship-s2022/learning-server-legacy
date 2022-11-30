@@ -8,11 +8,17 @@ const groups: GroupType[] = [
     course: new mongoose.Types.ObjectId('1e063109a88495b45758c006'),
     name: 'Grupo 1',
     type: 'DEV',
-    modules: [new mongoose.Types.ObjectId('637517be650676f3da006f00')],
+    modules: [
+      new mongoose.Types.ObjectId('637517be650676f3da006f00'),
+      new mongoose.Types.ObjectId('637517be650676f3da006f01'),
+      new mongoose.Types.ObjectId('637517be650676f3da006f02'),
+      new mongoose.Types.ObjectId('637517be650676f3da006f03'),
+    ],
     courseUsers: [
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400000'),
       new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001'),
       new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400002'),
+      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400003'),
+      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400004'),
     ],
     isActive: true,
   },
@@ -25,10 +31,7 @@ const groups: GroupType[] = [
       new mongoose.Types.ObjectId('637517be650676f3da006f00'),
       new mongoose.Types.ObjectId('637517be650676f3da006f02'),
     ],
-    courseUsers: [
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400000'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001'),
-    ],
+    courseUsers: [new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001')],
     isActive: true,
   },
   {
@@ -38,14 +41,9 @@ const groups: GroupType[] = [
     type: 'DEV',
     modules: [
       new mongoose.Types.ObjectId('637517be650676f3da006f00'),
-      new mongoose.Types.ObjectId('637517be650676f3da006f03'),
+      new mongoose.Types.ObjectId('637517be650676f3da006f02'),
     ],
-    courseUsers: [
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400002'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400003'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400004'),
-    ],
+    courseUsers: [new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001')],
     isActive: true,
   },
   {
@@ -57,12 +55,7 @@ const groups: GroupType[] = [
       new mongoose.Types.ObjectId('637517be650676f3da006f00'),
       new mongoose.Types.ObjectId('637517be650676f3da006f03'),
     ],
-    courseUsers: [
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400002'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400003'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400004'),
-    ],
+    courseUsers: [new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001')],
     isActive: true,
   },
   {
@@ -74,12 +67,7 @@ const groups: GroupType[] = [
       new mongoose.Types.ObjectId('637517be650676f3da006f00'),
       new mongoose.Types.ObjectId('637517be650676f3da006f03'),
     ],
-    courseUsers: [
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400002'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400003'),
-      new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400004'),
-    ],
+    courseUsers: [new mongoose.Types.ObjectId('507f1f77bcf86cdcc4400001')],
     isActive: true,
   },
 ];

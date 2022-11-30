@@ -4,6 +4,7 @@ import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
 import groupRouter from 'src/routes/course/group';
 import moduleRouter from 'src/routes/course/module';
+import reportRouter from 'src/routes/course/report';
 
 import coursesControllers from './controllers';
 import postulantCourseRoute from './postulant-course';
@@ -11,6 +12,13 @@ import validations from './validations';
 
 const router = express.Router();
 
+router.use(
+  '/:courseId/report',
+  firebaseValidations.superAdmin,
+  globalValidations.validateMongoId,
+  validations.courseId,
+  reportRouter,
+);
 router.use(
   '/:courseId/module',
   firebaseValidations.superAdmin,
