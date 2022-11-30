@@ -37,7 +37,7 @@ const exportReports = async (docs: ReportDocument[], res: Response) => {
         { value: 'courseUser.user.postulant.dni', label: 'DNI' },
         { value: 'assistance', label: 'report.assistance' },
         ...examsHeads,
-        { value: 'courseUser.user.postulant.email', label: 'email' },
+        { value: 'courseUser.user.email', label: 'email' },
         { value: 'courseUser.role', label: 'role' },
         'module.name',
         'module.status',

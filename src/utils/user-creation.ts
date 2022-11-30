@@ -41,6 +41,7 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
           await firebase
             .auth()
             .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
           if (err?.errorInfo?.code === 'auth/email-already-exists') {
@@ -65,6 +66,7 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
             isNewUser: true,
           });
           await newMongoUser.save();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
           await firebase.auth().deleteUser(firebaseUid);
@@ -79,6 +81,7 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
               email: req.body.email,
               password: newPassword,
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async (err: any) => {
               if (err) {
                 if (!req.body.postulant && !promotion)

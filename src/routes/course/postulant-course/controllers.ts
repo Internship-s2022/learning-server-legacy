@@ -331,6 +331,7 @@ const correctTests = async (req: Request, res: Response) => {
       data: updatedPostulations,
       error: false,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     for (let a = 0; a < initialValues.length; a++) {
       await AdmissionResult.findByIdAndUpdate(
@@ -401,11 +402,13 @@ const promoteOne = async (
           await NewCourseUser.save();
           successfulPostulants.push({ postulantId, user: newMongoUser, credentials });
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         throw new CustomError(500, err.message, { ...err, type: 'COURSE_USER_MONGO_ERROR' });
       }
     }
     return 'Postulants promoted successfully.';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     failedPostulants.push({ postulantId, error: err.message });
     throw err;
@@ -439,6 +442,7 @@ const promoteMany = async (req: Request, res: Response) => {
   let response: string;
   try {
     response = await promoteOne(req, failedPostulants, successfulPostulants);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await onError(successfulPostulants, courseId);
     throw err;
@@ -462,6 +466,7 @@ const promoteMany = async (req: Request, res: Response) => {
         template = sendgridTemplates.sendUserCredentials;
         templateData = { data: 'Inscription data' };
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await sendEmail(email, template, templateData, async (err: any) => {
         if (err) {
           await onError(successfulPostulants, courseId);

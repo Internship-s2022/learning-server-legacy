@@ -37,6 +37,11 @@ export const getReportPipeline = (query: qs.ParsedQs | { [k: string]: unknown })
       },
     },
     {
+      $unwind: {
+        path: '$courseUser.user',
+      },
+    },
+    {
       $lookup: {
         from: 'postulants',
         localField: 'courseUser.user.postulant',
@@ -47,15 +52,6 @@ export const getReportPipeline = (query: qs.ParsedQs | { [k: string]: unknown })
     {
       $unwind: {
         path: '$courseUser.user.postulant',
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-        module: 1,
-        courseUser: 1,
-        exams: 1,
-        assistance: 1,
       },
     },
     { $match: query },
