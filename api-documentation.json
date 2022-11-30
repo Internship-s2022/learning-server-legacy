@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "464da8ea-976d-465e-8cce-a663e086a873",
+    "_postman_id": "d81a3c39-6da8-4691-9f3b-aad9d64bc97b",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -1169,7 +1169,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "[\n    {\n        \"_id\": \"63861541e2ba06a6aaa88d86\",\n        \"exams\": [\n            {\n                \"name\": \"Problemática\",\n                \"grade\": 9\n            }\n        ]\n    },\n    {\n        \"_id\": \"63861541e2ba06a6aaa88d88\",\n        \"exams\": [\n            {\n                \"name\": \"Problemática\",\n                \"grade\": 6\n            }\n        ],\n        \"assistance\": true\n    }\n]",
+                  "raw": "[\n    {\n        \"_id\": \"637517be6506000000007f01\",\n        \"exams\": [\n            {\n                \"_id\": \"507f1f77bcf86cdcc44fff00\",\n                \"grade\": 3\n            }\n        ],\n        \"assistance\": true\n    }\n]",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1183,7 +1183,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "1e063109a88495b45758c000"
+                      "value": "1e063109a88495b45758c006"
                     }
                   ]
                 }

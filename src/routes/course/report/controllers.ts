@@ -53,17 +53,23 @@ const exportReports = async (docs: ReportDocument[], res: Response) => {
   throw new CustomError(404, 'There are no reports to export');
 };
 
-const reportsByCourseId = async (req: Request) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) => {
+  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
   const modulesInCourse = await Module.find({
-    course: new mongoose.Types.ObjectId(req.params.courseId),
+    course: new mongoose.Types.ObjectId(courseId),
   });
+  if (!modulesInCourse.length) {
+    throw new CustomError(
+      404,
+      `Cannot find the list of reports in the course ${courseId}. There are not any modules on this course.`,
+    );
+  }
   const reportAggregate = Report.aggregate(
     getReportPipeline({
       ...query,
-      $or: modulesInCourse
-        .map((module) => module._id.toString())
-        .map((id) => ({ 'module._id': new mongoose.Types.ObjectId(id) })),
+      $or: modulesInCourse.map((module) => ({
+        'module._id': module._id,
+      })),
     }),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
@@ -74,7 +80,7 @@ const reportsByCourseId = async (req: Request) => {
 };
 
 const getByCourseId = async (req: Request, res: Response) => {
-  const { docs, ...pagination } = await reportsByCourseId(req);
+  const { docs, ...pagination } = await reportsByCourseId(req.params.courseId, req.query);
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports in the course ${req.params.courseId}.`,
@@ -90,18 +96,18 @@ const getByCourseId = async (req: Request, res: Response) => {
 };
 
 const exportByCourseId = async (req: Request, res: Response) => {
-  const { docs } = await reportsByCourseId(req);
+  const { docs } = await reportsByCourseId(req.params.courseId, req.query);
   await exportReports(docs, res);
 };
 
-const reportsByModuleId = async (req: Request) => {
-  const module = await Module.findById(req.params.moduleId);
+const reportsByModuleId = async (moduleId: string, reqQuery: qs.ParsedQs = {}) => {
+  const module = await Module.findById(moduleId);
   if (!module) {
-    throw new CustomError(404, `Module with id ${req.params.moduleId} was not found.`);
+    throw new CustomError(404, `Module with id ${moduleId} was not found.`);
   }
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
   const reportAggregate = Report.aggregate(
-    getReportPipeline({ ...query, 'module._id': new mongoose.Types.ObjectId(req.params.moduleId) }),
+    getReportPipeline({ ...query, 'module._id': new mongoose.Types.ObjectId(moduleId) }),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
     page,
@@ -111,7 +117,7 @@ const reportsByModuleId = async (req: Request) => {
 };
 
 const getByModuleId = async (req: Request, res: Response) => {
-  const { docs, ...pagination } = await reportsByModuleId(req);
+  const { docs, ...pagination } = await reportsByModuleId(req.params.moduleId, req.query);
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports in the module ${req.params.moduleId}.`,
@@ -127,7 +133,7 @@ const getByModuleId = async (req: Request, res: Response) => {
 };
 
 const exportByModuleId = async (req: Request, res: Response) => {
-  const { docs } = await reportsByModuleId(req);
+  const { docs } = await reportsByModuleId(req.params.moduleId, req.query);
   await exportReports(docs, res);
 };
 
@@ -140,12 +146,18 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
   const modulesIncludeGroup = await Module.find({
     groups: { $in: groupId },
   });
+  if (!modulesIncludeGroup.length) {
+    throw new CustomError(
+      404,
+      `Cannot find the list of reports in the grouo ${groupId}. This group in not assigned to any module.`,
+    );
+  }
   const reportAggregate = Report.aggregate(
     getReportPipeline({
       ...query,
-      $or: modulesIncludeGroup
-        .map((module) => module._id.toString())
-        .map((id) => ({ 'module._id': new mongoose.Types.ObjectId(id) })),
+      $or: modulesIncludeGroup.map((module) => ({
+        'module._id': module._id,
+      })),
     }),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
@@ -173,19 +185,19 @@ const exportByGroupId = async (req: Request, res: Response) => {
   await exportReports(docs, res);
 };
 
-const reportsByStudentId = async (req: Request) => {
-  const student = await CourseUser.findById(req.params.studentId);
+const reportsByStudentId = async (studentId: string, reqQuery: qs.ParsedQs = {}) => {
+  const student = await CourseUser.findById(studentId);
   if (!(student?.role === 'STUDENT')) {
     if (!student) {
-      throw new CustomError(404, `Course User with id ${req.params.studentId} was not found.`);
+      throw new CustomError(404, `Course User with id ${studentId} was not found.`);
     }
-    throw new CustomError(404, `Course User with id ${req.params.studentId} is not a student.`);
+    throw new CustomError(404, `Course User with id ${studentId} is not a student.`);
   }
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
   const reportAggregate = Report.aggregate(
     getReportPipeline({
       ...query,
-      'courseUser._id': new mongoose.Types.ObjectId(req.params.studentId),
+      'courseUser._id': new mongoose.Types.ObjectId(studentId),
     }),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
@@ -196,7 +208,7 @@ const reportsByStudentId = async (req: Request) => {
 };
 
 const getByStudentId = async (req: Request, res: Response) => {
-  const { docs, ...pagination } = await reportsByStudentId(req);
+  const { docs, ...pagination } = await reportsByStudentId(req.params.studentId, req.query);
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports of the student ${req.params.studentId}.`,
@@ -212,7 +224,7 @@ const getByStudentId = async (req: Request, res: Response) => {
 };
 
 const exportByStudentId = async (req: Request, res: Response) => {
-  const { docs } = await reportsByStudentId(req);
+  const { docs } = await reportsByStudentId(req.params.studentId, req.query);
   await exportReports(docs, res);
 };
 
@@ -251,12 +263,34 @@ export const deleteReportsByGroupId = async (groupId: string) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const reports: ReportIdType[] = req.body;
-  const validReports = await Report.find(
-    filterIncludeArrayOfIds(reports.map((report) => report._id.toString())),
+  const reportsBody: ReportIdType[] = req.body;
+  const reports = await Report.find(
+    filterIncludeArrayOfIds(reportsBody.map((report) => report._id.toString())),
   );
-  if (validReports.length !== reports.length) {
+  if (reports.length !== reportsBody.length) {
     throw new CustomError(404, 'One or more of the reports do not exist.');
+  }
+  for (let i = 0; i < reports.length; i++) {
+    if (reports[i].exams.length !== reportsBody[i].exams.length) {
+      throw new CustomError(
+        404,
+        'One or more of the report exams is not in the report or is missing in body.',
+      );
+    }
+    console.log('reports[i].exams', reports[i].exams);
+    console.log('reportsBody[i].exams', reportsBody[i].exams);
+    for (let j = 0; j < reports[i].exams.length; j++) {
+      const index = reports[i].exams.findIndex(
+        (exam) => exam._id?.toString() === reportsBody[i].exams[j]._id,
+      );
+      if (index === -1) {
+        throw new CustomError(
+          404,
+          'One or more of the report exams id is not in the report or is missing in body..',
+        );
+      }
+      reports[i].exams[index].grade = reportsBody[i].exams[j].grade;
+    }
   }
   const updatedReports: ReportType[] = [];
   try {

@@ -2,6 +2,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface ExamType {
+  _id?: mongoose.Types.ObjectId;
   name: string;
   grade: number;
 }
