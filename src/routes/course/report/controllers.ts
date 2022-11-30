@@ -277,8 +277,6 @@ const update = async (req: Request, res: Response) => {
         'One or more of the report exams is not in the report or is missing in body.',
       );
     }
-    console.log('reports[i].exams', reports[i].exams);
-    console.log('reportsBody[i].exams', reportsBody[i].exams);
     for (let j = 0; j < reports[i].exams.length; j++) {
       const index = reports[i].exams.findIndex(
         (exam) => exam._id?.toString() === reportsBody[i].exams[j]._id,
