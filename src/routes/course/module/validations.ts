@@ -5,16 +5,28 @@ import { CustomError } from 'src/models/custom-error';
 import { ModuleType } from 'src/models/module';
 
 const moduleJoiSchema = Joi.object<ModuleType>({
-  name: Joi.string().min(3).max(50).required().messages({
-    'string.min': 'Invalid name, it must contain more than 3 letters.',
-    'string.max': 'Invalid name, it must not contain more than 50 letters.',
-    'any.required': 'Name is a required field.',
-  }),
-  description: Joi.string().min(5).max(50).required().messages({
-    'string.min': 'Invalid description, it must contain more than 5 letters.',
-    'string.max': 'Invalid description, it must not contain more than 200 letters.',
-    'any.required': 'Description is a required field.',
-  }),
+  name: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(50)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
+      'string.min': 'Invalid name, it must contain more than 3 letters.',
+      'string.max': 'Invalid name, it must not contain more than 50 letters.',
+      'any.required': 'Name is a required field.',
+    }),
+  description: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(5)
+    .max(50)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
+      'string.min': 'Invalid description, it must contain more than 5 letters.',
+      'string.max': 'Invalid description, it must not contain more than 200 letters.',
+      'any.required': 'Description is a required field.',
+    }),
   status: Joi.string().valid('PENDING', 'IN_PROGRESS', 'COMPLETED').required().messages({
     'string.valid': 'Invalid status, should be one of the valids status.',
     'any.required': 'Status is a required field.',
@@ -37,11 +49,18 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .unique(),
   contents: Joi.array()
     .items(
-      Joi.string().min(3).max(24).required().messages({
-        'string.min': 'Invalid content name, it must contain more than 3 letters.',
-        'string.max': 'Invalid content name, it must not contain more than 24 letters.',
-        'any.required': 'Name is a required field.',
-      }),
+      Joi.string()
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .min(3)
+        .max(24)
+        .required()
+        .messages({
+          'string.pattern.base':
+            'Invalid content name, it must not start nor end with whitespaces.',
+          'string.min': 'Invalid content name, it must contain more than 3 letters.',
+          'string.max': 'Invalid content name, it must not contain more than 24 letters.',
+          'any.required': 'Name is a required field.',
+        }),
     )
     .optional(),
   isActive: Joi.boolean().required().messages({

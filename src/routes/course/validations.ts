@@ -6,25 +6,31 @@ import { CustomError } from 'src/models/custom-error';
 
 const courseValidation = (req: Request, res: Response, next: NextFunction) => {
   const courseValidation = Joi.object<CourseWithUsers>({
-    name: Joi.string().min(3).max(50).required().messages({
-      'string.min': 'Invalid course name, it must contain more than 3 letters.',
-      'string.max': 'Invalid course name, it must not contain more than 50 letters.',
-      'any.required': 'Name is a required field.',
-    }),
+    name: Joi.string()
+      .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+      .min(3)
+      .max(50)
+      .required()
+      .messages({
+        'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
+        'string.min': 'Invalid course name, it must contain more than 3 letters.',
+        'string.max': 'Invalid course name, it must not contain more than 50 letters.',
+        'any.required': 'Name is a required field.',
+      }),
     admissionTests: Joi.array().items(
       Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .messages({
           'string.pattern.base': 'Invalid admission test id, ObjectId expected.',
-          'any.required': 'Admission tests id is a required field.',
         }),
     ),
     description: Joi.string()
-      .pattern(/(.*[a-zA-Z]){4}/)
+      .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+      .min(4)
       .max(200)
       .required()
       .messages({
-        'string.pattern.base': 'Invalid description, it must contain at least 4 letters.',
+        'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
         'any.required': 'Description is a required field.',
       }),
     inscriptionStartDate: Joi.date().greater('now').required().messages({
@@ -65,6 +71,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
         }),
       )
       .min(2)
+      .max(1000)
       .has(
         Joi.object({
           user: Joi.string()

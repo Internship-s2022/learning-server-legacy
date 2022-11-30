@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 
-import { ResponseBody } from 'src/interfaces/response';
-import Course, { CourseType, CourseWithUsers } from 'src/models/course';
+import Course, { CourseDocument, CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
@@ -48,13 +47,13 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
-  res: Response<ResponseBody<CourseType>>,
+  res: Response,
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
   if (courseName?.name) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
-  let newCourse: CourseType | undefined;
+  let newCourse: CourseDocument;
   try {
     const course = new Course<CourseType>({
       name: req.body.name,
@@ -68,8 +67,7 @@ const create = async (
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
     });
-    await course.save();
-    newCourse = course;
+    newCourse = await course.save();
   } catch {
     throw new CustomError(500, 'There was an error during the creation of the course.');
   }
@@ -83,18 +81,18 @@ const create = async (
     throw new CustomError(400, 'Some of the users dont exist.');
   }
 
+  const courseUsers = req.body.courseUsers?.map((e) => ({
+    course: newCourse?._id,
+    user: e.user,
+    role: e.role,
+    isActive: e.isActive,
+  }));
+
   try {
-    CourseUser.insertMany(
-      req.body.courseUsers?.map((e) => ({
-        course: newCourse?._id,
-        user: e.user,
-        role: e.role,
-        isActive: e.isActive,
-      })),
-    );
+    CourseUser.insertMany(courseUsers);
     return res.status(201).json({
       message: 'Course with users successfully created.',
-      data: newCourse,
+      data: { ...newCourse.toObject(), courseUsers },
       error: false,
     });
   } catch {

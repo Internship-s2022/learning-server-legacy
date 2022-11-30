@@ -25,6 +25,7 @@ const groupJoiSchema = Joi.object<GroupType>({
         }),
     )
     .optional()
+    .max(250)
     .unique(),
   modules: Joi.array()
     .items(
