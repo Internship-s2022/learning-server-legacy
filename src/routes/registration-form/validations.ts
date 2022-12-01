@@ -38,6 +38,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         }),
       views: Joi.array()
         .min(1)
+        .max(200)
         .items(
           Joi.object({
             name: Joi.string()

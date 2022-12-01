@@ -17,13 +17,15 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
         'string.max': 'Invalid course name, it must not contain more than 50 characters.',
         'any.required': 'Name is a required field.',
       }),
-    admissionTests: Joi.array().items(
-      Joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .messages({
-          'string.pattern.base': 'Invalid admission test id, ObjectId expected.',
-        }),
-    ),
+    admissionTests: Joi.array()
+      .max(200)
+      .items(
+        Joi.string()
+          .pattern(/^[0-9a-fA-F]{24}$/)
+          .messages({
+            'string.pattern.base': 'Invalid admission test id, ObjectId expected.',
+          }),
+      ),
     description: Joi.string()
       .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
       .min(4)

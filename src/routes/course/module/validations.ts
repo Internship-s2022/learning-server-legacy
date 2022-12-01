@@ -46,6 +46,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
         }),
     )
     .optional()
+    .max(200)
     .unique(),
   contents: Joi.array()
     .items(
@@ -62,7 +63,8 @@ const moduleJoiSchema = Joi.object<ModuleType>({
           'any.required': 'Name is a required field.',
         }),
     )
-    .optional(),
+    .optional()
+    .max(200),
   isActive: Joi.boolean().required().messages({
     'any.required': 'Is active is a required field.',
   }),

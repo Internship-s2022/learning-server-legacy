@@ -43,6 +43,7 @@ const groupJoiSchema = Joi.object<GroupType>({
           'any.required': 'Modules is a required field.',
         }),
     )
+    .max(200)
     .optional()
     .unique(),
   isActive: Joi.boolean().required().messages({
