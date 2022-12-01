@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
 import { paginateAndFilterByIncludes } from 'src/utils/query';
@@ -48,6 +49,13 @@ const getById = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const course = await Course.findById(req.body.course);
+  if (!course?.isActive) {
+    if (!course) {
+      throw new CustomError(404, `Course with the id ${req.body.course} was not found.`);
+    }
+    throw new CustomError(404, `Course with the id ${req.body.course} is not active.`);
+  }
   const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
   if (formName?.title) {
     throw new CustomError(
@@ -71,6 +79,13 @@ const create = async (req: Request, res: Response) => {
 };
 
 const updateById = async (req: Request, res: Response) => {
+  const course = await Course.findById(req.body.course);
+  if (!course?.isActive) {
+    if (!course) {
+      throw new CustomError(404, `Course with the id ${req.body.course} was not found.`);
+    }
+    throw new CustomError(404, `Course with the id ${req.body.course} is not active.`);
+  }
   const formName = await RegistrationForm.findOne({ title: req.body.title, isActive: true });
   if (formName?.title) {
     throw new CustomError(
