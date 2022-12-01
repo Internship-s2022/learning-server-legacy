@@ -5,11 +5,17 @@ import { CustomError } from 'src/models/custom-error';
 import { GroupType } from 'src/models/group';
 
 const groupJoiSchema = Joi.object<GroupType>({
-  name: Joi.string().min(3).max(50).required().messages({
-    'string.min': 'Invalid name, it must contain more than 3 letters.',
-    'string.max': 'Invalid name, it must not contain more than 50 letters.',
-    'any.required': 'Name is a required field.',
-  }),
+  name: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(50)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
+      'string.min': 'Invalid name, it must contain more than 3 letters.',
+      'string.max': 'Invalid name, it must not contain more than 50 letters.',
+      'any.required': 'Name is a required field.',
+    }),
   type: Joi.string().valid('DEV', 'QA', 'UXUI', 'GENERAL').required().messages({
     'string.valid': 'Invalid type, should be one of the valids types.',
     'any.required': 'Type is a required field.',
@@ -25,6 +31,7 @@ const groupJoiSchema = Joi.object<GroupType>({
         }),
     )
     .optional()
+    .max(250)
     .unique(),
   modules: Joi.array()
     .items(

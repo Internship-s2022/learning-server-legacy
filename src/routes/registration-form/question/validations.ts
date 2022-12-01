@@ -7,20 +7,31 @@ import { Option, QuestionType } from 'src/models/question';
 import RegistrationForm, { RegistrationFormDocument } from 'src/models/registration-form';
 
 const option = Joi.object<Option>({
-  value: Joi.string().min(3).max(24).required(),
+  value: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(24)
+    .required(),
 })
   .required()
   .messages({
+    'string.pattern.base': 'Invalid value, it must not start nor end with whitespaces.',
     'string.max': 'Invalid option value, it must not contain more than 24 characters.',
     'string.min': 'Invalid option value, it must contain more than 3 characters.',
   });
 
 const question = Joi.object<QuestionType>({
-  title: Joi.string().min(3).max(50).required().messages({
-    'string.min': 'Invalid title, it must contain more than 3 letters.',
-    'string.max': 'Invalid title, it must not contain more than 50 letters.',
-    'any.required': 'Title is a required field.',
-  }),
+  title: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(50)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
+      'string.min': 'Invalid title, it must contain more than 3 letters.',
+      'string.max': 'Invalid title, it must not contain more than 50 letters.',
+      'any.required': 'Title is a required field.',
+    }),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()

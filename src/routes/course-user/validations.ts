@@ -87,6 +87,7 @@ const courseUserByModuleIds = (req: Request, res: Response, next: NextFunction) 
       )
       .required()
       .min(1)
+      .max(250)
       .messages({
         'any.min': 'Modules should have at least one module id.',
         'any.required': 'Modules is a required field.',

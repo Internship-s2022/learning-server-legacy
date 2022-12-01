@@ -24,7 +24,7 @@ export interface PopulatedCourseType {
 export interface CourseWithUsers extends CourseType {
   courseUsers: CourseUserType[];
 }
-interface CourseDocument extends CourseType, Document {
+export interface CourseDocument extends CourseType, Document {
   _id?: mongoose.Types.ObjectId;
 }
 
