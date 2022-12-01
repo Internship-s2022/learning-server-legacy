@@ -7,7 +7,7 @@ import { SuperAdminType } from 'src/models/super-admin';
 const superAdminValidation = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object<SuperAdminType>({
     email: Joi.string()
-      .pattern(/^\w+([.-]?\w+){2,64}@radiumrocket.com$/)
+      .pattern(/^[0-9a-zA-Z]+(?:[.\-_!$+=#][0-9a-zA-Z]+)*@radiumrocket.com$/)
       .messages({
         'string.pattern.base': 'Invalid email format.',
       }),
