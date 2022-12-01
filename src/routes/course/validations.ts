@@ -35,7 +35,7 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
         'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
         'any.required': 'Description is a required field.',
       }),
-    inscriptionStartDate: Joi.date().greater('now').required().messages({
+    inscriptionStartDate: Joi.date().required().messages({
       'date.greater': 'Invalid inscription start date, it must be after the current date.',
       'any.required': 'Inscription start date is a required field.',
     }),
