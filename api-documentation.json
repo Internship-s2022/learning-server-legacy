@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "c6f02916-723d-4030-8829-a3e0634e1d17",
+    "_postman_id": "d81a3c39-6da8-4691-9f3b-aad9d64bc97b",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -10,6 +10,30 @@
     {
       "name": "SuperAdmin",
       "item": [
+        {
+          "name": "Maintenance",
+          "item": [
+            {
+              "name": "Seeders",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/super-admin/maintenance/seeders",
+                  "host": ["{{API_URL}}"],
+                  "path": ["super-admin", "maintenance", "seeders"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Create",
           "request": {
@@ -233,7 +257,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "1e063109a88495b45758c000"
+                      "value": "1e063109a88495b45758c006"
                     }
                   ]
                 }
@@ -365,7 +389,801 @@
                     },
                     {
                       "key": "moduleId",
-                      "value": "637517380419a5552a9bcf99"
+                      "value": "637517be650676f3da006f00"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Group",
+          "item": [
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Grupo 14\",\n    \"type\": \"DEV\",\n    \"modules\": [\n        \"637517be650676f3da006f00\",\n        \"637517be650676f3da006f01\"\n    ],\n    \"courseUsers\": [\n        \"507f1f77bcf86cdcc4400000\",\n        \"507f1f77bcf86cdcc4400003\"\n    ],\n    \"isActive\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update by id",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Grupo 14\",\n    \"type\": \"DEV\",\n    \"modules\": [\"637517be650676f3da006f00\"],\n    \"courseUsers\": [\"507f1f77bcf86cdcc4400000\"],\n    \"isActive\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "query": [
+                    {
+                      "key": "isActive",
+                      "value": "false",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logical delete by id",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", ":groupId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export to csv",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/group/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "group", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "",
+                      "description": "filter by course name",
+                      "disabled": true
+                    },
+                    {
+                      "key": "courseUsers.user.postulant.firstName",
+                      "value": "",
+                      "description": "filter by courseUser firstName",
+                      "disabled": true
+                    },
+                    {
+                      "key": "courseUsers.role",
+                      "value": "",
+                      "description": "filter by courseUser role",
+                      "disabled": true
+                    },
+                    {
+                      "key": "modules.name",
+                      "value": "",
+                      "description": "filter by module name",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PostulantCourse",
+          "item": [
+            {
+              "name": "Get by CourseId",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation"],
+                  "query": [
+                    {
+                      "key": "corrected",
+                      "value": "true",
+                      "disabled": true
+                    },
+                    {
+                      "key": "postulant.firstName",
+                      "value": "Ag",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"postulant\": \"637b9c4e442cb499f3b614bc\",\n    \"view\": \"1e063109a88495b45758c000\",\n    \"answer\": [\n        {\n            \"question\": \"636d603af4779c11ba8f6009\"\n        },\n        {\n            \"question\": \"636d603af4779c11ba8f6001\",\n            \"value\": \"fddsf\"\n        },\n        {\n            \"question\": \"636d603af4779c11ba8f6006\",\n            \"value\": [\n                \"Argentina\"\n            ]\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Csv",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/export/csv?corrected=true",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "corrected",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Correct Tests",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"postulantId\": \"637bff5ec0421b651de9b800\",\n        \"scores\": [\n            {\n                \"admissionResult\": \"637aff8cc0421b651de9b81a\",\n                \"score\": 10\n            }\n        ]\n    },\n    {\n        \"postulantId\": \"637b9c4e442cb499f3b614bc\",\n        \"scores\": [\n            {\n                \"admissionResult\": \"637bffb1c0421b651de9b840\",\n                \"score\": 6\n            }\n        ]\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/admission-test",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "admission-test"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Promote postulants",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"postulantId\": \"637bff3ec0421b651de9b7ef\"\n    },\n    {\n        \"postulantId\": \"637bff5ec0421b651de9b800\"\n    },\n    {\n        \"postulantId\": \"637b9c4e442cb499f3b614bc\"\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/promote",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", "promote"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c000"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/postulation/:postulantId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "postulation", ":postulantId"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c003"
+                    },
+                    {
+                      "key": "postulantId",
+                      "value": "1e063109a88495b45758c002"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Report",
+          "item": [
+            {
+              "name": "Get by course id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", ""],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export by course id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by module id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/module/:moduleId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "module", ":moduleId"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "637517be650676f3da006f02"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export by module id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/module/:moduleId/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "module", ":moduleId", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "moduleId",
+                      "value": "637517be650676f3da006f02"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by group id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/group/:groupId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "group", ":groupId"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export by group id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/group/:groupId/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "group", ":groupId", "export", "csv"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "groupId",
+                      "value": "637517be650676f3da007f03"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by student id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/student/:studentId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report", "student", ":studentId"],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "studentId",
+                      "value": "507f1f77bcf86cdcc4400003"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export by student id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report/student/:studentId/export/csv",
+                  "host": ["{{API_URL}}"],
+                  "path": [
+                    "course",
+                    ":courseId",
+                    "report",
+                    "student",
+                    ":studentId",
+                    "export",
+                    "csv"
+                  ],
+                  "query": [
+                    {
+                      "key": "title",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
+                    },
+                    {
+                      "key": "studentId",
+                      "value": "507f1f77bcf86cdcc4400003"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"_id\": \"637517be6506000000007f01\",\n        \"exams\": [\n            {\n                \"_id\": \"507f1f77bcf86cdcc44fff00\",\n                \"grade\": 3\n            }\n        ],\n        \"assistance\": true\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/course/:courseId/report",
+                  "host": ["{{API_URL}}"],
+                  "path": ["course", ":courseId", "report"],
+                  "variable": [
+                    {
+                      "key": "courseId",
+                      "value": "1e063109a88495b45758c006"
                     }
                   ]
                 }
@@ -414,17 +1232,27 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course?isActive=true&name=A",
+              "raw": "{{API_URL}}/course?startDate.min=2023-04-11&inscriptionStartDate.min=2023-03-11",
               "host": ["{{API_URL}}"],
               "path": ["course"],
               "query": [
                 {
                   "key": "isActive",
-                  "value": "true"
+                  "value": "true",
+                  "disabled": true
                 },
                 {
                   "key": "name",
-                  "value": "A"
+                  "value": "A",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate.min",
+                  "value": "2023-04-11"
+                },
+                {
+                  "key": "inscriptionStartDate.min",
+                  "value": "2023-03-11"
                 }
               ]
             }
@@ -1129,7 +1957,7 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/postulant",
+              "raw": "{{API_URL}}/postulant?age.max=25",
               "host": ["{{API_URL}}"],
               "path": ["postulant"],
               "query": [
@@ -1137,6 +1965,15 @@
                   "key": "isActive",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "age.min",
+                  "value": "40",
+                  "disabled": true
+                },
+                {
+                  "key": "age.max",
+                  "value": "25"
                 }
               ]
             }
@@ -1748,12 +2585,81 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Get without group by courseId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"modules\": [\n        \"637517be650676f3da006f01\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/course-user/:courseId/without-group",
+              "host": ["{{API_URL}}"],
+              "path": ["course-user", ":courseId", "without-group"],
+              "query": [
+                {
+                  "key": "user.postulant.firstName",
+                  "value": "a",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "1e063109a88495b45758c006"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "Auth",
       "item": [
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Login",
           "event": [
@@ -1789,6 +2695,37 @@
                 {
                   "key": "key",
                   "value": "{{GOOGLE_API_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admission Result",
+      "item": [
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/admission-result",
+              "host": ["{{API_URL}}"],
+              "path": ["admission-result"],
+              "query": [
+                {
+                  "key": "score",
+                  "value": "9",
+                  "disabled": true
                 }
               ]
             }

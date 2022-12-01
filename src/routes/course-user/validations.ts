@@ -73,4 +73,33 @@ const courseUserDelete = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
-export default { courseUserValidations, courseUserDelete };
+const courseUserByModuleIds = (req: Request, res: Response, next: NextFunction) => {
+  const courseUserValidation = Joi.object({
+    modules: Joi.array()
+      .items(
+        Joi.string()
+          .pattern(/^[0-9a-fA-F]{24}$/)
+          .required()
+          .messages({
+            'string.pattern.base': 'Invalid module id, ObjectId expected.',
+            'any.required': 'Module id is a required field.',
+          }),
+      )
+      .required()
+      .min(1)
+      .max(250)
+      .messages({
+        'any.min': 'Modules should have at least one module id.',
+        'any.required': 'Modules is a required field.',
+      }),
+  });
+
+  const validation = courseUserValidation.validate(req.body);
+
+  if (validation.error) {
+    throw new CustomError(400, validation.error.details[0].message);
+  }
+  return next();
+};
+
+export default { courseUserValidations, courseUserDelete, courseUserByModuleIds };

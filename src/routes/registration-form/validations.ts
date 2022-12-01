@@ -14,21 +14,38 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'string.pattern.base': 'Invalid course id, ObjectId expected.',
           'any.required': 'Course id is a required field.',
         }),
-      title: Joi.string().min(3).max(50).required().messages({
-        'string.min': 'Invalid title, it must contain more than 3 letters.',
-        'string.max': 'Invalid title, it must not contain more than 50 letters.',
-        'any.required': 'Title is a required field.',
-      }),
-      description: Joi.string().min(8).max(150).required().messages({
-        'string.min': 'Invalid description, it must contain more than 8 letters.',
-        'string.max': 'Invalid description, it must not contain more than 150 letters.',
-        'any.required': 'Description is a required field.',
-      }),
+      title: Joi.string()
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .min(3)
+        .max(50)
+        .required()
+        .messages({
+          'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
+          'string.min': 'Invalid title, it must contain more than 3 characters.',
+          'string.max': 'Invalid title, it must not contain more than 50 characters.',
+          'any.required': 'Title is a required field.',
+        }),
+      description: Joi.string()
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .min(8)
+        .max(200)
+        .required()
+        .messages({
+          'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
+          'string.min': 'Invalid description, it must contain more than 8 characters.',
+          'string.max': 'Invalid description, it must not contain more than 150 characters.',
+          'any.required': 'Description is a required field.',
+        }),
       views: Joi.array()
         .min(1)
+        .max(200)
         .items(
           Joi.object({
-            name: Joi.string().min(3).required(),
+            name: Joi.string()
+              .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+              .min(3)
+              .max(30)
+              .required(),
             _id:
               requestType === 'post'
                 ? Joi.string()

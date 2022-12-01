@@ -7,20 +7,31 @@ import { Option, QuestionType } from 'src/models/question';
 import RegistrationForm, { RegistrationFormDocument } from 'src/models/registration-form';
 
 const option = Joi.object<Option>({
-  value: Joi.string().min(3).max(24).required(),
+  value: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(24)
+    .required(),
 })
   .required()
   .messages({
+    'string.pattern.base': 'Invalid value, it must not start nor end with whitespaces.',
     'string.max': 'Invalid option value, it must not contain more than 24 characters.',
     'string.min': 'Invalid option value, it must contain more than 3 characters.',
   });
 
 const question = Joi.object<QuestionType>({
-  title: Joi.string().min(3).max(50).required().messages({
-    'string.min': 'Invalid title, it must contain more than 3 letters.',
-    'string.max': 'Invalid title, it must not contain more than 50 letters.',
-    'any.required': 'Title is a required field.',
-  }),
+  title: Joi.string()
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .min(3)
+    .max(50)
+    .required()
+    .messages({
+      'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
+      'string.min': 'Invalid title, it must contain more than 3 characters.',
+      'string.max': 'Invalid title, it must not contain more than 50 characters.',
+      'any.required': 'Title is a required field.',
+    }),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()
@@ -31,8 +42,9 @@ const question = Joi.object<QuestionType>({
   options: Joi.when('type', {
     is: Joi.string().valid('SHORT_ANSWER', 'PARAGRAPH'),
     then: Joi.valid(null),
-    otherwise: Joi.array().items(option).unique('value').required(),
+    otherwise: Joi.array().items(option).unique('value').max(200).required(),
   }).messages({
+    'any.max': 'No more than 200 questions per view in the Registration Form.',
     'any.required': 'Options is a required field.',
   }),
   view: Joi.string()
@@ -49,7 +61,8 @@ const question = Joi.object<QuestionType>({
 
 const questionValidation = (bodyType: 'array' | 'object') => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const questionValidation = bodyType === 'array' ? Joi.array().items(question) : question;
+    const questionValidation =
+      bodyType === 'array' ? Joi.array().items(question).unique('title').min(1).max(200) : question;
     const validation = questionValidation.validate(req.body);
     if (validation.error) {
       throw new CustomError(400, validation.error.details[0].message);

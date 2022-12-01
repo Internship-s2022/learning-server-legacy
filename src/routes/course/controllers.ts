@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
-import { PipelineStage } from 'mongoose';
 
-import { ResponseBody } from 'src/interfaces/response';
-import Course, { CourseType, CourseWithUsers } from 'src/models/course';
+import Course, { CourseDocument, CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
@@ -14,57 +12,7 @@ import {
   paginateAndFilterByIncludes,
 } from 'src/utils/query';
 
-const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean }) => {
-  const pipeline: PipelineStage[] = [
-    {
-      $addFields: {
-        status: {
-          $switch: {
-            branches: [
-              {
-                case: {
-                  $gte: ['$inscriptionStartDate', '$$NOW'],
-                },
-                then: 'SOON',
-              },
-              {
-                case: {
-                  $and: [
-                    { $lt: ['$inscriptionStartDate', '$$NOW'] },
-                    { $gte: ['$inscriptionEndDate', '$$NOW'] },
-                  ],
-                },
-                then: 'OPEN_INSCRIPTION',
-              },
-              {
-                case: {
-                  $and: [{ $lt: ['$startDate', '$$NOW'] }, { $gte: ['$endDate', '$$NOW'] }],
-                },
-                then: 'IN_PROGRESS',
-              },
-            ],
-            default: 'COMPLETED',
-          },
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: 'admissiontests',
-        localField: 'admissionTests',
-        foreignField: '_id',
-        as: 'admissionTests',
-      },
-    },
-    { $match: query },
-  ];
-
-  if (options?.unwindAdmissionTest) {
-    pipeline.push({ $unwind: { path: '$admissionTests' } });
-  }
-
-  return pipeline;
-};
+import { getCoursePipeline } from './aggregations';
 
 const getAll = async (req: Request, res: Response) => {
   const { page, limit, query } = paginateAndFilterByIncludes(req.query);
@@ -99,13 +47,13 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (
   req: Request<Record<string, string>, unknown, CourseWithUsers>,
-  res: Response<ResponseBody<CourseType>>,
+  res: Response,
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
   if (courseName?.name) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
-  let newCourse: CourseType | undefined;
+  let newCourse: CourseDocument;
   try {
     const course = new Course<CourseType>({
       name: req.body.name,
@@ -119,8 +67,7 @@ const create = async (
       isInternal: req.body.isInternal,
       isActive: req.body.isActive,
     });
-    await course.save();
-    newCourse = course;
+    newCourse = await course.save();
   } catch {
     throw new CustomError(500, 'There was an error during the creation of the course.');
   }
@@ -134,18 +81,18 @@ const create = async (
     throw new CustomError(400, 'Some of the users dont exist.');
   }
 
+  const courseUsers = req.body.courseUsers?.map((e) => ({
+    course: newCourse?._id,
+    user: e.user,
+    role: e.role,
+    isActive: e.isActive,
+  }));
+
   try {
-    CourseUser.insertMany(
-      req.body.courseUsers?.map((e) => ({
-        course: newCourse?._id,
-        user: e.user,
-        role: e.role,
-        isActive: e.isActive,
-      })),
-    );
+    CourseUser.insertMany(courseUsers);
     return res.status(201).json({
       message: 'Course with users successfully created.',
-      data: newCourse,
+      data: { ...newCourse.toObject(), courseUsers },
       error: false,
     });
   } catch {

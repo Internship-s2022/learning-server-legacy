@@ -35,7 +35,7 @@ const postulantValidation = (req: Request, res: Response, next: NextFunction) =>
     location: Joi.string().min(3).max(50).required(),
     email: Joi.string()
       .required()
-      .pattern(/^[\w-.]{2,64}@([\w-]{1,255}\.)+[\w-]{2,4}$/)
+      .pattern(/^[0-9a-zA-Z]+(?:[.\-_!$+=#][0-9a-zA-Z]+)*@[a-z0-9]{2,252}(?:\.[a-z]{2,3})+$/s)
       .messages({
         'string.pattern.base': 'Invalid email format.',
         //TO-DO: try to implement diferent cases for pattern validation. It is not possible to make this at this moment. It will be investigated with another tecnologies.

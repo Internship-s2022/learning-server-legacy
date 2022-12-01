@@ -4,11 +4,13 @@ import firebaseValidations from 'src/middlewares/firebase';
 import globalValidations from 'src/middlewares/validations';
 
 import superAdminControllers from './controllers';
+import maintenanceRouter from './maintenance';
 import validations from './validation';
 
 const router = express.Router();
 
 router.get('/', firebaseValidations.superAdmin, superAdminControllers.getAll);
+router.use('/maintenance', firebaseValidations.superAdmin, maintenanceRouter);
 router.get(
   '/:id',
   firebaseValidations.superAdmin,

@@ -13,10 +13,14 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
   let response: DecodedIdToken;
   try {
     response = await firebase.auth().verifyIdToken(String(token));
-  } catch {
-    throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
-      type: 'TOKEN_EXPIRED',
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error?.errorInfo?.code === 'auth/id-token-expired') {
+      throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
+        type: 'TOKEN_EXPIRED',
+      });
+    }
+    throw new Error(error);
   }
 
   if (response.userType !== 'SUPER_ADMIN') {
@@ -31,14 +35,18 @@ const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   if (!token) {
     throw new CustomError(401, 'Unauthorized. Provide a token.');
   }
-
   let response: DecodedIdToken;
   try {
     response = await firebase.auth().verifyIdToken(String(token));
-  } catch {
-    throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
-      type: 'TOKEN_EXPIRED',
-    });
+    req.firebaseUid = response.uid;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error?.errorInfo?.code === 'auth/id-token-expired') {
+      throw new CustomError(401, 'Unauthorized. Firebase ID token has expired.', {
+        type: 'TOKEN_EXPIRED',
+      });
+    }
+    throw new Error(error);
   }
 
   if (response.userType !== 'NORMAL') {
