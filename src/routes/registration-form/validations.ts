@@ -21,8 +21,8 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         .required()
         .messages({
           'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid title, it must contain more than 3 letters.',
-          'string.max': 'Invalid title, it must not contain more than 50 letters.',
+          'string.min': 'Invalid title, it must contain more than 3 characters.',
+          'string.max': 'Invalid title, it must not contain more than 50 characters.',
           'any.required': 'Title is a required field.',
         }),
       description: Joi.string()
@@ -32,8 +32,8 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         .required()
         .messages({
           'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid description, it must contain more than 8 letters.',
-          'string.max': 'Invalid description, it must not contain more than 150 letters.',
+          'string.min': 'Invalid description, it must contain more than 8 characters.',
+          'string.max': 'Invalid description, it must not contain more than 150 characters.',
           'any.required': 'Description is a required field.',
         }),
       views: Joi.array()

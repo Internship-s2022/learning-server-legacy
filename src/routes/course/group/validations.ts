@@ -12,8 +12,8 @@ const groupJoiSchema = Joi.object<GroupType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid name, it must contain more than 3 letters.',
-      'string.max': 'Invalid name, it must not contain more than 50 letters.',
+      'string.min': 'Invalid name, it must contain more than 3 characters.',
+      'string.max': 'Invalid name, it must not contain more than 50 characters.',
       'any.required': 'Name is a required field.',
     }),
   type: Joi.string().valid('DEV', 'QA', 'UXUI', 'GENERAL').required().messages({

@@ -28,8 +28,8 @@ const question = Joi.object<QuestionType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid title, it must contain more than 3 letters.',
-      'string.max': 'Invalid title, it must not contain more than 50 letters.',
+      'string.min': 'Invalid title, it must contain more than 3 characters.',
+      'string.max': 'Invalid title, it must not contain more than 50 characters.',
       'any.required': 'Title is a required field.',
     }),
   type: Joi.string()

@@ -13,8 +13,8 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       .required()
       .messages({
         'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-        'string.min': 'Invalid course name, it must contain more than 3 letters.',
-        'string.max': 'Invalid course name, it must not contain more than 50 letters.',
+        'string.min': 'Invalid course name, it must contain more than 3 characters.',
+        'string.max': 'Invalid course name, it must not contain more than 50 characters.',
         'any.required': 'Name is a required field.',
       }),
     admissionTests: Joi.array().items(
@@ -30,8 +30,8 @@ const courseValidation = (req: Request, res: Response, next: NextFunction) => {
       .max(200)
       .required()
       .messages({
-        'string.min': 'Invalid course description, it must contain more than 4 letters.',
-        'string.max': 'Invalid course description, it must not contain more than 200 letters.',
+        'string.min': 'Invalid course description, it must contain more than 4 characters.',
+        'string.max': 'Invalid course description, it must not contain more than 200 characters.',
         'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
         'any.required': 'Description is a required field.',
       }),
