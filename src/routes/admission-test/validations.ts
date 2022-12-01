@@ -12,8 +12,8 @@ export const admissionTestSchema = Joi.object<AdmissionTestType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid admission test name, it must contain more than 3 letter.',
-      'string.max': 'Invalid admission test name, it must not contain more than 50 letters.',
+      'string.min': 'Invalid admission test name, it must contain more than 3 characters.',
+      'string.max': 'Invalid admission test name, it must not contain more than 50 characters.',
       'any.required': 'Name is a required field.',
     }),
   isActive: Joi.boolean().required().messages({

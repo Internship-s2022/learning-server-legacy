@@ -12,8 +12,8 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid name, it must contain more than 3 letters.',
-      'string.max': 'Invalid name, it must not contain more than 50 letters.',
+      'string.min': 'Invalid name, it must contain more than 3 characters.',
+      'string.max': 'Invalid name, it must not contain more than 50 characters.',
       'any.required': 'Name is a required field.',
     }),
   description: Joi.string()
@@ -23,8 +23,8 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid description, it must contain more than 5 letters.',
-      'string.max': 'Invalid description, it must not contain more than 200 letters.',
+      'string.min': 'Invalid description, it must contain more than 5 characters.',
+      'string.max': 'Invalid description, it must not contain more than 200 characters.',
       'any.required': 'Description is a required field.',
     }),
   status: Joi.string().valid('PENDING', 'IN_PROGRESS', 'COMPLETED').required().messages({
@@ -46,6 +46,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
         }),
     )
     .optional()
+    .max(200)
     .unique(),
   contents: Joi.array()
     .items(
@@ -57,12 +58,13 @@ const moduleJoiSchema = Joi.object<ModuleType>({
         .messages({
           'string.pattern.base':
             'Invalid content name, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid content name, it must contain more than 3 letters.',
-          'string.max': 'Invalid content name, it must not contain more than 24 letters.',
+          'string.min': 'Invalid content name, it must contain more than 3 characters.',
+          'string.max': 'Invalid content name, it must not contain more than 24 characters.',
           'any.required': 'Name is a required field.',
         }),
     )
-    .optional(),
+    .optional()
+    .max(200),
   isActive: Joi.boolean().required().messages({
     'any.required': 'Is active is a required field.',
   }),

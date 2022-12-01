@@ -28,8 +28,8 @@ const question = Joi.object<QuestionType>({
     .required()
     .messages({
       'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid title, it must contain more than 3 letters.',
-      'string.max': 'Invalid title, it must not contain more than 50 letters.',
+      'string.min': 'Invalid title, it must contain more than 3 characters.',
+      'string.max': 'Invalid title, it must not contain more than 50 characters.',
       'any.required': 'Title is a required field.',
     }),
   type: Joi.string()
@@ -42,8 +42,9 @@ const question = Joi.object<QuestionType>({
   options: Joi.when('type', {
     is: Joi.string().valid('SHORT_ANSWER', 'PARAGRAPH'),
     then: Joi.valid(null),
-    otherwise: Joi.array().items(option).unique('value').required(),
+    otherwise: Joi.array().items(option).unique('value').max(200).required(),
   }).messages({
+    'any.max': 'No more than 200 questions per view in the Registration Form.',
     'any.required': 'Options is a required field.',
   }),
   view: Joi.string()
@@ -60,7 +61,8 @@ const question = Joi.object<QuestionType>({
 
 const questionValidation = (bodyType: 'array' | 'object') => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const questionValidation = bodyType === 'array' ? Joi.array().items(question) : question;
+    const questionValidation =
+      bodyType === 'array' ? Joi.array().items(question).unique('title').min(1).max(200) : question;
     const validation = questionValidation.validate(req.body);
     if (validation.error) {
       throw new CustomError(400, validation.error.details[0].message);
