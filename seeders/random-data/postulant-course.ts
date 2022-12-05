@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
-import { AdmissionResultType } from 'src/models/admission-result';
-
+import { AdmissionResultType } from '../../src/models/admission-result';
 import { CourseType } from '../../src/models/course';
 import { PostulantType } from '../../src/models/postulant';
 import { PostulantCourseType } from '../../src/models/postulant-course';

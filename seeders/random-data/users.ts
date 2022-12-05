@@ -41,7 +41,7 @@ export const generateRandomUsers = (amount: number, postulants: PostulantType[])
   const usersIds: UserType['_id'][] = [];
 
   for (let i = 0; i < amount; i++) {
-    const postulant = faker.helpers.arrayElement(postulants);
+    const postulant = postulants[i];
     const email = faker.internet.email(undefined, undefined, 'getnada.com');
     const firebaseUser = randomFirebaseUser(email);
     firebaseUsers.push(firebaseUser);

@@ -401,7 +401,7 @@ const promoteOne = async (
         );
       }
       await PostulantCourse.findOneAndUpdate(
-        { postulant: postulantId },
+        { postulant: postulantId, course: req.params.courseId },
         { isPromoted: true },
         {
           new: true,
