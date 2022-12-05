@@ -21,9 +21,12 @@ export interface PopulatedCourseType {
   _id?: mongoose.Types.ObjectId;
   admissionTests: AdmissionTestType[];
 }
+
 export interface CourseWithUsers extends CourseType {
   courseUsers: CourseUserType[];
+  updatedAt?: string;
 }
+
 export interface CourseDocument extends CourseType, Document {
   _id?: mongoose.Types.ObjectId;
 }
