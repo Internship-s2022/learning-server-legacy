@@ -18,6 +18,7 @@ export interface PostulantCourseType {
   answer: AnswerType[];
   admissionResults: mongoose.Types.ObjectId[];
   view: mongoose.Types.ObjectId;
+  isPromoted: boolean;
 }
 
 export interface PopulatedPostulantCourseType {
@@ -27,6 +28,7 @@ export interface PopulatedPostulantCourseType {
   answer: AnswerType[];
   admissionResults: PopulatedAdmissionResultType[];
   view: mongoose.Types.ObjectId;
+  isPromoted: boolean;
 }
 
 interface PostulantCourseDocument extends PostulantCourseType, Document {
@@ -71,6 +73,10 @@ const PostulantCourseSchema = new Schema<PostulantCourseType, Model<PostulantCou
     view: {
       type: Schema.Types.ObjectId,
       required: true,
+    },
+    isPromoted: {
+      type: Schema.Types.Boolean,
+      default: false,
     },
   },
   { timestamps: true },
