@@ -41,6 +41,12 @@ const create = async (req: Request, res: Response) => {
         `The postulant with id: ${req.body.postulant} has been already postulated in this course.`,
       );
     }
+    if (!course.admissionTests.length) {
+      throw new CustomError(
+        400,
+        `The course with id: ${req.params.courseId} must have admission tests to create the postulation.`,
+      );
+    }
     const answers: AnswerType[] = req.body.answer;
     const enteredQuestions = await Question.find(
       filterIncludeArrayOfIds(answers.map((a: AnswerType) => a.question.toString())),
