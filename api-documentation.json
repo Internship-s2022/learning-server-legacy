@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "d81a3c39-6da8-4691-9f3b-aad9d64bc97b",
+    "_postman_id": "cbb2c37f-3948-4f6a-856c-db2c060c519f",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23305867"
+    "_exporter_id": "23577717"
   },
   "item": [
     {
@@ -1786,6 +1786,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -1870,6 +1875,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2758,8 +2768,9 @@
       "type": "string"
     },
     {
-      "key": "token",
-      "value": ""
+      "key": "GOOGLE_API_KEY",
+      "value": "AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E",
+      "type": "string"
     },
     {
       "key": "EMAIL",
@@ -2772,9 +2783,12 @@
       "type": "string"
     },
     {
-      "key": "GOOGLE_API_KEY",
-      "value": "AIzaSyBU42bIcEBMJnZ6lL5unZLjfhgb2-Ofa6E",
-      "type": "string"
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "courseId",
+      "value": "1e063109a88495b45758c000"
     }
   ]
 }
