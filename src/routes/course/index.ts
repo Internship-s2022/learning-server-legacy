@@ -51,14 +51,14 @@ router.get(
 router.post(
   '/',
   firebaseValidations.superAdmin,
-  validations.courseValidation,
+  validations.courseValidation('post'),
   coursesControllers.create,
 );
 router.put(
   '/:id',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
-  validations.courseValidation,
+  validations.courseValidation('put'),
   coursesControllers.update,
 );
 router.patch(

@@ -41,6 +41,12 @@ const create = async (req: Request, res: Response) => {
         `The postulant with id: ${req.body.postulant} has been already postulated in this course.`,
       );
     }
+    if (!course.admissionTests.length) {
+      throw new CustomError(
+        400,
+        `The course with id: ${req.params.courseId} must have admission tests to create the postulation.`,
+      );
+    }
     const answers: AnswerType[] = req.body.answer;
     const enteredQuestions = await Question.find(
       filterIncludeArrayOfIds(answers.map((a: AnswerType) => a.question.toString())),
@@ -109,7 +115,6 @@ const create = async (req: Request, res: Response) => {
         }
       }
     });
-
     const setAdmissionResults = await AdmissionResult.insertMany(
       course.admissionTests.map((item) => ({
         admissionTest: item,
@@ -121,6 +126,7 @@ const create = async (req: Request, res: Response) => {
       admissionResults: setAdmissionResults.map((item) => item._id),
       answer: req.body.answer,
       view: req.body.view,
+      isPromoted: false,
     });
     await newPostulantCourse.save();
 
@@ -225,10 +231,17 @@ const getPostulantBasedOnCoursePipeline = (
     ? {
         $match: {
           ...query,
+          isPromoted: false,
           admissionResults: { $not: { $elemMatch: { score: 0 } } },
         },
       }
-    : { $match: query },
+    : {
+        $match: {
+          ...query,
+          isPromoted: false,
+          admissionResults: { $elemMatch: { score: 0 } },
+        },
+      },
 ];
 
 const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
@@ -248,9 +261,11 @@ const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
 
 const getByCourseId = async (req: Request, res: Response) => {
   const courseId = req.params.courseId;
-  const corrected = req.query.corrected ? true : false;
+  const corrected = req.query.corrected === 'true' ? true : false;
   delete req.query.corrected;
-  const postulantCourse = await PostulantCourse.find({ course: new ObjectId(courseId) });
+  const postulantCourse = await PostulantCourse.find({
+    course: new ObjectId(courseId),
+  });
   if (postulantCourse.length) {
     const { page, limit, query } = paginateAndFilterByIncludes(req.query);
     const postulantCourseAggregate = PostulantCourse.aggregate(
@@ -391,6 +406,13 @@ const promoteOne = async (
           `The postulant with id: ${postulantId} has already a role in this course.`,
         );
       }
+      await PostulantCourse.findOneAndUpdate(
+        { postulant: postulantId, course: req.params.courseId },
+        { isPromoted: true },
+        {
+          new: true,
+        },
+      );
       try {
         if (newMongoUser._id) {
           const NewCourseUser = new CourseUser<CourseUserType>({
@@ -426,6 +448,10 @@ const onError = async (users: SuccessfulType[], courseId: string) => {
       user: users[u].user._id,
       course: courseId,
     });
+    await PostulantCourse.findOneAndUpdate(
+      { postulant: users[u].postulantId },
+      { isPromoted: false },
+    );
   }
   await firebaseAdmin.auth().deleteUsers(usersUids);
 };

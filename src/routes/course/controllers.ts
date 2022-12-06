@@ -105,7 +105,7 @@ const update = async (req: Request, res: Response) => {
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     isActive: true,
-  });
+  }).populate({ path: 'admissionTests' });
   if (updatedCourse) {
     return res.status(200).json({
       message: 'The course has been successfully updated.',

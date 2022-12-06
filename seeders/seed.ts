@@ -3,14 +3,14 @@ import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import { DeleteResult } from 'mongodb';
 
 import { FirebaseUser } from '../src/interfaces/firebase';
-import AdmissionResult, { AdmissionResultType } from '../src/models/admission-result';
+import AdmissionResult from '../src/models/admission-result';
 import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
 import Course, { CourseType } from '../src/models/course';
 import CourseUser, { CourseUserType } from '../src/models/course-user';
 import Group, { GroupType } from '../src/models/group';
 import Module, { ModuleType } from '../src/models/module';
 import Postulant, { PostulantType } from '../src/models/postulant';
-import PostulantCourse, { PostulantCourseType } from '../src/models/postulant-course';
+import PostulantCourse from '../src/models/postulant-course';
 import Question, { QuestionType } from '../src/models/question';
 import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
 import Report, { ReportType } from '../src/models/report';
@@ -19,6 +19,7 @@ import User, { UserType } from '../src/models/user';
 import config from './config';
 import allData from './data';
 import { generateRandomCourseUsers } from './random-data/course-users';
+import { generateRandomPostulantCourses } from './random-data/postulant-course';
 import { generateRandomPostulants } from './random-data/postulants';
 import { generateRegistrationFormPerCourse } from './random-data/registration-form';
 import { generateRandomUsers } from './random-data/users';
@@ -35,8 +36,6 @@ interface data {
   courseUsers: CourseUserType[];
   questions: QuestionType[];
   modules: ModuleType[];
-  postulantCourses: PostulantCourseType[];
-  admissionResults: AdmissionResultType[];
   groups: GroupType[];
   reports: ReportType[];
 }
@@ -52,8 +51,6 @@ const {
   users,
   courseUsers,
   modules,
-  postulantCourses,
-  admissionResults,
   groups,
   reports,
 }: data = allData[env];
@@ -103,6 +100,12 @@ const seedDatabase = async (endProcess = true) => {
   );
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
+  const { postulantCourses, admissionResults } = generateRandomPostulantCourses(
+    courses,
+    allPostulants,
+    registrationForms,
+    config.users.amountRandom,
+  );
 
   try {
     if (config.remove) {
