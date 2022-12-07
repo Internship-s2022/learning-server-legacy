@@ -68,9 +68,12 @@ const accessBasedOnRoleAndType =
     }
 
     if (response.userType === 'NORMAL') {
+      if (!mongoose.Types.ObjectId.isValid(String(course)) || !course) {
+        throw new CustomError(401, unauthorizedMessage);
+      }
       const courseDoc = await Course.findOne({ _id: course });
-      if (!mongoose.Types.ObjectId.isValid(String(course)) || !course || !courseDoc) {
-        throw new CustomError(400, 'The course is invalid or does not exist.');
+      if (!courseDoc) {
+        throw new CustomError(401, unauthorizedMessage);
       }
 
       const user = await User.findOne({ firebaseUid: response.uid });
