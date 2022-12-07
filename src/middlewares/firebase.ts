@@ -76,8 +76,11 @@ const accessBasedOnRoleAndType =
       const user = await User.findOne({ firebaseUid: response.uid });
       const courseUser = await CourseUser.findOne({ user: user?._id, course });
 
-      if (courseUser && (!roles.includes(courseUser.role) || !courseUser.isActive)) {
-        throw new CustomError(401, 'Unauthorized. You must have permissions in this course');
+      if (
+        !user?.isActive ||
+        (courseUser && (!roles.includes(courseUser.role) || !courseUser.isActive))
+      ) {
+        throw new CustomError(401, unauthorizedMessage);
       }
     }
 

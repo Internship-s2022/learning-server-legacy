@@ -36,7 +36,7 @@ const courseUsers: CourseUserType[] = [
     course: new mongoose.Types.ObjectId('1e063109a88495b45758c006'),
     user: new mongoose.Types.ObjectId('507f1f77bcf86cd799400004'),
     role: 'STUDENT',
-    isActive: true,
+    isActive: false,
   },
 ];
 
