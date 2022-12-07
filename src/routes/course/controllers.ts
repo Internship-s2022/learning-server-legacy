@@ -53,6 +53,12 @@ const create = async (
   if (courseName?.name) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
+  if (req.body.admissionTests.length > 0) {
+    throw new CustomError(
+      400,
+      'It is not possible to create a course with an Admission test in it.',
+    );
+  }
   let newCourse: CourseDocument;
   try {
     const course = new Course<CourseType>({
@@ -102,6 +108,10 @@ const create = async (
 };
 
 const update = async (req: Request, res: Response) => {
+  const courseName = await Course.findOne({ name: req.body.name, isActive: true });
+  if (courseName?.name) {
+    throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+  }
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     isActive: true,
