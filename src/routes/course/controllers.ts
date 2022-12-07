@@ -53,7 +53,7 @@ const create = async (
   if (courseName?.name) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
-  if (req.body.admissionTests.length > 0) {
+  if (req.body.admissionTests?.length) {
     throw new CustomError(
       400,
       'It is not possible to create a course with an Admission test in it.',
@@ -115,12 +115,15 @@ const update = async (
   if (courseName?.name && courseName?._id.toString() !== req.params.id) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
-  const existingUsers = await User.find(
-    filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
-  );
-  if (existingUsers?.length !== req.body.courseUsers.length) {
-    throw new CustomError(400, 'Some of the users dont exist.');
+  if (req.body.courseUsers?.length) {
+    const existingUsers = await User.find(
+      filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
+    );
+    if (existingUsers?.length !== req.body.courseUsers.length) {
+      throw new CustomError(400, 'Some of the users dont exist.');
+    }
   }
+
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     isActive: true,
