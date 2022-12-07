@@ -107,10 +107,19 @@ const create = async (
   }
 };
 
-const update = async (req: Request, res: Response) => {
+const update = async (
+  req: Request<Record<string, string>, unknown, CourseWithUsers>,
+  res: Response,
+) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
-  if (courseName?.name) {
+  if (courseName?.name && courseName?._id.toString() !== req.params.id) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+  }
+  const existingUsers = await User.find(
+    filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
+  );
+  if (existingUsers?.length !== req.body.courseUsers.length) {
+    throw new CustomError(400, 'Some of the users dont exist.');
   }
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
