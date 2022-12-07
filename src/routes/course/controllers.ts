@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 
+import AdmissionTest from 'src/models/admission-test';
 import Course, { CourseDocument, CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
@@ -53,12 +54,7 @@ const create = async (
   if (courseName?.name) {
     throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
   }
-  if (req.body.admissionTests?.length) {
-    throw new CustomError(
-      400,
-      'It is not possible to create a course with an Admission test in it.',
-    );
-  }
+
   let newCourse: CourseDocument;
   try {
     const course = new Course<CourseType>({
@@ -117,17 +113,25 @@ const update = async (
   }
   if (req.body.courseUsers?.length) {
     const existingUsers = await User.find(
-      filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
+      filterIncludeArrayOfIds(req.body.courseUsers?.map((cUser) => cUser.user.toString())),
     );
-    if (existingUsers?.length !== req.body.courseUsers.length) {
+    if (existingUsers?.length !== req.body.courseUsers?.length) {
       throw new CustomError(400, 'Some of the users dont exist.');
     }
   }
-
   const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     isActive: true,
   }).populate({ path: 'admissionTests' });
+
+  if (req.body.admissionTests?.length) {
+    const existingAdmissionTests = await AdmissionTest.find(
+      filterIncludeArrayOfIds(req.body.admissionTests?.map((aTest) => aTest.toString())),
+    );
+    if (existingAdmissionTests?.length !== req.body.admissionTests.length) {
+      throw new CustomError(400, 'Some of the admission tests dont exist.');
+    }
+  }
   if (updatedCourse) {
     return res.status(200).json({
       message: 'The course has been successfully updated.',
