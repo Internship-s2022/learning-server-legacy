@@ -52,7 +52,7 @@ const create = async (
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
   if (courseName?.name) {
-    throw new CustomError(400, `An course with the name ${req.body.name} already exists.`);
+    throw new CustomError(400, `A course with the name ${req.body.name} already exists.`);
   }
 
   let newCourse: CourseDocument;
@@ -109,7 +109,7 @@ const update = async (
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
   if (courseName?.name && courseName?._id.toString() !== req.params.id) {
-    throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+    throw new CustomError(400, `A course with the name ${req.body.name} already exists.`);
   }
   if (req.body.courseUsers?.length) {
     const existingUsers = await User.find(
