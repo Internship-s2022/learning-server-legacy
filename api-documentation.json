@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "2e746337-2588-406b-a8c4-2a9279b3cc49",
+    "_postman_id": "b9d632cf-738c-4589-80ae-dabe0fb4a160",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577583"
+    "_exporter_id": "23577717"
   },
   "item": [
     {
@@ -261,7 +261,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     }
                   ]
                 }
@@ -293,7 +293,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": ""
+                      "value": "{{courseId}}"
                     }
                   ]
                 }
@@ -327,7 +327,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "moduleId",
@@ -363,7 +363,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "moduleId",
@@ -392,7 +392,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "moduleId",
@@ -421,7 +421,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "moduleId",
@@ -464,6 +464,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
@@ -482,7 +487,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     }
                   ]
                 }
@@ -530,6 +535,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
@@ -548,7 +558,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "groupId",
@@ -567,6 +577,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -604,6 +619,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -613,7 +633,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "groupId",
@@ -633,6 +653,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -642,7 +667,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     },
                     {
                       "key": "groupId",
@@ -661,6 +686,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -697,7 +727,7 @@
                   "variable": [
                     {
                       "key": "courseId",
-                      "value": "{{courseintId}}"
+                      "value": "{{courseId}}"
                     }
                   ]
                 }
@@ -1320,7 +1350,7 @@
                   "\r",
                   "if(pm.response.code === 201){\r",
                   "    pm.response.to.have.status(201);\r",
-                  "    pm.collectionVariables.set(\"courseintId\", pm.response.json().data._id);\r",
+                  "    pm.collectionVariables.set(\"courseId\", pm.response.json().data._id);\r",
                   "} else { \r",
                   "pm.response.to.have.status(400);\r",
                   "}"
@@ -1366,7 +1396,7 @@
                   "\r",
                   "if(pm.response.code === 201){\r",
                   "    pm.response.to.have.status(201);\r",
-                  "    pm.collectionVariables.set(\"courseExtId\", pm.response.json().data._id);\r",
+                  "    pm.collectionVariables.set(\"courseId\", pm.response.json().data._id);\r",
                   "} else { \r",
                   "pm.response.to.have.status(400);\r",
                   "}"
@@ -1531,7 +1561,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "{{courseintId}}"
+                  "value": "{{courseId}}"
                 }
               ]
             }
@@ -1574,7 +1604,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "{{courseExtId}}"
+                  "value": "{{courseId}}"
                 }
               ]
             }
@@ -3081,7 +3111,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"{{userAdminId}}\",\n    \"course\": \"{{courseintId}}\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"user\": \"{{userAdminId}}\",\n    \"course\": \"{{courseId}}\",\n    \"role\": \"ADMIN\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3127,7 +3157,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"{{userTutorId}}\",\n    \"course\": \"{{courseintId}}\",\n    \"role\": \"TUTOR\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"user\": \"{{userTutorId}}\",\n    \"course\": \"{{courseId}}\",\n    \"role\": \"TUTOR\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3173,7 +3203,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"{{userAuxId}}\",\n    \"course\": \"{{courseintId}}\",\n    \"role\": \"AUXILIARY\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"user\": \"{{userAuxId}}\",\n    \"course\": \"{{courseId}}\",\n    \"role\": \"AUXILIARY\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3219,7 +3249,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"{{userIntStuId}}\",\n    \"course\": \"{{courseintId}}\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"user\": \"{{userIntStuId}}\",\n    \"course\": \"{{courseId}}\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3265,7 +3295,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"{{userExtStuId}}\",\n    \"course\": \"{{courseExtId}}\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
+              "raw": "{\n    \"user\": \"{{userExtStuId}}\",\n    \"course\": \"{{courseId}}\",\n    \"role\": \"STUDENT\",\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3885,7 +3915,7 @@
     },
     {
       "key": "courseId",
-      "value": "",
+      "value": "1e063109a88495b45758c006",
       "type": "string"
     },
     {
@@ -3954,15 +3984,7 @@
       "value": ""
     },
     {
-      "key": "courseintId",
-      "value": ""
-    },
-    {
       "key": "courseUserExtStuId",
-      "value": ""
-    },
-    {
-      "key": "courseExtId",
       "value": ""
     },
     {
@@ -3980,6 +4002,10 @@
     {
       "key": "courseUserTutorId",
       "value": ""
+    },
+    {
+      "key": "groupId",
+      "value": "637517be650676f3da007f00"
     }
   ]
 }
