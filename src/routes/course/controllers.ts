@@ -119,10 +119,6 @@ const update = async (
       throw new CustomError(400, 'Some of the users dont exist.');
     }
   }
-  const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    isActive: true,
-  }).populate({ path: 'admissionTests' });
 
   if (req.body.admissionTests?.length) {
     const existingAdmissionTests = await AdmissionTest.find(
@@ -132,6 +128,10 @@ const update = async (
       throw new CustomError(400, 'Some of the admission tests dont exist.');
     }
   }
+  const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    isActive: true,
+  }).populate({ path: 'admissionTests' });
   if (updatedCourse) {
     return res.status(200).json({
       message: 'The course has been successfully updated.',
