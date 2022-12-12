@@ -7,11 +7,15 @@ import admissionTestControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
-router.get('/', firebaseValidations.superAdmin, admissionTestControllers.getAll);
+router.get('/', getAccessRoleAndPermission, admissionTestControllers.getAll);
 router.get(
   '/:id',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   admissionTestControllers.getById,
 );

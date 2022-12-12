@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-type RoleType = 'ADMIN' | 'TUTOR' | 'AUXILIARY' | 'STUDENT';
+export type RoleType = 'ADMIN' | 'TUTOR' | 'AUXILIARY' | 'STUDENT';
 
 export interface CourseUserType {
   _id?: mongoose.Types.ObjectId;

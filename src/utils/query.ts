@@ -22,7 +22,7 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Object.entries(query).reduce<Record<string, any>>((prev = {}, [key, value]) => {
     if (key.includes('min')) {
-      const newKeys = key.split('.');
+      const newKeys = key.split(/\.(?=[^.]+$)/);
       if (key.toLowerCase().includes('date')) {
         return {
           ...prev,
@@ -41,7 +41,7 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
       };
     }
     if (key.includes('max')) {
-      const newKeys = key.split('.');
+      const newKeys = key.split(/\.(?=[^.]+$)/);
       if (key.toLowerCase().includes('date')) {
         return {
           ...prev,

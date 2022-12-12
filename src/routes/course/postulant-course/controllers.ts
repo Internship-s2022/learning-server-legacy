@@ -212,6 +212,21 @@ const getPostulantBasedOnCoursePipeline = (
   },
   { $unwind: { path: '$postulant' } },
   {
+    $addFields: {
+      'postulant.age': {
+        $dateDiff: {
+          startDate: {
+            $dateFromString: {
+              dateString: '$postulant.birthDate',
+            },
+          },
+          endDate: '$$NOW',
+          unit: 'year',
+        },
+      },
+    },
+  },
+  {
     $lookup: {
       from: 'courses',
       localField: 'course',
@@ -291,7 +306,7 @@ const getByCourseId = async (req: Request, res: Response) => {
     }
     throw new CustomError(404, 'Could not find the list of postulants.');
   }
-  throw new CustomError(400, 'This course does not have any postulants.');
+  throw new CustomError(404, 'This course does not have any postulants.');
 };
 
 const correctTests = async (req: Request, res: Response) => {
@@ -549,9 +564,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         corrected,
       ),
     );
-    const tests = course.admissionTests.map((at) => at.name);
-    const docsToExport = getCorrected(docs);
-    if (docsToExport.length) {
+    if (docs.length) {
+      const tests = course.admissionTests.map((at) => at.name);
+      const docsToExport = getCorrected(docs);
       const csv = await parseAsync(docsToExport, {
         fields: [
           '_id',
@@ -580,7 +595,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         return res.status(200).send(csv);
       }
     }
-    throw new CustomError(400, 'This course does not have any members');
+    throw new CustomError(404, 'This course does not have any members');
   }
   throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
