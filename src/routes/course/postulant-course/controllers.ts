@@ -212,6 +212,21 @@ const getPostulantBasedOnCoursePipeline = (
   },
   { $unwind: { path: '$postulant' } },
   {
+    $addFields: {
+      'postulant.age': {
+        $dateDiff: {
+          startDate: {
+            $dateFromString: {
+              dateString: '$postulant.birthDate',
+            },
+          },
+          endDate: '$$NOW',
+          unit: 'year',
+        },
+      },
+    },
+  },
+  {
     $lookup: {
       from: 'courses',
       localField: 'course',
@@ -549,9 +564,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         corrected,
       ),
     );
-    const tests = course.admissionTests.map((at) => at.name);
-    const docsToExport = getCorrected(docs);
-    if (docsToExport.length) {
+    if (docs.length) {
+      const tests = course.admissionTests.map((at) => at.name);
+      const docsToExport = getCorrected(docs);
       const csv = await parseAsync(docsToExport, {
         fields: [
           '_id',
