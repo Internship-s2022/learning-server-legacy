@@ -35,7 +35,6 @@ router.use(
 );
 router.use(
   '/:courseId/group',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   groupRouter,
