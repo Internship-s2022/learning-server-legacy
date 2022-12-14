@@ -503,6 +503,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -2124,7 +2129,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006 ",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2157,7 +2162,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2188,7 +2193,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2227,7 +2232,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006 ",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2257,7 +2262,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006 ",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2287,7 +2292,7 @@
               },
               {
                 "key": "x-course",
-                "value": "1e063109a88495b45758c006 ",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
