@@ -38,7 +38,7 @@ router.patch(
 );
 router.delete(
   '/:groupId',
-  getAccessRoleAndPermission,
+  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   groupControllers.physicalDeleteById,
 );
