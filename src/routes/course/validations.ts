@@ -109,7 +109,7 @@ const courseValidation = (requestType: 'post' | 'put') => {
       courseUsers:
         requestType === 'post'
           ? courseUserValidation.required().messages({
-              'any.required': 'Course users must be a required field.',
+              'any.required': 'Course users is a required field.',
             })
           : courseUserValidation.optional(),
     });
