@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "b9d632cf-738c-4589-80ae-dabe0fb4a160",
+    "_postman_id": "8f79e0ed-3d34-4eab-a9b2-e5bdb2f3fa7d",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -243,6 +243,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
@@ -277,6 +282,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -308,6 +318,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -347,6 +362,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -382,6 +402,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -657,11 +682,6 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
-                    "type": "text"
-                  },
-                  {
-                    "key": "x-course",
-                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],

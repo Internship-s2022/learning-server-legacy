@@ -21,7 +21,6 @@ router.use(
 );
 router.use(
   '/:courseId/module',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   moduleRouter,
