@@ -34,7 +34,7 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
+  const course = await Course.findById(req.params.courseId).populate({ path: 'admissionTests' });
 
   if (course) {
     return res.status(200).json({
@@ -43,7 +43,7 @@ const getById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const create = async (
@@ -108,7 +108,7 @@ const update = async (
   res: Response,
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
-  if (courseName?.name && courseName?._id.toString() !== req.params.id) {
+  if (courseName?.name && courseName?._id.toString() !== req.params.courseId) {
     throw new CustomError(400, `A course with the name ${req.body.name} already exists.`);
   }
   if (req.body.courseUsers?.length) {
@@ -128,7 +128,7 @@ const update = async (
       throw new CustomError(400, 'Some of the admission tests dont exist.');
     }
   }
-  const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
+  const updatedCourse = await Course.findByIdAndUpdate(req.params.courseId, req.body, {
     new: true,
     isActive: true,
   }).populate({ path: 'admissionTests' });
@@ -139,16 +139,16 @@ const update = async (
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findById(req.params.courseId);
   if (course?.isActive === false) {
     throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(
-    req.params.id,
+    req.params.courseId,
     { isActive: false },
     {
       new: true,
@@ -161,19 +161,19 @@ const deleteById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const physicalDeleteById = async (req: Request, res: Response) => {
-  const result = await Course.findByIdAndDelete(req.params.id);
+  const result = await Course.findByIdAndDelete(req.params.courseId);
   if (result) {
     return res.status(200).json({
-      message: `The course with id ${req.params.id} has been successfully deleted.`,
+      message: `The course with id ${req.params.courseId} has been successfully deleted.`,
       data: result,
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const exportToCsv = async (req: Request, res: Response) => {

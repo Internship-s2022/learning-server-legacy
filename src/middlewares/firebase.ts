@@ -72,7 +72,7 @@ const accessBasedOnRoleAndType =
         throw new CustomError(401, unauthorizedMessage);
       }
       const courseDoc = await Course.findOne({ _id: course });
-      if (!courseDoc) {
+      if (!courseDoc || (req.params.courseId && req.params.courseId !== course)) {
         throw new CustomError(401, unauthorizedMessage);
       }
 

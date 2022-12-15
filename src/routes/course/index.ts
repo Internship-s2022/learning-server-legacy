@@ -11,6 +11,10 @@ import postulantCourseRoute from './postulant-course';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
 router.use(
   '/:courseId/report',
@@ -39,8 +43,8 @@ router.use(
 router.get('/', firebaseValidations.superAdmin, coursesControllers.getAll);
 router.get('/export/csv', firebaseValidations.superAdmin, coursesControllers.exportToCsv);
 router.get(
-  '/:id',
-  firebaseValidations.superAdmin,
+  '/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   coursesControllers.getById,
 );
@@ -51,20 +55,20 @@ router.post(
   coursesControllers.create,
 );
 router.put(
-  '/:id',
-  firebaseValidations.superAdmin,
+  '/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   validations.courseValidation('put'),
   coursesControllers.update,
 );
 router.patch(
-  '/:id',
+  '/:courseId',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   coursesControllers.deleteById,
 );
 router.delete(
-  '/:id',
+  '/:courseId',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   coursesControllers.physicalDeleteById,
