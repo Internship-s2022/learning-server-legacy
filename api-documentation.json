@@ -1778,6 +1778,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
@@ -1812,6 +1817,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1828,7 +1838,7 @@
                   "variable": [
                     {
                       "key": "regFormId",
-                      "value": "6388c14bc15f0bcd8698ba07"
+                      "value": "{{registrationFormId}}"
                     }
                   ]
                 }
@@ -1844,11 +1854,16 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"view\": \"507f1f77bcf86cd799439012\",\n    \"isRequired\": \"true\"\n}",
+                  "raw": "{\n    \"title\": \"Question 1\",\n    \"type\": \"SHORT_ANSWER\",\n    \"view\": \"639b567010a2b5b847a1e85a\",\n    \"isRequired\": \"true\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1862,11 +1877,11 @@
                   "variable": [
                     {
                       "key": "regFormId",
-                      "value": "2e063109a88495b45758ccd2"
+                      "value": "{{registrationFormId}}"
                     },
                     {
                       "key": "questionId",
-                      "value": "636d603af4779c11ba8f6012"
+                      "value": "639b567010a2b5b847a1e87a"
                     }
                   ]
                 }
@@ -1881,6 +1896,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -1898,11 +1918,11 @@
                   "variable": [
                     {
                       "key": "regFormId",
-                      "value": "507f1f77bcf86cd799439011"
+                      "value": "{{registrationFormId}}"
                     },
                     {
                       "key": "questionId",
-                      "value": "636db53fe6836985625e39f0"
+                      "value": "639b567010a2b5b847a1e87a"
                     }
                   ]
                 }
@@ -1918,6 +1938,11 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -1927,11 +1952,11 @@
                   "variable": [
                     {
                       "key": "regFormId",
-                      "value": "507f1f77bcf86cd799439011"
+                      "value": "{{registrationFormId}}"
                     },
                     {
                       "key": "questionId",
-                      "value": "636db53fe6836985625e39f0"
+                      "value": "639b567010a2b5b847a1e87a"
                     }
                   ]
                 }
@@ -3973,11 +3998,11 @@
     },
     {
       "key": "registrationFormId",
-      "value": ""
+      "value": "639b567010a2b5b847a1e859"
     },
     {
       "key": "viewId",
-      "value": ""
+      "value": "639b567010a2b5b847a1e85a"
     },
     {
       "key": "questionId",
