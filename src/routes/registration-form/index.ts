@@ -11,7 +11,6 @@ const router = express.Router();
 
 router.use(
   '/:regFormId/question',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.registrationFormId,
   questionRouter,
