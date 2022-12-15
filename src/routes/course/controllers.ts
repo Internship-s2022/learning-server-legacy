@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 
+import AdmissionTest from 'src/models/admission-test';
 import Course, { CourseDocument, CourseType, CourseWithUsers } from 'src/models/course';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
@@ -33,7 +34,7 @@ const getAll = async (req: Request, res: Response) => {
 };
 
 const getById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id).populate({ path: 'admissionTests' });
+  const course = await Course.findById(req.params.courseId).populate({ path: 'admissionTests' });
 
   if (course) {
     return res.status(200).json({
@@ -42,7 +43,7 @@ const getById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const create = async (
@@ -51,8 +52,9 @@ const create = async (
 ) => {
   const courseName = await Course.findOne({ name: req.body.name, isActive: true });
   if (courseName?.name) {
-    throw new CustomError(400, `An course with name ${req.body.name} already exists.`);
+    throw new CustomError(400, `A course with the name ${req.body.name} already exists.`);
   }
+
   let newCourse: CourseDocument;
   try {
     const course = new Course<CourseType>({
@@ -101,11 +103,35 @@ const create = async (
   }
 };
 
-const update = async (req: Request, res: Response) => {
-  const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
+const update = async (
+  req: Request<Record<string, string>, unknown, CourseWithUsers>,
+  res: Response,
+) => {
+  const courseName = await Course.findOne({ name: req.body.name, isActive: true });
+  if (courseName?.name && courseName?._id.toString() !== req.params.courseId) {
+    throw new CustomError(400, `A course with the name ${req.body.name} already exists.`);
+  }
+  if (req.body.courseUsers?.length) {
+    const existingUsers = await User.find(
+      filterIncludeArrayOfIds(req.body.courseUsers?.map((cUser) => cUser.user.toString())),
+    );
+    if (existingUsers?.length !== req.body.courseUsers?.length) {
+      throw new CustomError(400, 'Some of the users dont exist.');
+    }
+  }
+
+  if (req.body.admissionTests?.length) {
+    const existingAdmissionTests = await AdmissionTest.find(
+      filterIncludeArrayOfIds(req.body.admissionTests?.map((aTest) => aTest.toString())),
+    );
+    if (existingAdmissionTests?.length !== req.body.admissionTests.length) {
+      throw new CustomError(400, 'Some of the admission tests dont exist.');
+    }
+  }
+  const updatedCourse = await Course.findByIdAndUpdate(req.params.courseId, req.body, {
     new: true,
     isActive: true,
-  });
+  }).populate({ path: 'admissionTests' });
   if (updatedCourse) {
     return res.status(200).json({
       message: 'The course has been successfully updated.',
@@ -113,16 +139,16 @@ const update = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const deleteById = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findById(req.params.courseId);
   if (course?.isActive === false) {
     throw new CustomError(400, 'This course has already been disabled.');
   }
   const result = await Course.findByIdAndUpdate(
-    req.params.id,
+    req.params.courseId,
     { isActive: false },
     {
       new: true,
@@ -135,19 +161,19 @@ const deleteById = async (req: Request, res: Response) => {
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const physicalDeleteById = async (req: Request, res: Response) => {
-  const result = await Course.findByIdAndDelete(req.params.id);
+  const result = await Course.findByIdAndDelete(req.params.courseId);
   if (result) {
     return res.status(200).json({
-      message: `The course with id ${req.params.id} has been successfully deleted.`,
+      message: `The course with id ${req.params.courseId} has been successfully deleted.`,
       data: result,
       error: false,
     });
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const exportToCsv = async (req: Request, res: Response) => {

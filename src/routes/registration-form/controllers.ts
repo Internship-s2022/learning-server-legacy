@@ -63,6 +63,7 @@ const create = async (req: Request, res: Response) => {
       `An active registration form with name ${req.body.title} already exists.`,
     );
   }
+
   const registrationForm = new RegistrationForm<RegistrationFormType>({
     course: req.body.course,
     title: req.body.title,

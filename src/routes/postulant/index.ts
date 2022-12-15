@@ -7,12 +7,16 @@ import postulantsControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
-router.get('/', firebaseValidations.superAdmin, postulantsControllers.getAll);
+router.get('/', getAccessRoleAndPermission, postulantsControllers.getAll);
 router.get(
   '/:dni',
   globalValidations.validateDni,
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   postulantsControllers.getByDni,
 );
 router.post(

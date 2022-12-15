@@ -11,31 +11,31 @@ import postulantCourseRoute from './postulant-course';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
 router.use(
   '/:courseId/report',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   reportRouter,
 );
 router.use(
   '/:courseId/module',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   moduleRouter,
 );
 router.use(
   '/:courseId/postulation',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   postulantCourseRoute,
 );
 router.use(
   '/:courseId/group',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   groupRouter,
@@ -43,32 +43,32 @@ router.use(
 router.get('/', firebaseValidations.superAdmin, coursesControllers.getAll);
 router.get('/export/csv', firebaseValidations.superAdmin, coursesControllers.exportToCsv);
 router.get(
-  '/:id',
-  firebaseValidations.superAdmin,
+  '/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   coursesControllers.getById,
 );
 router.post(
   '/',
   firebaseValidations.superAdmin,
-  validations.courseValidation,
+  validations.courseValidation('post'),
   coursesControllers.create,
 );
 router.put(
-  '/:id',
-  firebaseValidations.superAdmin,
+  '/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
-  validations.courseValidation,
+  validations.courseValidation('put'),
   coursesControllers.update,
 );
 router.patch(
-  '/:id',
+  '/:courseId',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   coursesControllers.deleteById,
 );
 router.delete(
-  '/:id',
+  '/:courseId',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   coursesControllers.physicalDeleteById,
