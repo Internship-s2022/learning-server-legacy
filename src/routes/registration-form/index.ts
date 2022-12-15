@@ -8,6 +8,10 @@ import registrationFormControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
 router.use(
   '/:regFormId/question',
@@ -15,10 +19,10 @@ router.use(
   validations.registrationFormId,
   questionRouter,
 );
-router.get('/', firebaseValidations.superAdmin, registrationFormControllers.getAll);
+router.get('/', getAccessRoleAndPermission, registrationFormControllers.getAll);
 router.get(
   '/:id',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   registrationFormControllers.getById,
 );
@@ -30,7 +34,7 @@ router.post(
 );
 router.put(
   '/:id',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   validations.registrationFormValidation('put'),
   registrationFormControllers.updateById,
