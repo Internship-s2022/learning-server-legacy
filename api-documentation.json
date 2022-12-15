@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "8f79e0ed-3d34-4eab-a9b2-e5bdb2f3fa7d",
+    "_postman_id": "3232146b-ed78-4513-8ff1-901334af331d",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -773,20 +773,21 @@
                     "key": "token",
                     "value": "{{token}}",
                     "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "{{API_URL}}/course/:courseId/postulation?corrected=false",
+                  "raw": "{{API_URL}}/course/:courseId/postulation",
                   "host": ["{{API_URL}}"],
                   "path": ["course", ":courseId", "postulation"],
                   "query": [
                     {
                       "key": "corrected",
-                      "value": "false"
-                    },
-                    {
-                      "key": "postulant.firstName",
-                      "value": "Ag",
+                      "value": "false",
                       "disabled": true
                     }
                   ],
@@ -831,7 +832,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"postulant\": \"{{postulantId}}\",\n    \"view\": \"{{viewId}}\",\n    \"answer\": [\n        {\n            \"question\": \"{{questionId}}\",\n            \"value\": [\"Option 1\"]\n        }\n    ]\n}",
+                  "raw": "{\n    \"postulant\": \"{{postulantId}}\",\n    \"view\": \"{{viewId}}\",\n    \"answer\": [\n        {\n            \"question\": \"{{questionId}}\",\n            \"value\": [\n                \"Option 1\"\n            ]\n        }\n    ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -860,6 +861,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -891,6 +897,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -925,6 +936,11 @@
                   {
                     "key": "token",
                     "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
                     "type": "text"
                   }
                 ],
@@ -3945,7 +3961,7 @@
     },
     {
       "key": "postulantId",
-      "value": ""
+      "value": "1e063109a88495b45758c000"
     },
     {
       "key": "postulantDni",
