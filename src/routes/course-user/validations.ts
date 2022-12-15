@@ -94,6 +94,8 @@ const courseUserByModuleIds = (req: Request, res: Response, next: NextFunction) 
       }),
   });
 
+  const { modules } = req.query;
+  req.body.modules = Array.isArray(modules) ? modules : [modules];
   const validation = courseUserValidation.validate(req.body);
 
   if (validation.error) {

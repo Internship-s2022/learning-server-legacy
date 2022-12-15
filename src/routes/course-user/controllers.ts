@@ -12,7 +12,7 @@ import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users'
 import { getCourseBasedOnUserPipeline, getUserBasedOnCoursePipeline } from './aggregations';
 
 const getByCourseId = async (req: Request, res: Response) => {
-  const courseId = req.params.id;
+  const courseId = req.params.courseId;
   const course = await Course.findById(courseId);
   if (course) {
     const courseUser = await CourseUser.findOne({ course: courseId });
@@ -26,7 +26,7 @@ const getByCourseId = async (req: Request, res: Response) => {
         limit,
       });
       return res.status(200).json({
-        message: `The list of users and roles of the course with id: ${req.params.id} has been successfully found.`,
+        message: `The list of users and roles of the course with id: ${req.params.courseId} has been successfully found.`,
         data: docs,
         pagination,
         error: false,
@@ -34,7 +34,7 @@ const getByCourseId = async (req: Request, res: Response) => {
     }
     throw new CustomError(400, 'This course does not have any members.');
   }
-  throw new CustomError(404, `Course with id ${req.params.id} was not found.`);
+  throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
 const getByUserId = async (req: Request, res: Response) => {
@@ -208,13 +208,13 @@ const physicalDeleteByUserId = async (req: Request, res: Response) => {
 };
 
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findById(req.params.courseId);
   if (course) {
     const query = filterByIncludes(req.query);
     const docs = await CourseUser.aggregate(
       getUserBasedOnCoursePipeline({
         ...query,
-        course: new mongoose.Types.ObjectId(req.params.id),
+        course: new mongoose.Types.ObjectId(req.params.courseId),
       }),
     );
     if (docs.length) {
@@ -244,7 +244,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
     }
     throw new CustomError(400, 'This course does not have any members.');
   }
-  throw new CustomError(404, `There are no course with id ${req.params.id} to export.`);
+  throw new CustomError(404, `There are no course with id ${req.params.courseId} to export.`);
 };
 
 const exportToCsvByUserId = async (req: Request, res: Response) => {

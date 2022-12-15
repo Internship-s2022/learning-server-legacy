@@ -3066,6 +3066,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -3111,6 +3116,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -3158,6 +3168,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -3203,6 +3218,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -3250,6 +3270,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -3295,6 +3320,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -3368,6 +3398,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -3392,6 +3427,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -3426,6 +3466,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -3508,6 +3553,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -3538,30 +3588,23 @@
                 "type": "text"
               },
               {
-                "key": "",
-                "value": "",
-                "type": "text",
-                "disabled": true
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"modules\": [\n        \"637517be650676f3da006f01\"\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
               "raw": "{{API_URL}}/course-user/:courseId/without-group",
               "host": ["{{API_URL}}"],
               "path": ["course-user", ":courseId", "without-group"],
               "query": [
                 {
-                  "key": "user.postulant.firstName",
-                  "value": "a",
-                  "disabled": true
+                  "key": "modules",
+                  "value": "637517be650676f3da006f01"
+                },
+                {
+                  "key": "modules",
+                  "value": "637517be650676f3da006f02"
                 }
               ],
               "variable": [

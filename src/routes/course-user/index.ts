@@ -7,10 +7,14 @@ import courseUserControllers from './controllers';
 import validations from './validations';
 
 const router = express.Router();
+const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType({
+  roles: ['ADMIN'],
+  types: ['SUPER_ADMIN', 'NORMAL'],
+});
 
 router.get(
-  '/by-course/:id',
-  firebaseValidations.superAdmin,
+  '/by-course/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   courseUserControllers.getByCourseId,
 );
@@ -22,20 +26,20 @@ router.get(
 );
 router.post(
   '/',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   validations.courseUserValidations('post'),
   courseUserControllers.assignRole,
 );
 router.put(
   '/:id',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   validations.courseUserValidations('put'),
   globalValidations.validateMongoId,
   courseUserControllers.updateByUserId,
 );
 router.patch(
   '/',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   validations.courseUserDelete,
   courseUserControllers.disableByUserId,
 );
@@ -46,8 +50,8 @@ router.delete(
   courseUserControllers.physicalDeleteByUserId,
 );
 router.get(
-  '/export-by-course/csv/:id',
-  firebaseValidations.superAdmin,
+  '/export-by-course/csv/:courseId',
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   courseUserControllers.exportToCsvByCourseId,
 );
@@ -59,7 +63,7 @@ router.get(
 );
 router.get(
   '/:courseId/without-group',
-  firebaseValidations.superAdmin,
+  getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   validations.courseUserByModuleIds,
   courseUserControllers.getWithoutGroup,
