@@ -2060,6 +2060,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -2095,11 +2100,16 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"course\": \"633731b3a943619145e6f020\",\n    \"title\": \"Registration Form Updated\",\n    \"description\": \"This form was updated\",\n    \"views\": [\n        {\n            \"_id\": \"507f1f77bcf86cd799439012\",\n            \"name\": \"General\"\n        }\n    ],\n    \"isActive\": true\n}",
+              "raw": "{\n    \"course\": \"{{courseId}}\",\n    \"title\": \"Registration Form Updated\",\n    \"description\": \"This form was updated\",\n    \"views\": [\n        {\n            \"_id\": \"507f1f77bcf86cd799439012\",\n            \"name\": \"General\"\n        }\n    ],\n    \"isActive\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2113,7 +2123,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "507f1f77bcf86cd799439011"
+                  "value": "{{registrationFormId}}"
                 }
               ]
             }
@@ -2138,7 +2148,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "507f1f77bcf86cd799439011"
+                  "value": "{{registrationFormId}}"
                 }
               ]
             }
@@ -2153,6 +2163,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -2188,7 +2203,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "2e063109a88495b45758ccd2"
+                  "value": "{{registrationFormId}}"
                 }
               ]
             }
@@ -4038,7 +4053,7 @@
     },
     {
       "key": "registrationFormId",
-      "value": ""
+      "value": "639b567010a2b5b847a1e859"
     },
     {
       "key": "viewId",
