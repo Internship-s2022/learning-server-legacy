@@ -14,7 +14,6 @@ const router = express.Router();
 
 router.use(
   '/:courseId/report',
-  firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
   validations.courseId,
   reportRouter,
