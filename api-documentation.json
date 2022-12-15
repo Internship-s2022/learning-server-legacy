@@ -1505,6 +1505,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -1548,6 +1553,11 @@
                 "key": "token",
                 "value": "{{token}}",
                 "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -1590,6 +1600,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
@@ -1649,6 +1664,11 @@
               {
                 "key": "token",
                 "value": "{{token}}",
+                "type": "text"
+              },
+              {
+                "key": "x-course",
+                "value": "{{courseId}}",
                 "type": "text"
               }
             ],
