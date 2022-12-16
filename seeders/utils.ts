@@ -1,10 +1,12 @@
 import firebaseAdmin from 'firebase-admin';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
+import { DeleteResult, Document, InsertManyResult, OptionalUnlessRequiredId } from 'mongodb';
+import { Collection } from 'mongoose';
 
 import { FirebaseUser } from '../src/interfaces/firebase';
 
-export const padMessage = (message: string, startLength = 20, endLength = 45) => {
-  return '|'.padEnd(startLength, '-') + ` ${message} `.padEnd(endLength, '-') + '|';
+export const padMessage = (message: string, char = '-', startLength = 20, endLength = 45) => {
+  return '|'.padEnd(startLength, char) + ` ${message} `.padEnd(endLength, char) + '|';
 };
 
 export const listAndRemoveAllUsers = async (nextPageToken?: string) => {
@@ -49,7 +51,7 @@ export const listAndAddAllUsers = async (firebaseUsers: FirebaseUser[]) => {
     console.log('\x1b[36m', padMessage('⚡️ Adding Firebase Users'));
     for (let i = 0; i < firebaseUsers.length; i++) {
       timeout = timeout + 1;
-      console.log('\x1b[36m', padMessage(`User ${i + 1}: ${firebaseUsers[i].email}`, 10, 55));
+      console.log('\x1b[36m', padMessage(`User ${i + 1}: ${firebaseUsers[i].email}`, '-', 10, 55));
       const user = await addUser(firebaseUsers[i], timeout);
       users.push(user);
     }
@@ -58,5 +60,35 @@ export const listAndAddAllUsers = async (firebaseUsers: FirebaseUser[]) => {
   } catch (error) {
     console.log('\x1b[31m', '🛑 Error adding users', '\x1b[0m', error);
     throw error;
+  }
+};
+
+type ResourceConfig<TDoc extends Document> = {
+  remove: boolean;
+  create: boolean;
+  collection: Collection<TDoc>;
+  message: string;
+  amountRandom?: number;
+};
+
+export const removeCollection = (
+  promises: Promise<DeleteResult>[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  resource: ResourceConfig<any>,
+) => {
+  if (resource.remove) {
+    promises.push(resource.collection.deleteMany({}));
+    console.log('\x1b[37m', padMessage(`🚀 ${resource.message} removed`));
+  }
+};
+
+export const addCollection = <TDoc extends Document>(
+  promises: Promise<InsertManyResult<TDoc>>[],
+  resource: ResourceConfig<TDoc>,
+  data: OptionalUnlessRequiredId<TDoc>[],
+) => {
+  if (resource.create) {
+    promises.push(resource.collection.insertMany(data));
+    console.log('\x1b[37m', padMessage(`🚀 ${resource.message} added`));
   }
 };

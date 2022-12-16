@@ -20,7 +20,7 @@ firebaseAdmin.initializeApp({
     pass: process.env.DATABASE_PASS,
     dbName: process.env.DATABASE_NAME,
   });
-  console.log('\n\x1b[36m', padMessage('🚀 Database connected'));
+  console.log('\n\x1b[36m', padMessage('🚀 Database connected'), '\n');
   // -------------- DATABASE CONNECTION -------------- [end]
 
   seedDatabase();

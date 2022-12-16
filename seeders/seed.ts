@@ -1,21 +1,21 @@
 import 'dotenv/config';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
-import { DeleteResult } from 'mongodb';
+import { DeleteResult, InsertManyResult } from 'mongodb';
 
 import { FirebaseUser } from '../src/interfaces/firebase';
-import AdmissionResult from '../src/models/admission-result';
-import AdmissionTest, { AdmissionTestType } from '../src/models/admission-test';
-import Course, { CourseType } from '../src/models/course';
-import CourseUser, { CourseUserType } from '../src/models/course-user';
-import Group, { GroupType } from '../src/models/group';
-import Module, { ModuleType } from '../src/models/module';
-import Postulant, { PostulantType } from '../src/models/postulant';
-import PostulantCourse from '../src/models/postulant-course';
-import Question, { QuestionType } from '../src/models/question';
-import RegistrationForm, { RegistrationFormType } from '../src/models/registration-form';
-import Report, { ReportType } from '../src/models/report';
+import { AdmissionResultType } from '../src/models/admission-result';
+import { AdmissionTestType } from '../src/models/admission-test';
+import { CourseType } from '../src/models/course';
+import { CourseUserType } from '../src/models/course-user';
+import { GroupType } from '../src/models/group';
+import { ModuleType } from '../src/models/module';
+import { PostulantType } from '../src/models/postulant';
+import { PostulantCourseType } from '../src/models/postulant-course';
+import { QuestionType } from '../src/models/question';
+import { RegistrationFormType } from '../src/models/registration-form';
+import { ReportType } from '../src/models/report';
 import SuperAdmin, { SuperAdminType } from '../src/models/super-admin';
-import User, { UserType } from '../src/models/user';
+import { UserType } from '../src/models/user';
 import config from './config';
 import allData from './data';
 import { generateRandomCourseUsers } from './random-data/course-users';
@@ -23,9 +23,15 @@ import { generateRandomPostulantCourses } from './random-data/postulant-course';
 import { generateRandomPostulants } from './random-data/postulants';
 import { generateRegistrationFormPerCourse } from './random-data/registration-form';
 import { generateRandomUsers } from './random-data/users';
-import { listAndAddAllUsers, listAndRemoveAllUsers, padMessage } from './utils';
+import {
+  addCollection,
+  listAndAddAllUsers,
+  listAndRemoveAllUsers,
+  padMessage,
+  removeCollection,
+} from './utils';
 
-interface data {
+interface Data {
   admissionTests: AdmissionTestType[];
   courses: CourseType[];
   firebaseUsers: FirebaseUser[];
@@ -38,27 +44,19 @@ interface data {
   modules: ModuleType[];
   groups: GroupType[];
   reports: ReportType[];
+  postulantCourses: PostulantCourseType[];
+  admissionResults: AdmissionResultType[];
 }
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const {
-  admissionTests,
-  courses,
-  firebaseUsers,
-  superAdmins,
-  postulants,
-  users,
-  courseUsers,
-  modules,
-  groups,
-  reports,
-}: data = allData[env];
+const { courses, firebaseUsers, superAdmins, postulants, users, courseUsers, ...restData }: Data =
+  allData[env];
 
 const seedDatabase = async (endProcess = true) => {
-  console.log('\x1b[36m', '                      ----------------------');
+  console.log('\x1b[36m', padMessage('-----------------------', ' '));
   console.log('\x1b[36m', padMessage('| Board configuration |'));
-  console.log('\x1b[36m', '                      ----------------------');
+  console.log('\x1b[36m', padMessage('-----------------------', ' '));
   console.log('\x1b[36m'.padStart(10), 'Seeding env:', `\x1b[37m${env}\n`);
   Object.entries(config).forEach((item) => {
     if (typeof item[1] === 'boolean') {
@@ -69,7 +67,7 @@ const seedDatabase = async (endProcess = true) => {
       );
     } else if (typeof item[1] === 'object') {
       const label = Object.entries(item[1])
-        .filter((subItem) => subItem[1])
+        .filter((subItem) => typeof subItem[1] === 'boolean' || typeof subItem[1] === 'number')
         .map((subItem) =>
           typeof subItem[1] === 'number'
             ? ` ${subItem[0]}: \x1b[33m${subItem[1]} `
@@ -107,8 +105,23 @@ const seedDatabase = async (endProcess = true) => {
     config.users.amountRandom,
   );
 
+  const data: Omit<Data, 'firebaseUsers'> = {
+    ...restData,
+    courses,
+    superAdmins,
+    postulants: allPostulants,
+    users: allUsers,
+    courseUsers: allCourseUsers,
+    registrationForms,
+    questions,
+    postulantCourses,
+    admissionResults,
+  };
+
   try {
     if (config.remove) {
+      console.log();
+
       console.log('\x1b[36m', padMessage('⚡️ Removing previous data'));
       // ------------ REMOVE FIREBASE USERS ----------- [start]
       const promises: Promise<DeleteResult>[] = [];
@@ -119,70 +132,11 @@ const seedDatabase = async (endProcess = true) => {
       // ------------ REMOVE FIREBASE USERS -------- [end]
 
       // ------------ REMOVE MONGODB COLLECTIONS -- [start]
-      if (config.superAdmins.remove) {
-        promises.push(SuperAdmin.collection.deleteMany({}));
-        console.log('\n\x1b[37m', padMessage('🚀 Super admins removed'));
-      }
-
-      if (config.courses.remove) {
-        promises.push(Course.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Courses removed'));
-      }
-
-      if (config.registrationForms.remove) {
-        promises.push(RegistrationForm.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Registration Forms removed'));
-      }
-      if (config.postulants.remove) {
-        promises.push(Postulant.collection.deleteMany({}));
-        console.log('\x1b[33m', padMessage('🚀 Postulants removed'));
-      }
-
-      if (config.admissionTests.remove) {
-        promises.push(AdmissionTest.collection.deleteMany({}));
-        console.log('\x1b[33m', padMessage('🚀 Admission Tests removed'));
-      }
-
-      if (config.users.remove) {
-        promises.push(User.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Users removed'));
-      }
-
-      if (config.courseUsers.remove) {
-        promises.push(CourseUser.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Course users removed'));
-      }
-
-      if (config.questions.remove) {
-        promises.push(Question.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Questions removed'));
-      }
-
-      if (config.modules.remove) {
-        promises.push(Module.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Modules removed'));
-      }
-
-      if (config.postulantCourses.remove) {
-        promises.push(PostulantCourse.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Postulant courses removed'));
-      }
-
-      if (config.admissionResults.remove) {
-        promises.push(AdmissionResult.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Admission results removed'));
-      }
-
-      if (config.groups.remove) {
-        promises.push(Group.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Groups removed'));
-      }
-
-      if (config.reports.remove) {
-        promises.push(Report.collection.deleteMany({}));
-        console.log('\x1b[37m', padMessage('🚀 Reports removed'));
-      }
-
+      Object.values(config).forEach((resource) => {
+        if (typeof resource === 'object' && 'collection' in resource) {
+          removeCollection(promises, resource);
+        }
+      });
       // ------------ REMOVE MONGODB COLLECTIONS -- [end]
 
       await Promise.all([Promise.all(removeFirebaseUsers), Promise.all(promises)]);
@@ -191,7 +145,7 @@ const seedDatabase = async (endProcess = true) => {
     }
 
     if (config.create) {
-      const promises: Promise<unknown>[] = [];
+      const promises: Promise<InsertManyResult>[] = [];
       let createFirebaseUsers: UserRecord[] = [];
       // ------------ CREATE FIREBASE USERS ----------- [start]
       if (config.firebaseUsers.create) {
@@ -222,64 +176,11 @@ const seedDatabase = async (endProcess = true) => {
         console.log('\x1b[37m', padMessage('🚀 Super admins added'));
       }
 
-      if (config.courses.create) {
-        promises.push(Course.collection.insertMany(courses));
-        console.log('\x1b[37m', padMessage('🚀 Courses added'));
-      }
-
-      if (config.registrationForms.create) {
-        promises.push(RegistrationForm.collection.insertMany(registrationForms));
-        console.log('\x1b[37m', padMessage('🚀 Registration Forms added'));
-      }
-      if (config.postulants.create) {
-        promises.push(Postulant.collection.insertMany(allPostulants));
-        console.log('\x1b[37m', padMessage('🚀 Postulants added'));
-      }
-
-      if (config.admissionTests.create) {
-        promises.push(AdmissionTest.collection.insertMany(admissionTests));
-        console.log('\x1b[37m', padMessage('🚀 Admission Tests added'));
-      }
-
-      if (config.users.create) {
-        promises.push(User.collection.insertMany(allUsers));
-        console.log('\x1b[37m', padMessage('🚀 Users added'));
-      }
-
-      if (config.courseUsers.create) {
-        promises.push(CourseUser.collection.insertMany(allCourseUsers));
-        console.log('\x1b[37m', padMessage('🚀 Course users added'));
-      }
-
-      if (config.questions.create) {
-        promises.push(Question.collection.insertMany(questions));
-        console.log('\x1b[37m', padMessage('🚀 Questions added'));
-      }
-
-      if (config.modules.create) {
-        promises.push(Module.collection.insertMany(modules));
-        console.log('\x1b[37m', padMessage('🚀 Modules added'));
-      }
-
-      if (config.postulantCourses.create) {
-        promises.push(PostulantCourse.collection.insertMany(postulantCourses));
-        console.log('\x1b[37m', padMessage('🚀 Postulant courses added'));
-      }
-
-      if (config.admissionResults.create) {
-        promises.push(AdmissionResult.collection.insertMany(admissionResults));
-        console.log('\x1b[37m', padMessage('🚀 Admission results added'));
-      }
-
-      if (config.groups.create) {
-        promises.push(Group.collection.insertMany(groups));
-        console.log('\x1b[37m', padMessage('🚀 Groups added'));
-      }
-
-      if (config.reports.create) {
-        promises.push(Report.collection.insertMany(reports));
-        console.log('\x1b[37m', padMessage('🚀 Reports added'));
-      }
+      Object.entries(config).forEach(([key, resource]) => {
+        if (typeof resource === 'object' && 'collection' in resource && key !== 'superAdmins') {
+          addCollection(promises, resource, data[key as keyof Omit<Data, 'firebaseUsers'>]);
+        }
+      });
 
       // ------------ UPLOAD MONGODB COLLECTIONS -- [end]
 
