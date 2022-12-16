@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import { CustomError } from 'src/models/custom-error';
 import Question, { QuestionType } from 'src/models/question';
 import RegistrationForm from 'src/models/registration-form';
-import { filterByIncludes } from 'src/utils/query';
+import { formatFilters } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const query = filterByIncludes({
+  const query = formatFilters({
     ...req.query,
     registrationForm: req.params.regFormId,
   });

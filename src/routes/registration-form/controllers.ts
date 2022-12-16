@@ -3,24 +3,15 @@ import { Request, Response } from 'express';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { paginateAndFilter } from 'src/utils/query';
 
-const getRegistrationFormPipeline = (query: qs.ParsedQs) => [
-  {
-    $lookup: {
-      from: 'courses',
-      localField: 'course',
-      foreignField: '_id',
-      as: 'course',
-    },
-  },
-  { $unwind: { path: '$course' } },
-  { $match: query },
-];
+import { getRegistrationFormPipeline } from './aggregation';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const registrationFormAggregate = RegistrationForm.aggregate(getRegistrationFormPipeline(query));
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const registrationFormAggregate = RegistrationForm.aggregate(
+    getRegistrationFormPipeline(query, sort),
+  );
   const { docs, ...pagination } = await RegistrationForm.aggregatePaginate(
     registrationFormAggregate,
     { page, limit },

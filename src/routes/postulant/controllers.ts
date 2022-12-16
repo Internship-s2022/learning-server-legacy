@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
+import { SortType } from 'src/interfaces/request';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
-import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 
-const getPostulantPipeline = (query: qs.ParsedQs) => {
+const getPostulantPipeline = (query: qs.ParsedQs, sort?: SortType) => {
   const pipeline: PipelineStage[] = [
     {
       $addFields: {
@@ -25,12 +26,17 @@ const getPostulantPipeline = (query: qs.ParsedQs) => {
     },
     { $match: query },
   ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
   return pipeline;
 };
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query));
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query, sort));
   const { docs, ...pagination } = await Postulant.aggregatePaginate(postulantAggregate, {
     page,
     limit,
@@ -135,8 +141,11 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
-  const query = filterByIncludes(req.query);
-  const docs = await Postulant.find(query);
+  const { sort, ...rest } = req.query;
+  const query = formatFilters(rest);
+  const docs = await Postulant.aggregate<PostulantType>(
+    getPostulantPipeline(query, formatSort(sort)),
+  );
   if (docs.length) {
     const csv = await parseAsync(docs, {
       fields: [
@@ -145,6 +154,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         'lastName',
         'email',
         'birthDate',
+        'age',
         'phone',
         'location',
         'dni',

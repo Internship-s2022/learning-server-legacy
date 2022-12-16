@@ -4,14 +4,14 @@ import mongoose from 'mongoose';
 import { CustomError } from 'src/models/custom-error';
 import Group, { GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { paginateAndFilter } from 'src/utils/query';
 
 import { getModulePipeline } from './aggregations';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { page, limit, sort, query } = paginateAndFilter(req.query);
   const moduleAggregate = Module.aggregate(
-    getModulePipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }),
+    getModulePipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }, sort),
   );
   const { docs, ...pagination } = await Module.aggregatePaginate(moduleAggregate, {
     page,

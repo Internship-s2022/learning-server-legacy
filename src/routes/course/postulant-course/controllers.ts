@@ -17,10 +17,11 @@ import PostulantCourse, {
 } from 'src/models/postulant-course';
 import Question from 'src/models/question';
 import User, { UserDocument } from 'src/models/user';
-import { filterIncludeArrayOfIds, paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterIncludeArrayOfIds, formatSort, paginateAndFilter } from 'src/utils/query';
 import sendEmail from 'src/utils/send-email';
 import userCreation from 'src/utils/user-creation';
 
+import { getPostulantBasedOnCoursePipeline } from './aggregations';
 import { FailedType, SuccessfulType } from './types';
 
 const create = async (req: Request, res: Response) => {
@@ -140,125 +141,6 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const getPostulantBasedOnCoursePipeline = (
-  query: qs.ParsedQs | { [k: string]: ObjectId },
-  corrected?: boolean,
-) => [
-  {
-    $lookup: {
-      from: 'admissionresults',
-      localField: 'admissionResults',
-      foreignField: '_id',
-      as: 'admissionResults',
-    },
-  },
-  {
-    $unwind: {
-      path: '$admissionResults',
-    },
-  },
-
-  {
-    $lookup: {
-      from: 'admissiontests',
-      localField: 'admissionResults.admissionTest',
-      foreignField: '_id',
-      as: 'admissionResults.admissionTest',
-    },
-  },
-  {
-    $unwind: {
-      path: '$admissionResults.admissionTest',
-    },
-  },
-  {
-    $group: {
-      _id: '$_id',
-      admissionResults: {
-        $push: '$admissionResults',
-      },
-    },
-  },
-  {
-    $lookup: {
-      from: 'postulantcourses',
-      localField: '_id',
-      foreignField: '_id',
-      as: 'newField',
-    },
-  },
-  {
-    $unwind: {
-      path: '$newField',
-    },
-  },
-  {
-    $addFields: {
-      'newField.admissionResults': '$admissionResults',
-    },
-  },
-  {
-    $replaceRoot: {
-      newRoot: '$newField',
-    },
-  },
-  {
-    $lookup: {
-      from: 'postulants',
-      localField: 'postulant',
-      foreignField: '_id',
-      as: 'postulant',
-    },
-  },
-  { $unwind: { path: '$postulant' } },
-  {
-    $addFields: {
-      'postulant.age': {
-        $dateDiff: {
-          startDate: {
-            $dateFromString: {
-              dateString: '$postulant.birthDate',
-            },
-          },
-          endDate: '$$NOW',
-          unit: 'year',
-        },
-      },
-    },
-  },
-  {
-    $lookup: {
-      from: 'courses',
-      localField: 'course',
-      foreignField: '_id',
-      as: 'course',
-    },
-  },
-  { $unwind: { path: '$course' } },
-  {
-    $project: {
-      'admissionResults.__v': 0,
-      'admissionResults.createdAt': 0,
-      'admissionResults.updatedAt': 0,
-    },
-  },
-  corrected
-    ? {
-        $match: {
-          ...query,
-          isPromoted: false,
-          admissionResults: { $not: { $elemMatch: { score: 0 } } },
-        },
-      }
-    : {
-        $match: {
-          ...query,
-          isPromoted: false,
-          admissionResults: { $elemMatch: { score: 0 } },
-        },
-      },
-];
-
 const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
   return docs.reduce(
     (prev = [{}], obj, index) => {
@@ -282,11 +164,12 @@ const getByCourseId = async (req: Request, res: Response) => {
     course: new ObjectId(courseId),
   });
   if (postulantCourse.length) {
-    const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+    const { page, limit, query, sort } = paginateAndFilter(req.query);
     const postulantCourseAggregate = PostulantCourse.aggregate(
       getPostulantBasedOnCoursePipeline(
         { ...query, 'course._id': new ObjectId(courseId) },
         corrected,
+        sort,
       ),
     );
     const { docs, ...pagination } = await PostulantCourse.aggregatePaginate(
@@ -557,11 +440,13 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
     const corrected = req.query.corrected ? true : false;
     delete req.query.corrected;
 
-    const { query } = paginateAndFilterByIncludes(req.query);
-    const docs = await PostulantCourse.aggregate(
+    const { sort, ...rest } = req.query;
+    const { query } = paginateAndFilter(rest);
+    const docs = await PostulantCourse.aggregate<PopulatedPostulantCourseType>(
       getPostulantBasedOnCoursePipeline(
         { ...query, 'course._id': new ObjectId(req.params.courseId) },
         corrected,
+        formatSort(sort),
       ),
     );
     if (docs.length) {

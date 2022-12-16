@@ -1,8 +1,9 @@
 import mongoose, { PipelineStage } from 'mongoose';
 
+import { SortType } from 'src/interfaces/request';
 import CourseUser from 'src/models/course-user';
 import Group, { GroupType } from 'src/models/group';
-import { filterExcludeArrayOfIds, paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterExcludeArrayOfIds, paginateAndFilter } from 'src/utils/query';
 
 const getGroupsByModulesIds = (
   query: qs.ParsedQs | { [k: string]: mongoose.Types.ObjectId },
@@ -20,7 +21,10 @@ const getGroupsByModulesIds = (
   return pipeline;
 };
 
-const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
+const getUserBasedOnCoursePipeline = (
+  query: qs.ParsedQs | { [k: string]: unknown },
+  sort?: SortType,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
@@ -43,6 +47,10 @@ const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: unknow
     { $match: query },
   ];
 
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
   return pipeline;
 };
 
@@ -62,14 +70,17 @@ export const getCourseUsersExcludeByModules = async (
     });
     return prev;
   }, []);
-  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
+  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const courseUserAggregate = CourseUser.aggregate(
-    getUserBasedOnCoursePipeline({
-      ...query,
-      ...(cUsersIds.length && filterExcludeArrayOfIds(cUsersIds)),
-      course: new mongoose.Types.ObjectId(courseId),
-      isActive: true,
-    }),
+    getUserBasedOnCoursePipeline(
+      {
+        ...query,
+        ...(cUsersIds.length && filterExcludeArrayOfIds(cUsersIds)),
+        course: new mongoose.Types.ObjectId(courseId),
+        isActive: true,
+      },
+      sort,
+    ),
   );
   const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
     page,
