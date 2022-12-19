@@ -292,6 +292,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
 };
 
 const getWithoutGroup = async (req: Request, res: Response) => {
+  delete req.query.modules;
   const courseUsers = await getCourseUsersExcludeByModules(
     new mongoose.Types.ObjectId(req.params.courseId),
     req.body.modules,
