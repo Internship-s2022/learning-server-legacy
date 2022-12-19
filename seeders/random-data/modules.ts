@@ -13,13 +13,20 @@ const randomContents = (amount: number) => {
   return contents;
 };
 
+const today = new Date();
+
 const randomModule = (course: CourseType, index: number): ModuleType => {
   return {
-    _id: new mongoose.Types.ObjectId(faker.database.mongodbObjectId()),
+    _id: new mongoose.Types.ObjectId(),
     course: course._id as mongoose.Types.ObjectId,
     name: `Módulo ${index + 1}`,
     description: faker.lorem.paragraph(5),
-    status: 'PENDING',
+    status:
+      course.inscriptionEndDate <= today
+        ? course.endDate <= today
+          ? 'COMPLETED'
+          : 'IN_PROGRESS'
+        : 'PENDING',
     type: faker.helpers.arrayElement(['DEV', 'QA', 'UIUX', 'GENERAL']),
     groups: [],
     contents: randomContents(10),

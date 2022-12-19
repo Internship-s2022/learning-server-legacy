@@ -12,6 +12,7 @@ const randomCourseUser = (
   userId: mongoose.Types.ObjectId,
 ): CourseUserType => {
   return {
+    _id: new mongoose.Types.ObjectId(),
     course: courseId,
     user: userId,
     role: isInternal

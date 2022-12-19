@@ -14,6 +14,7 @@ const randomPostulantCourse = (
   view: mongoose.Types.ObjectId,
 ): PostulantCourseType => {
   return {
+    _id: new mongoose.Types.ObjectId(),
     course: courseId,
     postulant: postulantId,
     admissionResults,

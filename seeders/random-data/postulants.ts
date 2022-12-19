@@ -9,7 +9,7 @@ const randomPostulant = (): PostulantType => {
   const lastName = faker.name.firstName();
 
   return {
-    _id: new mongoose.Types.ObjectId(faker.database.mongodbObjectId()),
+    _id: new mongoose.Types.ObjectId(),
     birthDate: faker.date.birthdate({ mode: 'age', min: 18, max: 60 }).toISOString(),
     location: faker.address.cityName(),
     dni: faker.helpers.regexpStyleStringParse('[1-5][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),

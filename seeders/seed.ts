@@ -24,6 +24,7 @@ import { generateRandomModules } from './random-data/modules';
 import { generateRandomPostulantCourses } from './random-data/postulant-course';
 import { generateRandomPostulants } from './random-data/postulants';
 import { generateRegistrationFormPerCourse } from './random-data/registration-form';
+import { generateRandomReports } from './random-data/reports';
 import { generateRandomUsers } from './random-data/users';
 import {
   addCollection,
@@ -109,6 +110,7 @@ const seedDatabase = async (endProcess = true) => {
   const { modules: randomModules } = generateRandomModules(config.modules.amountRandom, courses);
   const allModules = [...modules, ...randomModules];
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
+  const { reports: randomReports } = generateRandomReports(courses, allModules, allCourseUsers);
   const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
   const { postulantCourses, admissionResults } = generateRandomPostulantCourses(
@@ -130,6 +132,7 @@ const seedDatabase = async (endProcess = true) => {
     registrationForms,
     questions,
     postulantCourses,
+    reports: randomReports,
     admissionResults,
   };
 

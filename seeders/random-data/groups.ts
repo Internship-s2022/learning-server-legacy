@@ -15,7 +15,7 @@ const randomGroup = (
   courseUsers: mongoose.Types.ObjectId[],
 ): GroupType => {
   return {
-    _id: new mongoose.Types.ObjectId(faker.database.mongodbObjectId()),
+    _id: new mongoose.Types.ObjectId(),
     course: course._id as mongoose.Types.ObjectId,
     name: `Grupo ${index + 1}`,
     modules,
