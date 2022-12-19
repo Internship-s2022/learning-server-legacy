@@ -117,7 +117,14 @@ export const formatSort = (sort: QueryType | undefined): SortType | undefined =>
       throw new CustomError(400, 'Sort must have at least one sort key.');
     }
     const entries = Object.entries(sort);
-    const hasNaN = entries.some(([_key, value]) => isNaN(Number(value)) || value === '');
+    const hasNaN = entries.some(
+      ([_key, value]) =>
+        isNaN(Number(value)) ||
+        value === '' ||
+        Number(value) > 1 ||
+        Number(value) < -1 ||
+        Number(value) === 0,
+    );
     if (hasNaN) {
       throw new CustomError(400, 'Sort keys must be 1 (for ascending) or -1 (for descending).');
     }
