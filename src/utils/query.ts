@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
 import { QueryType, SortType } from 'src/interfaces/request';
+import { CustomError } from 'src/models/custom-error';
 
 export const filterExcludeArrayOfIds = (excludeIds: string[] | string) => {
   if (typeof excludeIds === 'string') {
@@ -112,7 +113,15 @@ export const formatFilters = (query: qs.ParsedQs) => {
 
 export const formatSort = (sort: QueryType | undefined): SortType | undefined => {
   if (typeof sort === 'object') {
-    return Object.entries(sort).reduce((acum, [key, value]) => {
+    if (Array.isArray(sort)) {
+      throw new CustomError(400, 'Sort must have at least one sort key.');
+    }
+    const entries = Object.entries(sort);
+    const hasNaN = entries.some(([_key, value]) => isNaN(Number(value)) || value === '');
+    if (hasNaN) {
+      throw new CustomError(400, 'Sort keys must be 1 (for ascending) or -1 (for descending).');
+    }
+    return entries.reduce((acum, [key, value]) => {
       if (value) {
         return {
           ...acum,
