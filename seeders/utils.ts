@@ -1,5 +1,6 @@
 import firebaseAdmin from 'firebase-admin';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
+import _ from 'lodash';
 import { DeleteResult, Document, InsertManyResult, OptionalUnlessRequiredId } from 'mongodb';
 import { Collection } from 'mongoose';
 
@@ -27,17 +28,29 @@ export const listAndRemoveAllUsers = async (nextPageToken?: string) => {
   }
 };
 
-export const addUser = async (user: FirebaseUser, timeout: number) => {
-  return new Promise((resolve: (value: UserRecord) => void, reject) =>
+const usersPerChunk = 15;
+
+export const addUsers = async (users: FirebaseUser[], timeout: number, chunk: number) => {
+  return new Promise((resolve: (value: UserRecord[]) => void, reject) =>
     setTimeout(async () => {
       try {
-        const userType = user.type;
-        const isNewUser = user.isNewUser;
-        const userCreated = await firebaseAdmin.auth().createUser({ ...user });
-        await firebaseAdmin.auth().setCustomUserClaims(userCreated.uid, { userType, isNewUser });
-        resolve(userCreated);
+        const responses = await Promise.all(
+          users.map(async (user, i) => {
+            console.log(
+              '\x1b[36m',
+              padMessage(`User ${chunk * usersPerChunk + i + 1}: ${user.email}`, '-', 10, 55),
+            );
+            const userCreated = await firebaseAdmin.auth().createUser({ ...user });
+            await firebaseAdmin.auth().setCustomUserClaims(userCreated.uid, {
+              userType: user.type,
+              isNewUser: user.isNewUser,
+            });
+            return userCreated;
+          }),
+        );
+        resolve(responses);
       } catch (error) {
-        console.log('\x1b[31m', `🛑 Error adding user: ${user.email} \n`, '\x1b[0m', error);
+        console.log('\x1b[31m', `🛑 Error adding chunk of users: ${chunk} \n`, '\x1b[0m', error);
         reject(error);
       }
     }, timeout),
@@ -47,13 +60,13 @@ export const addUser = async (user: FirebaseUser, timeout: number) => {
 export const listAndAddAllUsers = async (firebaseUsers: FirebaseUser[]) => {
   try {
     let timeout = 0;
-    const users: UserRecord[] = [];
-    console.log('\x1b[36m', padMessage('⚡️ Adding Firebase Users'));
-    for (let i = 0; i < firebaseUsers.length; i++) {
+    let users: UserRecord[] = [];
+    const chunkedFirebaseUsers = _.chunk(firebaseUsers, usersPerChunk);
+    for (let i = 0; i < chunkedFirebaseUsers.length; i++) {
       timeout = timeout + 1;
-      console.log('\x1b[36m', padMessage(`User ${i + 1}: ${firebaseUsers[i].email}`, '-', 10, 55));
-      const user = await addUser(firebaseUsers[i], timeout);
-      users.push(user);
+      console.log('\x1b[36m', padMessage(`⚡️ Chunk of users ${i + 1}`, '-'));
+      const newUsers = await addUsers(chunkedFirebaseUsers[i], timeout, i);
+      users = [...users, ...newUsers];
     }
     console.log('\n\x1b[37m', padMessage('🚀 Firebase Users Added'));
     return users;
