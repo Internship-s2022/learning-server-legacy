@@ -88,6 +88,7 @@ export default {
     create: true,
     collection: Module.collection,
     message: 'Modules',
+    amountRandom: parseInt(process.env.RANDOM_MODULES_PER_COURSE_AMOUNT || '15'),
   },
   groups: {
     remove: true,

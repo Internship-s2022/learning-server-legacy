@@ -19,6 +19,8 @@ import { UserType } from '../src/models/user';
 import config from './config';
 import allData from './data';
 import { generateRandomCourseUsers } from './random-data/course-users';
+import { generateRandomGroups } from './random-data/groups';
+import { generateRandomModules } from './random-data/modules';
 import { generateRandomPostulantCourses } from './random-data/postulant-course';
 import { generateRandomPostulants } from './random-data/postulants';
 import { generateRegistrationFormPerCourse } from './random-data/registration-form';
@@ -50,8 +52,16 @@ interface Data {
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const { courses, firebaseUsers, superAdmins, postulants, users, courseUsers, ...restData }: Data =
-  allData[env];
+const {
+  courses,
+  firebaseUsers,
+  superAdmins,
+  postulants,
+  users,
+  courseUsers,
+  modules,
+  ...restData
+}: Data = allData[env];
 
 const seedDatabase = async (endProcess = true) => {
   console.log('\x1b[36m', padMessage('-----------------------', ' '));
@@ -96,7 +106,10 @@ const seedDatabase = async (endProcess = true) => {
     allUsers,
     courseUsers,
   );
+  const { modules: randomModules } = generateRandomModules(config.modules.amountRandom, courses);
+  const allModules = [...modules, ...randomModules];
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
+  const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
   const { postulantCourses, admissionResults } = generateRandomPostulantCourses(
     courses,
@@ -112,6 +125,8 @@ const seedDatabase = async (endProcess = true) => {
     postulants: allPostulants,
     users: allUsers,
     courseUsers: allCourseUsers,
+    modules: allModules,
+    groups: randomGroups,
     registrationForms,
     questions,
     postulantCourses,
