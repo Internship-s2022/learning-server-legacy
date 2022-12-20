@@ -84,10 +84,9 @@ type ResourceConfig<TDoc extends Document> = {
   amountRandom?: number;
 };
 
-export const removeCollection = (
+export const removeCollection = <TDoc extends Document>(
   promises: Promise<DeleteResult>[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  resource: ResourceConfig<any>,
+  resource: ResourceConfig<TDoc>,
 ) => {
   if (resource.remove) {
     promises.push(resource.collection.deleteMany({}));

@@ -11,13 +11,13 @@ const tutorsPerCourse = parseInt(process.env.RANDOM_TUTORS_PER_COURSE || '15');
 const randomCourseUser = (
   courseId: mongoose.Types.ObjectId,
   userId: mongoose.Types.ObjectId,
-  role?: RoleType,
+  role: RoleType,
 ): CourseUserType => {
   return {
     _id: new mongoose.Types.ObjectId(),
     course: courseId,
     user: userId,
-    role: role ? role : 'STUDENT',
+    role,
     isActive: true,
   };
 };
@@ -46,10 +46,9 @@ export const generateRandomCourseUsers = (
           )
         ) {
           if ((course.isInternal && user.isInternal) || !course.isInternal) {
-            let role: RoleType | undefined = undefined;
+            let role: RoleType = 'STUDENT';
             if (countAdmins < adminsPerCourse && user.isInternal) role = 'ADMIN';
             else if (countTutors < tutorsPerCourse && user.isInternal) role = 'TUTOR';
-            else role = 'STUDENT';
 
             courseUser = randomCourseUser(
               new mongoose.Types.ObjectId(course._id),
