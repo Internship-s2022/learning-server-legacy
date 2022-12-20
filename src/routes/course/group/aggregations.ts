@@ -1,6 +1,11 @@
 import mongoose, { PipelineStage } from 'mongoose';
 
-export const getGroupPipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
+import { SortType } from 'src/interfaces/request';
+
+export const getGroupPipeline = (
+  query: qs.ParsedQs | { [k: string]: unknown },
+  sort?: SortType,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
@@ -54,12 +59,17 @@ export const getGroupPipeline = (query: qs.ParsedQs | { [k: string]: unknown }) 
     { $match: query },
   ];
 
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
   return pipeline;
 };
 
 export const exportGroupPipeline = (
   query: qs.ParsedQs | { [k: string]: unknown },
   courseId: mongoose.Types.ObjectId,
+  sort?: SortType,
 ) => {
   const pipeline: PipelineStage[] = [
     { $match: { course: courseId } },
@@ -147,6 +157,10 @@ export const exportGroupPipeline = (
     },
     { $match: query },
   ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
 
   return pipeline;
 };

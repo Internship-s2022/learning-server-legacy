@@ -1,29 +1,39 @@
 import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
+import { PipelineStage } from 'mongoose';
 
 import firebase from 'src/config/firebase';
+import { SortType } from 'src/interfaces/request';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
 import User from 'src/models/user';
-import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 import userCreation from 'src/utils/user-creation';
 
-const getUserPipeline = (query: qs.ParsedQs) => [
-  {
-    $lookup: {
-      from: 'postulants',
-      localField: 'postulant',
-      foreignField: '_id',
-      as: 'postulant',
+const getUserPipeline = (query: qs.ParsedQs, sort?: SortType) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: 'postulants',
+        localField: 'postulant',
+        foreignField: '_id',
+        as: 'postulant',
+      },
     },
-  },
-  { $unwind: { path: '$postulant' } },
-  { $match: query },
-];
+    { $unwind: { path: '$postulant' } },
+    { $match: query },
+  ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
+  return pipeline;
+};
 
 const getAllUsers = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const userAggregate = User.aggregate(getUserPipeline(query));
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const userAggregate = User.aggregate(getUserPipeline(query, sort));
   const { docs, ...pagination } = await User.aggregatePaginate(userAggregate, {
     page,
     limit,
@@ -170,8 +180,9 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
-  const query = filterByIncludes(req.query);
-  const docs = await User.aggregate(getUserPipeline(query));
+  const { sort, ...rest } = req.query;
+  const query = formatFilters(rest);
+  const docs = await User.aggregate(getUserPipeline(query, formatSort(sort)));
   if (docs.length) {
     const csv = await parseAsync(docs, {
       fields: [

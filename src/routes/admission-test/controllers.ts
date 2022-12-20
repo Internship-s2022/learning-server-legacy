@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 
 import AdmissionTest, { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { paginateAndFilter } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await AdmissionTest.paginate(query, { page, limit });
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const { docs, ...pagination } = await AdmissionTest.paginate(query, { page, limit, sort });
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of admission tests.',

@@ -7,9 +7,10 @@ import Group, { GroupIdType, GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
 import { createReports, deleteReportsByGroupId } from 'src/routes/course/report/controllers';
 import {
-  filterByIncludes,
   filterIncludeArrayOfIds,
-  paginateAndFilterByIncludes,
+  formatFilters,
+  formatSort,
+  paginateAndFilter,
 } from 'src/utils/query';
 import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users';
 import { validateAtLeastOneRole } from 'src/utils/validate-role';
@@ -17,9 +18,9 @@ import { validateAtLeastOneRole } from 'src/utils/validate-role';
 import { exportGroupPipeline, getGroupPipeline } from './aggregations';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
   const groupAggregate = Group.aggregate(
-    getGroupPipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }),
+    getGroupPipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }, sort),
   );
   const { docs, ...pagination } = await Group.aggregatePaginate(groupAggregate, {
     page,
@@ -234,9 +235,10 @@ const deleteById = async (req: Request, res: Response) => {
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
-  const query = filterByIncludes(req.query);
+  const { sort, ...rest } = req.query;
+  const query = formatFilters(rest);
   const docs = await Group.aggregate(
-    exportGroupPipeline(query, new mongoose.Types.ObjectId(req.params.courseId)),
+    exportGroupPipeline(query, new mongoose.Types.ObjectId(req.params.courseId), formatSort(sort)),
   );
   if (docs.length) {
     const csv = await parseAsync(docs, {

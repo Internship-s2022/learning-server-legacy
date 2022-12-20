@@ -7,7 +7,7 @@ import { CustomError } from 'src/models/custom-error';
 import Group from 'src/models/group';
 import Module from 'src/models/module';
 import Report, { ReportDocument, ReportIdType, ReportType } from 'src/models/report';
-import { filterIncludeArrayOfIds, paginateAndFilterByIncludes } from 'src/utils/query';
+import { filterIncludeArrayOfIds, paginateAndFilter } from 'src/utils/query';
 
 import { getReportPipeline } from './aggregations';
 
@@ -54,7 +54,7 @@ const exportReports = async (docs: ReportDocument[], res: Response) => {
 };
 
 const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
+  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const modulesInCourse = await Module.find({
     course: new mongoose.Types.ObjectId(courseId),
   });
@@ -65,12 +65,15 @@ const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) =
     );
   }
   const reportAggregate = Report.aggregate(
-    getReportPipeline({
-      ...query,
-      $or: modulesInCourse.map((module) => ({
-        'module._id': module._id,
-      })),
-    }),
+    getReportPipeline(
+      {
+        ...query,
+        $or: modulesInCourse.map((module) => ({
+          'module._id': module._id,
+        })),
+      },
+      sort,
+    ),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
     page,
@@ -105,14 +108,11 @@ const reportsByModuleId = async (moduleId: string, reqQuery: qs.ParsedQs = {}) =
   if (!module) {
     throw new CustomError(404, `Module with id ${moduleId} was not found.`);
   }
-  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
+  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const reportAggregate = Report.aggregate(
-    getReportPipeline({ ...query, 'module._id': new mongoose.Types.ObjectId(moduleId) }),
+    getReportPipeline({ ...query, 'module._id': new mongoose.Types.ObjectId(moduleId) }, sort),
   );
-  const response = await Report.aggregatePaginate(reportAggregate, {
-    page,
-    limit,
-  });
+  const response = await Report.aggregatePaginate(reportAggregate, { page, limit });
   return response;
 };
 
@@ -142,7 +142,7 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
   if (!group) {
     throw new CustomError(404, `Group with id ${groupId} was not found.`);
   }
-  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
+  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const modulesIncludeGroup = await Module.find({
     groups: { $in: groupId },
   });
@@ -153,12 +153,15 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
     );
   }
   const reportAggregate = Report.aggregate(
-    getReportPipeline({
-      ...query,
-      $or: modulesIncludeGroup.map((module) => ({
-        'module._id': module._id,
-      })),
-    }),
+    getReportPipeline(
+      {
+        ...query,
+        $or: modulesIncludeGroup.map((module) => ({
+          'module._id': module._id,
+        })),
+      },
+      sort,
+    ),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
     page,
@@ -193,12 +196,15 @@ const reportsByStudentId = async (studentId: string, reqQuery: qs.ParsedQs = {})
     }
     throw new CustomError(404, `Course User with id ${studentId} is not a student.`);
   }
-  const { page, limit, query } = paginateAndFilterByIncludes(reqQuery);
+  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const reportAggregate = Report.aggregate(
-    getReportPipeline({
-      ...query,
-      'courseUser._id': new mongoose.Types.ObjectId(studentId),
-    }),
+    getReportPipeline(
+      {
+        ...query,
+        'courseUser._id': new mongoose.Types.ObjectId(studentId),
+      },
+      sort,
+    ),
   );
   const response = await Report.aggregatePaginate(reportAggregate, {
     page,

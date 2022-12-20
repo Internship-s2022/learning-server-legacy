@@ -3520,7 +3520,7 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "raw": "{{API_URL}}/course-user/by-user/:id?sort[role]=-1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
               "query": [
@@ -3528,6 +3528,10 @@
                   "key": "course._id",
                   "value": "1e063109a88495b45758c000",
                   "disabled": true
+                },
+                {
+                  "key": "sort[role]",
+                  "value": "-1"
                 }
               ],
               "variable": [
@@ -3557,9 +3561,15 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/by-course/:id",
+              "raw": "{{API_URL}}/course-user/by-course/:id?sort[role]=1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-course", ":id"],
+              "query": [
+                {
+                  "key": "sort[role]",
+                  "value": "1"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -3727,9 +3737,6 @@
         },
         {
           "name": "Get without group by courseId",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "GET",
             "header": [
@@ -3745,7 +3752,7 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/:courseId/without-group",
+              "raw": "{{API_URL}}/course-user/:courseId/without-group?modules=637517be650676f3da006f01&modules=637517be650676f3da006f02",
               "host": ["{{API_URL}}"],
               "path": ["course-user", ":courseId", "without-group"],
               "query": [
@@ -4055,13 +4062,17 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}",
+              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}&sort[score]=-1",
               "host": ["{{API_URL}}"],
               "path": ["admission-result"],
               "query": [
                 {
                   "key": "data.admissionTest",
                   "value": "{{admissionTestId}}"
+                },
+                {
+                  "key": "sort[score]",
+                  "value": "-1"
                 }
               ]
             }
@@ -4127,7 +4138,7 @@
     },
     {
       "key": "userId",
-      "value": ""
+      "value": "507f1f77bcf86cd799400000"
     },
     {
       "key": "registrationFormId",

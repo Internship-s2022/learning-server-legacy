@@ -1,6 +1,11 @@
 import { PipelineStage } from 'mongoose';
 
-export const getReportPipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
+import { SortType } from 'src/interfaces/request';
+
+export const getReportPipeline = (
+  query: qs.ParsedQs | { [k: string]: unknown },
+  sort?: SortType,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
@@ -56,6 +61,10 @@ export const getReportPipeline = (query: qs.ParsedQs | { [k: string]: unknown })
     },
     { $match: query },
   ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
 
   return pipeline;
 };

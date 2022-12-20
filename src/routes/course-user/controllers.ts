@@ -6,7 +6,7 @@ import Course from 'src/models/course';
 import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
-import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 import { getCourseUsersExcludeByModules } from 'src/utils/validate-course-users';
 
 import { getCourseBasedOnUserPipeline, getUserBasedOnCoursePipeline } from './aggregations';
@@ -17,9 +17,12 @@ const getByCourseId = async (req: Request, res: Response) => {
   if (course) {
     const courseUser = await CourseUser.findOne({ course: courseId });
     if (courseUser) {
-      const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+      const { page, limit, query, sort } = paginateAndFilter(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        getUserBasedOnCoursePipeline({ ...query, course: new mongoose.Types.ObjectId(courseId) }),
+        getUserBasedOnCoursePipeline(
+          { ...query, course: new mongoose.Types.ObjectId(courseId) },
+          sort,
+        ),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -43,9 +46,9 @@ const getByUserId = async (req: Request, res: Response) => {
   if (user) {
     const courseUser = await CourseUser.findOne({ user: userId });
     if (courseUser) {
-      const { page, limit, query } = paginateAndFilterByIncludes(req.query);
+      const { page, limit, query, sort } = paginateAndFilter(req.query);
       const courseUserAggregate = CourseUser.aggregate(
-        getCourseBasedOnUserPipeline({ ...query, user: new mongoose.Types.ObjectId(userId) }),
+        getCourseBasedOnUserPipeline({ ...query, user: new mongoose.Types.ObjectId(userId) }, sort),
       );
       const { docs, ...pagination } = await CourseUser.aggregatePaginate(courseUserAggregate, {
         page,
@@ -210,12 +213,13 @@ const physicalDeleteByUserId = async (req: Request, res: Response) => {
 const exportToCsvByCourseId = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.courseId);
   if (course) {
-    const query = filterByIncludes(req.query);
-    const docs = await CourseUser.aggregate(
-      getUserBasedOnCoursePipeline({
-        ...query,
-        course: new mongoose.Types.ObjectId(req.params.courseId),
-      }),
+    const { sort, ...rest } = req.query;
+    const query = formatFilters(rest);
+    const docs = await CourseUser.aggregate<CourseUserType>(
+      getUserBasedOnCoursePipeline(
+        { ...query, course: new mongoose.Types.ObjectId(req.params.courseId) },
+        formatSort(sort),
+      ),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -250,9 +254,13 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
 const exportToCsvByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   if (user) {
-    const query = filterByIncludes(req.query);
-    const docs = await CourseUser.aggregate(
-      getCourseBasedOnUserPipeline({ ...query, user: new mongoose.Types.ObjectId(req.params.id) }),
+    const { sort, ...rest } = req.query;
+    const query = formatFilters(rest);
+    const docs = await CourseUser.aggregate<CourseUserType>(
+      getCourseBasedOnUserPipeline(
+        { ...query, user: new mongoose.Types.ObjectId(req.params.id) },
+        formatSort(sort),
+      ),
     );
     if (docs.length) {
       const csv = await parseAsync(docs, {
@@ -284,6 +292,7 @@ const exportToCsvByUserId = async (req: Request, res: Response) => {
 };
 
 const getWithoutGroup = async (req: Request, res: Response) => {
+  delete req.query.modules;
   const courseUsers = await getCourseUsersExcludeByModules(
     new mongoose.Types.ObjectId(req.params.courseId),
     req.body.modules,
