@@ -1,23 +1,23 @@
 import mongoose from 'mongoose';
-import { faker } from '@faker-js/faker';
 
 import { CourseType } from '../../src/models/course';
-import { CourseUserType } from '../../src/models/course-user';
+import { CourseUserType, RoleType } from '../../src/models/course-user';
 import { UserType } from '../../src/models/user';
 import { padMessage } from '../utils';
 
+const adminsPerCourse = 5;
+const tutorsPerCourse = parseInt(process.env.RANDOM_TUTORS_PER_COURSE || '15');
+
 const randomCourseUser = (
-  isInternal: boolean,
   courseId: mongoose.Types.ObjectId,
   userId: mongoose.Types.ObjectId,
+  role?: RoleType,
 ): CourseUserType => {
   return {
     _id: new mongoose.Types.ObjectId(),
     course: courseId,
     user: userId,
-    role: isInternal
-      ? faker.helpers.arrayElement(['ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT'])
-      : 'STUDENT',
+    role: role ? role : 'STUDENT',
     isActive: true,
   };
 };
@@ -32,6 +32,8 @@ export const generateRandomCourseUsers = (
 
   for (let c = 0; c < courses.length; c++) {
     const course = courses[c];
+    let countAdmins = 1;
+    let countTutors = 1;
     if (course._id?.toString() !== '1e063109a88495b45758c006') {
       for (let u = 0; u < users.length; u++) {
         const user = users[u];
@@ -43,19 +45,19 @@ export const generateRandomCourseUsers = (
               cUser.course.toString() === course._id?.toString(),
           )
         ) {
-          if (course.isInternal && user.isInternal) {
+          if ((course.isInternal && user.isInternal) || !course.isInternal) {
+            let role: RoleType | undefined = undefined;
+            if (countAdmins < adminsPerCourse && user.isInternal) role = 'ADMIN';
+            else if (countTutors < tutorsPerCourse && user.isInternal) role = 'TUTOR';
+            else role = 'STUDENT';
+
             courseUser = randomCourseUser(
-              true,
               new mongoose.Types.ObjectId(course._id),
               new mongoose.Types.ObjectId(user._id),
+              role,
             );
-            courseUsers.push(courseUser);
-          } else if (!course.isInternal) {
-            courseUser = randomCourseUser(
-              user.isInternal,
-              new mongoose.Types.ObjectId(course._id),
-              new mongoose.Types.ObjectId(user._id),
-            );
+            if (courseUser.role === 'ADMIN') countAdmins++;
+            if (courseUser.role === 'TUTOR') countTutors++;
             courseUsers.push(courseUser);
           }
         }

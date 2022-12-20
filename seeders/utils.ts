@@ -63,8 +63,8 @@ export const listAndAddAllUsers = async (firebaseUsers: FirebaseUser[]) => {
     let users: UserRecord[] = [];
     const chunkedFirebaseUsers = _.chunk(firebaseUsers, usersPerChunk);
     for (let i = 0; i < chunkedFirebaseUsers.length; i++) {
-      timeout = timeout + 1;
-      console.log('\x1b[36m', padMessage(`⚡️ Chunk of users ${i + 1}`, '-'));
+      timeout = timeout + 5;
+      console.log('\x1b[37m', padMessage(`⚡️ Chunk of users ${i + 1}`, '-'));
       const newUsers = await addUsers(chunkedFirebaseUsers[i], timeout, i);
       users = [...users, ...newUsers];
     }

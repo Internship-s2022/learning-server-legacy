@@ -57,7 +57,7 @@ export default {
     create: true,
     collection: User.collection,
     message: 'Users',
-    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '24'),
+    amountRandom: parseInt(process.env.RANDOM_USERS_AMOUNT || '164'),
   },
   courseUsers: {
     remove: true,
