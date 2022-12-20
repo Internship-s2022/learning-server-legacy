@@ -64,7 +64,7 @@ const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) =
       `Cannot find the list of reports in the course ${courseId}. There are not any modules on this course.`,
     );
   }
-  const reportAggregate = await Report.aggregate(
+  const reportAggregate = await Report.aggregate<ReportDocument>(
     getReportPipeline(
       {
         ...query,
