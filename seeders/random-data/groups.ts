@@ -50,7 +50,7 @@ export const generateRandomGroups = (
 
       for (let sChunked = 0; sChunked < studentGroups.length; sChunked++) {
         const chunkedGroups = [
-          studentGroups[sChunked].map(({ _id }) => _id),
+          ...studentGroups[sChunked].map(({ _id }) => _id),
           tutors[_.random(0, tutors.length - 1)]._id,
         ] as mongoose.Types.ObjectId[];
         const group = randomGroup(courses[c], mChunked + sChunked, modules, chunkedGroups);
