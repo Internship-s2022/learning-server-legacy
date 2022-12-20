@@ -54,7 +54,7 @@ const exportReports = async (docs: ReportDocument[], res: Response) => {
 };
 
 const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) => {
-  const { page, limit, query, sort } = paginateAndFilter(reqQuery);
+  const { query, sort } = paginateAndFilter(reqQuery);
   const modulesInCourse = await Module.find({
     course: new mongoose.Types.ObjectId(courseId),
   });
@@ -64,7 +64,7 @@ const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) =
       `Cannot find the list of reports in the course ${courseId}. There are not any modules on this course.`,
     );
   }
-  const reportAggregate = Report.aggregate(
+  const reportAggregate = await Report.aggregate(
     getReportPipeline(
       {
         ...query,
@@ -75,20 +75,31 @@ const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) =
       sort,
     ),
   );
-  const response = await Report.aggregatePaginate(reportAggregate, {
-    page,
-    limit,
-  });
-  return response;
+  // TO-DO: Paginate by student
+  // const response = await Report.aggregatePaginate(reportAggregate, {
+  //   page,
+  //   limit,
+  // });
+  return reportAggregate;
 };
 
 const getByCourseId = async (req: Request, res: Response) => {
-  const { docs, ...pagination } = await reportsByCourseId(req.params.courseId, req.query);
+  const docs = await reportsByCourseId(req.params.courseId, req.query);
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports in the course ${req.params.courseId}.`,
       data: docs,
-      pagination,
+      pagination: {
+        totalDocs: docs.length,
+        limit: docs.length,
+        totalPages: 1,
+        page: 1,
+        pagingCounter: 0,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: null,
+        nextPage: null,
+      },
       error: false,
     });
   }
@@ -99,7 +110,7 @@ const getByCourseId = async (req: Request, res: Response) => {
 };
 
 const exportByCourseId = async (req: Request, res: Response) => {
-  const { docs } = await reportsByCourseId(req.params.courseId, req.query);
+  const docs = await reportsByCourseId(req.params.courseId, req.query);
   await exportReports(docs, res);
 };
 
