@@ -10,6 +10,7 @@ import { padMessage } from '../utils';
 
 const randomGroup = (
   course: CourseType,
+  moduleIndex: number,
   index: number,
   modules: mongoose.Types.ObjectId[],
   courseUsers: mongoose.Types.ObjectId[],
@@ -17,7 +18,7 @@ const randomGroup = (
   return {
     _id: new mongoose.Types.ObjectId(),
     course: course._id as mongoose.Types.ObjectId,
-    name: `Grupo ${index + 1}`,
+    name: `Grupo ${index + 1} Etapa ${moduleIndex + 1}`,
     modules,
     type: faker.helpers.arrayElement(['DEV', 'QA', 'UIUX', 'GENERAL']),
     courseUsers,
@@ -44,7 +45,7 @@ export const generateRandomGroups = (
     const chunkedModules = _.chunk(cModules, 3);
 
     for (let mChunked = 0; mChunked < chunkedModules.length; mChunked++) {
-      const modules = chunkedModules[mChunked].map(({ _id }) => _id as mongoose.Types.ObjectId);
+      const modules = chunkedModules[mChunked];
       const shuffleStudents = _.shuffle(students);
       const studentGroups = _.chunk(shuffleStudents, Math.ceil(tutors.length));
 
@@ -53,8 +54,15 @@ export const generateRandomGroups = (
           ...studentGroups[sChunked].map(({ _id }) => _id),
           tutors[_.random(0, tutors.length - 1)]._id,
         ] as mongoose.Types.ObjectId[];
-        const group = randomGroup(courses[c], mChunked + sChunked, modules, chunkedGroups);
+        const group = randomGroup(
+          courses[c],
+          mChunked,
+          sChunked,
+          modules.map(({ _id }) => _id as mongoose.Types.ObjectId),
+          chunkedGroups,
+        );
         groups.push(group);
+        modules.forEach((module) => module.groups.push(group._id as mongoose.Types.ObjectId));
       }
     }
   }

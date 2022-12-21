@@ -8,7 +8,7 @@ import { padMessage } from '../utils';
 const randomContents = (amount: number) => {
   const contents: string[] = [];
   for (let i = 0; i < amount; i++) {
-    contents[i] = faker.hacker.noun();
+    contents[i] = faker.lorem.word({ length: { min: 3, max: 24 } });
   }
   return contents;
 };
@@ -20,7 +20,7 @@ const randomModule = (course: CourseType, index: number): ModuleType => {
     _id: new mongoose.Types.ObjectId(),
     course: course._id as mongoose.Types.ObjectId,
     name: `Módulo ${index + 1}`,
-    description: faker.lorem.paragraph(5),
+    description: faker.lorem.paragraph(3),
     status:
       course.inscriptionEndDate <= today
         ? course.endDate <= today
@@ -40,9 +40,12 @@ export const generateRandomModules = (amount: number, courses: CourseType[]) => 
   const modules: ModuleType[] = [];
 
   for (let c = 0; c < courses.length; c++) {
-    for (let m = 0; m < amount; m++) {
-      const module = randomModule(courses[c], m);
-      modules.push(module);
+    if (courses[c]._id?.toString() !== '1e063109a88495b45758c006') {
+      console.log('entro', courses[c]._id?.toString());
+      for (let m = 0; m < amount; m++) {
+        const module = randomModule(courses[c], m);
+        modules.push(module);
+      }
     }
   }
 

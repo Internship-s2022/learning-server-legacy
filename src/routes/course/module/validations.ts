@@ -19,7 +19,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
   description: Joi.string()
     .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
     .min(5)
-    .max(50)
+    .max(200)
     .required()
     .messages({
       'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',

@@ -61,6 +61,7 @@ const {
   users,
   courseUsers,
   modules,
+  groups,
   ...restData
 }: Data = allData[env];
 
@@ -112,6 +113,7 @@ const seedDatabase = async (endProcess = true) => {
   const allCourseUsers = [...courseUsers, ...randomCourseUsers];
   const { reports: randomReports } = generateRandomReports(courses, allModules, allCourseUsers);
   const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
+  const allGroups = [...groups, ...randomGroups];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
   const { postulantCourses, admissionResults } = generateRandomPostulantCourses(
     courses,
@@ -128,7 +130,7 @@ const seedDatabase = async (endProcess = true) => {
     users: allUsers,
     courseUsers: allCourseUsers,
     modules: allModules,
-    groups: randomGroups,
+    groups: allGroups,
     registrationForms,
     questions,
     postulantCourses,
