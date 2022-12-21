@@ -44,6 +44,7 @@ export const createDefaultRegistrationForm = async (
         title: 'Nombre/s:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'firstName',
         isRequired: true,
       },
       {
@@ -51,6 +52,7 @@ export const createDefaultRegistrationForm = async (
         title: 'Apellido:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'lastName',
         isRequired: true,
       },
       {
@@ -58,6 +60,7 @@ export const createDefaultRegistrationForm = async (
         title: 'Email:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'email',
         isRequired: true,
       },
       {
@@ -65,6 +68,7 @@ export const createDefaultRegistrationForm = async (
         title: 'Fecha de nacimiento:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'birthDate',
         isRequired: true,
       },
       {
@@ -72,6 +76,7 @@ export const createDefaultRegistrationForm = async (
         title: 'DNI:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'dni',
         isRequired: true,
       },
       {
@@ -87,6 +92,7 @@ export const createDefaultRegistrationForm = async (
           },
         ],
         view: generalViewId,
+        key: 'location',
         isRequired: true,
       },
       {
@@ -101,6 +107,7 @@ export const createDefaultRegistrationForm = async (
         title: 'Telefono:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
+        key: 'phone',
         isRequired: true,
       },
     ];
