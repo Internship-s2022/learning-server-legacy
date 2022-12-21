@@ -31,7 +31,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     'string.valid': 'Invalid status, should be one of the valids status.',
     'any.required': 'Status is a required field.',
   }),
-  type: Joi.string().valid('DEV', 'QA', 'UXUI', 'GENERAL').required().messages({
+  type: Joi.string().valid('DEV', 'QA', 'UIUX', 'GENERAL').required().messages({
     'string.valid': 'Invalid type, should be one of the valids types.',
     'any.required': 'Type is a required field.',
   }),
