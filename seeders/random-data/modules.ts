@@ -20,7 +20,7 @@ const randomModule = (course: CourseType, index: number): ModuleType => {
     _id: new mongoose.Types.ObjectId(),
     course: course._id as mongoose.Types.ObjectId,
     name: `Módulo ${index + 1}`,
-    description: faker.lorem.paragraph(3),
+    description: faker.lorem.sentence(6),
     status:
       course.inscriptionEndDate <= today
         ? course.endDate <= today
@@ -35,13 +35,12 @@ const randomModule = (course: CourseType, index: number): ModuleType => {
 };
 
 export const generateRandomModules = (amount: number, courses: CourseType[]) => {
-  console.log('\n\x1b[36m', padMessage('⚡️ Generating Random Modules'));
+  console.log('\x1b[36m', padMessage('⚡️ Generating Random Modules'));
 
   const modules: ModuleType[] = [];
 
   for (let c = 0; c < courses.length; c++) {
     if (courses[c]._id?.toString() !== '1e063109a88495b45758c006') {
-      console.log('entro', courses[c]._id?.toString());
       for (let m = 0; m < amount; m++) {
         const module = randomModule(courses[c], m);
         modules.push(module);

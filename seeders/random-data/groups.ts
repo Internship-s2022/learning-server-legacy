@@ -31,7 +31,7 @@ export const generateRandomGroups = (
   modules: ModuleType[],
   courseUsers: CourseUserType[],
 ) => {
-  console.log('\n\x1b[36m', padMessage('⚡️ Generating Random Groups'));
+  console.log('\x1b[36m', padMessage('⚡️ Generating Random Groups'));
 
   const groups: GroupType[] = [];
 

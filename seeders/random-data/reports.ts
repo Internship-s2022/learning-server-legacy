@@ -29,7 +29,7 @@ export const generateRandomReports = (
   modules: ModuleType[],
   courseUsers: CourseUserType[],
 ) => {
-  console.log('\n\x1b[36m', padMessage('⚡️ Generating Random Reports'));
+  console.log('\x1b[36m', padMessage('⚡️ Generating Random Reports'));
 
   const reports: ReportType[] = [];
 

@@ -28,7 +28,7 @@ export const listAndRemoveAllUsers = async (nextPageToken?: string) => {
   }
 };
 
-const usersPerChunk = 15;
+const usersPerChunk = 20;
 
 export const addUsers = async (users: FirebaseUser[], timeout: number, chunk: number) => {
   return new Promise((resolve: (value: UserRecord[]) => void, reject) =>
@@ -63,7 +63,7 @@ export const listAndAddAllUsers = async (firebaseUsers: FirebaseUser[]) => {
     let users: UserRecord[] = [];
     const chunkedFirebaseUsers = _.chunk(firebaseUsers, usersPerChunk);
     for (let i = 0; i < chunkedFirebaseUsers.length; i++) {
-      timeout = timeout + 100;
+      timeout = timeout + 200;
       console.log('\x1b[37m', padMessage(`⚡️ Chunk of users ${i + 1}`, '-'));
       const newUsers = await addUsers(chunkedFirebaseUsers[i], timeout, i);
       users = [...users, ...newUsers];
