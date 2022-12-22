@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "3232146b-ed78-4513-8ff1-901334af331d",
+    "_postman_id": "4eed2eb8-f739-4229-8e85-c11db3a9fec7",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577717"
+    "_exporter_id": "23500192"
   },
   "item": [
     {
@@ -100,93 +100,9 @@
           "response": []
         },
         {
-          "name": "Update by id",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomFirstName}}.{{$randomLastName}}@radiumrocket.com\",\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Logical delete by id",
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get by id",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete by id",
-          "request": {
-            "method": "DELETE",
             "header": [
               {
                 "key": "token",
@@ -3520,7 +3436,7 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id?sort[role]=-1",
+              "raw": "{{API_URL}}/course-user/by-user/:id",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
               "query": [
@@ -3528,10 +3444,6 @@
                   "key": "course._id",
                   "value": "1e063109a88495b45758c000",
                   "disabled": true
-                },
-                {
-                  "key": "sort[role]",
-                  "value": "-1"
                 }
               ],
               "variable": [
@@ -3561,15 +3473,9 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/by-course/:id?sort[role]=1",
+              "raw": "{{API_URL}}/course-user/by-course/:id",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-course", ":id"],
-              "query": [
-                {
-                  "key": "sort[role]",
-                  "value": "1"
-                }
-              ],
               "variable": [
                 {
                   "key": "id",
@@ -4062,17 +3968,13 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}&sort[score]=-1",
+              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}",
               "host": ["{{API_URL}}"],
               "path": ["admission-result"],
               "query": [
                 {
                   "key": "data.admissionTest",
                   "value": "{{admissionTestId}}"
-                },
-                {
-                  "key": "sort[score]",
-                  "value": "-1"
                 }
               ]
             }
@@ -4138,7 +4040,7 @@
     },
     {
       "key": "userId",
-      "value": "507f1f77bcf86cd799400000"
+      "value": ""
     },
     {
       "key": "registrationFormId",
