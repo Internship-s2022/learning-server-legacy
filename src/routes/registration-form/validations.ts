@@ -15,7 +15,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'any.required': 'Course id is a required field.',
         }),
       title: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(3)
         .max(50)
         .required()
@@ -26,7 +26,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'any.required': 'Title is a required field.',
         }),
       description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(8)
         .max(200)
         .required()
@@ -42,7 +42,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
         .items(
           Joi.object({
             name: Joi.string()
-              .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+              .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
               .min(3)
               .max(30)
               .required(),

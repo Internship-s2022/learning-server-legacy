@@ -6,7 +6,7 @@ import { ModuleType } from 'src/models/module';
 
 const moduleJoiSchema = Joi.object<ModuleType>({
   name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
     .min(3)
     .max(50)
     .required()
@@ -17,7 +17,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
       'any.required': 'Name is a required field.',
     }),
   description: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
     .min(5)
     .max(200)
     .required()
@@ -51,7 +51,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
   contents: Joi.array()
     .items(
       Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(3)
         .max(24)
         .required()

@@ -50,7 +50,7 @@ const courseValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const courseValidation = Joi.object<CourseWithUsers>({
       name: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(3)
         .max(50)
         .required()
@@ -70,7 +70,7 @@ const courseValidation = (requestType: 'post' | 'put') => {
             }),
         ),
       description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(4)
         .max(200)
         .required()
