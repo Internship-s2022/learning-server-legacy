@@ -35,6 +35,7 @@ const generateGeneralQuestions = (
       title: 'Nombre',
       type: 'SHORT_ANSWER',
       view,
+      key: 'firstName',
       isRequired: true,
     },
     {
@@ -43,6 +44,7 @@ const generateGeneralQuestions = (
       title: 'Apellido',
       type: 'SHORT_ANSWER',
       view,
+      key: 'lastName',
       isRequired: true,
     },
     {
@@ -51,6 +53,7 @@ const generateGeneralQuestions = (
       title: 'Email',
       type: 'SHORT_ANSWER',
       view,
+      key: 'email',
       isRequired: true,
     },
     {
@@ -59,6 +62,7 @@ const generateGeneralQuestions = (
       title: 'Fecha de nacimiento',
       type: 'SHORT_ANSWER',
       view,
+      key: 'birthDate',
       isRequired: true,
     },
     {
@@ -67,6 +71,7 @@ const generateGeneralQuestions = (
       title: 'DNI',
       type: 'SHORT_ANSWER',
       view,
+      key: 'dni',
       isRequired: true,
     },
     {
@@ -85,14 +90,7 @@ const generateGeneralQuestions = (
         },
       ],
       view,
-      isRequired: true,
-    },
-    {
-      _id: new mongoose.Types.ObjectId(),
-      registrationForm,
-      title: 'Localidad',
-      type: 'SHORT_ANSWER',
-      view,
+      key: 'location',
       isRequired: true,
     },
     {
@@ -101,6 +99,7 @@ const generateGeneralQuestions = (
       title: 'Teléfono',
       type: 'SHORT_ANSWER',
       view,
+      key: 'phone',
       isRequired: true,
     },
     {

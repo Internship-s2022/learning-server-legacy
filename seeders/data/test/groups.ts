@@ -60,7 +60,7 @@ const groups: GroupType[] = [
   },
   {
     _id: new mongoose.Types.ObjectId('637517be650676f3da007f04'),
-    course: new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
+    course: new mongoose.Types.ObjectId('1e063109a88495b45758c006'),
     name: 'Grupo 5',
     type: 'DEV',
     modules: [
