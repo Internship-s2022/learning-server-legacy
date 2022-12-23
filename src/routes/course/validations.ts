@@ -70,12 +70,12 @@ const courseValidation = (requestType: 'post' | 'put') => {
             }),
         ),
       description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
         .min(3)
         .max(1000)
         .required()
         .messages({
-          'string.min': 'Innvalid description, it must contain more than 3 characters.',
+          'string.min': 'Invalid description, it must contain more than 3 characters.',
           'string.max': 'Invalid description, it must contain more than 1000 characters.',
           'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
           'any.required': 'Description is a required field.',

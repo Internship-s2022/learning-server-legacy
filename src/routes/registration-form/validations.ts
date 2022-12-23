@@ -26,7 +26,7 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'any.required': 'Title is a required field.',
         }),
       description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
         .min(8)
         .max(200)
         .required()

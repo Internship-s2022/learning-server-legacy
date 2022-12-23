@@ -17,7 +17,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
       'any.required': 'Name is a required field.',
     }),
   description: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(5)
     .max(200)
     .required()
