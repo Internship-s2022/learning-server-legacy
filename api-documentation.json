@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "3232146b-ed78-4513-8ff1-901334af331d",
+    "_postman_id": "1e915f16-ca17-4779-aa6a-fdb382da0f6b",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577717"
+    "_exporter_id": "23500192"
   },
   "item": [
     {
@@ -100,93 +100,9 @@
           "response": []
         },
         {
-          "name": "Update by id",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomFirstName}}.{{$randomLastName}}@radiumrocket.com\",\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Logical delete by id",
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get by id",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete by id",
-          "request": {
-            "method": "DELETE",
             "header": [
               {
                 "key": "token",
