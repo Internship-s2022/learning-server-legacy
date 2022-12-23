@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "4eed2eb8-f739-4229-8e85-c11db3a9fec7",
+    "_postman_id": "1e915f16-ca17-4779-aa6a-fdb382da0f6b",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -3436,7 +3436,7 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "raw": "{{API_URL}}/course-user/by-user/:id?sort[role]=-1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
               "query": [
@@ -3444,6 +3444,10 @@
                   "key": "course._id",
                   "value": "1e063109a88495b45758c000",
                   "disabled": true
+                },
+                {
+                  "key": "sort[role]",
+                  "value": "-1"
                 }
               ],
               "variable": [
@@ -3473,9 +3477,15 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/by-course/:id",
+              "raw": "{{API_URL}}/course-user/by-course/:id?sort[role]=1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-course", ":id"],
+              "query": [
+                {
+                  "key": "sort[role]",
+                  "value": "1"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -3968,13 +3978,17 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}",
+              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}&sort[score]=-1",
               "host": ["{{API_URL}}"],
               "path": ["admission-result"],
               "query": [
                 {
                   "key": "data.admissionTest",
                   "value": "{{admissionTestId}}"
+                },
+                {
+                  "key": "sort[score]",
+                  "value": "-1"
                 }
               ]
             }
@@ -4040,7 +4054,7 @@
     },
     {
       "key": "userId",
-      "value": ""
+      "value": "507f1f77bcf86cd799400000"
     },
     {
       "key": "registrationFormId",
