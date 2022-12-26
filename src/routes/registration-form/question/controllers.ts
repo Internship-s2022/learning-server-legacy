@@ -96,11 +96,20 @@ const updateListOfQuestions = async (req: Request, res: Response) => {
       registrationForm: req.params.regFormId,
       view: req.params.viewId,
     });
-    const mappedQuestions = req.body.map((question: QuestionType) =>
-      question._id
-        ? { ...question, _id: new mongoose.Types.ObjectId(question._id) }
-        : { ...question },
-    );
+    const mappedQuestions = req.body.map((question: QuestionType) => {
+      const newQuestion = { ...question };
+      if (question._id) {
+        newQuestion._id = new mongoose.Types.ObjectId(question._id);
+      }
+      if (question.options?.length) {
+        newQuestion.options = question.options.map((option) =>
+          option._id
+            ? { ...option, _id: new mongoose.Types.ObjectId(question._id) }
+            : { ...option },
+        );
+      }
+      return newQuestion;
+    });
     const questionsUpdated = await Question.insertMany(mappedQuestions);
 
     return res.status(200).json({
