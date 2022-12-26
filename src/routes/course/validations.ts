@@ -50,14 +50,14 @@ const courseValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const courseValidation = Joi.object<CourseWithUsers>({
       name: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(3)
-        .max(50)
+        .max(25)
         .required()
         .messages({
           'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid course name, it must contain more than 3 characters.',
-          'string.max': 'Invalid course name, it must not contain more than 50 characters.',
+          'string.min': 'Invalid name, it must not contain more than 3 characters.',
+          'string.max': 'Invalid name, it must not contain more than 25 characters.',
           'any.required': 'Name is a required field.',
         }),
       admissionTests: Joi.array()
@@ -70,18 +70,18 @@ const courseValidation = (requestType: 'post' | 'put') => {
             }),
         ),
       description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
-        .min(4)
-        .max(200)
+        .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
+        .min(3)
+        .max(1000)
         .required()
         .messages({
-          'string.min': 'Invalid course description, it must contain more than 4 characters.',
-          'string.max': 'Invalid course description, it must not contain more than 200 characters.',
+          'string.min': 'Invalid description, it must contain more than 3 characters.',
+          'string.max': 'Invalid description, it must not contain more than 1000 characters.',
           'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
           'any.required': 'Description is a required field.',
         }),
-      inscriptionStartDate: Joi.date().required().messages({
-        'date.greater': 'Invalid inscription start date, it must be after the current date.',
+      inscriptionStartDate: Joi.date().greater('11-1-2017').required().messages({
+        'date.greater': 'Invalid inscription date, minimum date allowed is 01/11/2017.',
         'any.required': 'Inscription start date is a required field.',
       }),
       inscriptionEndDate: Joi.date().greater(Joi.ref('inscriptionStartDate')).required().messages({
@@ -93,8 +93,9 @@ const courseValidation = (requestType: 'post' | 'put') => {
         'date.greater': 'Invalid start date, it must be after the inscription end date.',
         'any.required': 'Start date is a required field.',
       }),
-      endDate: Joi.date().greater(Joi.ref('startDate')).messages({
+      endDate: Joi.date().greater(Joi.ref('startDate')).max('11-1-2100').messages({
         'date.greater': 'Invalid end date, it must be after the course start date.',
+        'date.max': 'Invalid inscription date, maximum date allowed is 01/11/2100.',
       }),
       type: Joi.string().valid('EXPRESS', 'FULL').messages({
         'any.required': 'Type is a required field.',

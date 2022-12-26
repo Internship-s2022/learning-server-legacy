@@ -8,7 +8,7 @@ import RegistrationForm, { RegistrationFormDocument } from 'src/models/registrat
 
 const option = Joi.object<Option>({
   value: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(3)
     .max(24)
     .required(),
@@ -22,7 +22,7 @@ const option = Joi.object<Option>({
 
 const question = Joi.object<QuestionType>({
   title: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(3)
     .max(50)
     .required()
