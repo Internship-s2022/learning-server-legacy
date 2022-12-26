@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose, { startSession } from 'mongoose';
 
 import { CustomError } from 'src/models/custom-error';
 import Question, { QuestionType } from 'src/models/question';
@@ -67,6 +68,53 @@ const create = async (req: Request, res: Response) => {
   });
 };
 
+const updateListOfQuestions = async (req: Request, res: Response) => {
+  const session = await startSession();
+  session.startTransaction();
+  try {
+    const registrationForm = await RegistrationForm.findById(req.params.regFormId);
+    if (!registrationForm) {
+      session.abortTransaction();
+      throw new CustomError(
+        404,
+        `Registration form with the id ${req.params.regFormId} was not found.`,
+      );
+    }
+    if (!registrationForm?.isActive) {
+      session.abortTransaction();
+      throw new CustomError(
+        400,
+        `Registration form with the id ${req.params.regFormId} is not active.`,
+      );
+    }
+    if (!registrationForm.views.find((view) => view._id?.toString() === req.params.viewId)) {
+      session.abortTransaction();
+      throw new CustomError(400, 'Question view is not found on the registration form.');
+    }
+
+    await Question.deleteMany({
+      registrationForm: req.params.regFormId,
+      view: req.params.viewId,
+    });
+    const mappedQuestions = req.body.map((question: QuestionType) =>
+      question._id
+        ? { ...question, _id: new mongoose.Types.ObjectId(question._id) }
+        : { ...question },
+    );
+    const questionsUpdated = await Question.insertMany(mappedQuestions);
+
+    return res.status(200).json({
+      message: 'The questions have been successfully updated.',
+      data: questionsUpdated,
+      error: false,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    session.abortTransaction();
+    throw new CustomError(500, error.message);
+  }
+};
+
 const updateById = async (req: Request, res: Response) => {
   const registrationForm = await RegistrationForm.findById(req.params.regFormId);
   if (!registrationForm?.isActive) {
@@ -109,4 +157,4 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Question with id ${req.params.questionId} was not found.`);
 };
 
-export default { getAll, getById, create, updateById, physicalDeleteById };
+export default { getAll, getById, create, updateById, physicalDeleteById, updateListOfQuestions };
