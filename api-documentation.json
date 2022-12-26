@@ -1870,6 +1870,49 @@
               "response": []
             },
             {
+              "name": "Update array",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"_id\": \"63a5eab093359ab509ee01d1\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"este se mofidificoasoads\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d2\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"sadasdasd asdsadesfas\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01d3\",\n                \"value\": \"quo\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d4\",\n                \"value\": \"quasi\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d5\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"este amabnoidsaldksadnm\",\n        \"type\": \"MULTIPLE_CHOICES\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01d6\",\n                \"value\": \"laudantium\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d7\",\n                \"value\": \"numquam\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d8\",\n                \"value\": \"magni\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d9\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"CHECKANDSADSANLDSANDSLAKDNKS\",\n        \"type\": \"CHECKBOXES\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01da\",\n                \"value\": \"doloribus\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01db\",\n                \"value\": \"dolor\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01dc\",\n                \"value\": \"magnam\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01dd\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"Repellendus eaque reiciendis\",\n        \"type\": \"PARAGRAPH\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    },\n    {\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"Repellendus sdassadsa reiciendis\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question/view/:viewId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question", "view", ":viewId"],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "{{registrationFormId}}"
+                    },
+                    {
+                      "key": "viewId",
+                      "value": "{{viewId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Get by id",
               "request": {
                 "method": "GET",
