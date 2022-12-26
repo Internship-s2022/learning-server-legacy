@@ -76,7 +76,7 @@ const courseValidation = (requestType: 'post' | 'put') => {
         .required()
         .messages({
           'string.min': 'Invalid description, it must contain more than 3 characters.',
-          'string.max': 'Invalid description, it must contain more than 1000 characters.',
+          'string.max': 'Invalid description, it must not contain more than 1000 characters.',
           'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
           'any.required': 'Description is a required field.',
         }),
