@@ -98,15 +98,12 @@ const updateListOfQuestions = async (req: Request, res: Response) => {
     });
     const mappedQuestions = req.body.map((question: QuestionType) => {
       const newQuestion = { ...question };
-      if (question._id) {
-        newQuestion._id = new mongoose.Types.ObjectId(question._id);
-      }
+      newQuestion._id = new mongoose.Types.ObjectId(question._id ? question._id : undefined);
       if (question.options?.length) {
-        newQuestion.options = question.options.map((option) =>
-          option._id
-            ? { ...option, _id: new mongoose.Types.ObjectId(question._id) }
-            : { ...option },
-        );
+        newQuestion.options = question.options.map((option) => ({
+          ...option,
+          _id: new mongoose.Types.ObjectId(option._id ? option._id : undefined),
+        }));
       }
       return newQuestion;
     });
