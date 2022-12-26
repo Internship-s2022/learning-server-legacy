@@ -200,7 +200,7 @@ const deleteById = async (req: Request, res: Response) => {
   }
   const result = await Module.findByIdAndUpdate(
     req.params.moduleId,
-    { isActive: false },
+    { isActive: false, groups: [] },
     {
       new: true,
     },
