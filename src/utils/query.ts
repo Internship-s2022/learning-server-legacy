@@ -95,7 +95,7 @@ export const formatFilters = (query: qs.ParsedQs) => {
           [key]: new ObjectId(value),
         };
       }
-      if (!isNaN(Number(value))) {
+      if (!isNaN(Number(value)) && key.includes('age')) {
         return {
           ...prev,
           [key]: Number(value),
