@@ -4027,13 +4027,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"postulant\": \"{{postulantId}}\",\n    \"view\": \"{{viewId}}\",\n    \"answer\": [\n        {\n            \"question\": \"{{questionId}}\",\n            \"value\": [\n                \"Option 1\"\n            ]\n        }\n    ]\n}",
