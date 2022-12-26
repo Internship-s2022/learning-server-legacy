@@ -69,6 +69,12 @@ const getByUserId = async (req: Request, res: Response) => {
 const assignRole = async (req: Request, res: Response) => {
   const user = await User.findById(req.body.user);
   const course = await Course.findById(req.body.course);
+  if (course?.isInternal && !user?.isInternal) {
+    throw new CustomError(
+      404,
+      'It is not posible to create an external student on an internal course.',
+    );
+  }
   if (user && course) {
     const courseUser = await CourseUser.findOne({
       user: req.body.user,
@@ -117,6 +123,12 @@ const assignRole = async (req: Request, res: Response) => {
 const updateByUserId = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
   const course = await Course.findById(req.body.course);
+  if (course?.isInternal && !user?.isInternal) {
+    throw new CustomError(
+      404,
+      'It is not posible to create an external student on an internal course.',
+    );
+  }
   if (user && course) {
     const courseUser = await CourseUser.findOne({
       user: req.params.id,
