@@ -2,7 +2,10 @@ import { PipelineStage } from 'mongoose';
 
 import { SortType } from 'src/interfaces/request';
 
-export const getCoursePipeline = (query: qs.ParsedQs, sort?: SortType) => {
+export const getCoursePipeline = (
+  query: qs.ParsedQs | { [k: string]: unknown },
+  sort?: SortType,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $addFields: {
