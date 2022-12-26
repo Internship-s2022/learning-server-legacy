@@ -12,7 +12,6 @@ const getAccessRoleAndPermission = firebaseValidations.accessBasedOnRoleAndType(
   types: ['SUPER_ADMIN', 'NORMAL'],
 });
 
-router.post('/', postulantCourseValidations.validateCreation, postulantCourseControllers.create);
 router.get('/', getAccessRoleAndPermission, postulantCourseControllers.getByCourseId);
 router.post(
   '/admission-test',
