@@ -60,4 +60,5 @@ const getMeInfo = async (req: Request, res: Response) => {
   }
   throw new CustomError(404, `User with uid ${req.params.uid} was not found.`);
 };
+
 export default { updatePassword, getMeInfo };
