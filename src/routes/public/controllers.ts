@@ -60,20 +60,28 @@ const getRegistrationFormByView = async (req: Request, res: Response) => {
       if (viewBelongs) {
         const questions = await Question.find({
           registrationForm: registrationForm._id,
-          view: defaultView,
+          view: generalView,
         });
+
+        let viewQuestions;
 
         if (
           req.query.view &&
           req.query.view != String(defaultView) &&
           req.query.view != String(generalView)
         ) {
-          const viewQuestions = await Question.find({
+          viewQuestions = await Question.find({
             registrationForm: registrationForm._id,
-            view: req.query.view,
+            view: req.query.query,
           });
-          questions.push(...viewQuestions);
+        } else {
+          viewQuestions = await Question.find({
+            registrationForm: registrationForm._id,
+            view: defaultView,
+          });
         }
+
+        questions.push(...viewQuestions);
 
         return res.status(200).json({
           message: 'The registration form with questions has been successfully found.',
