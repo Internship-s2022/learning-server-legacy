@@ -35,7 +35,7 @@ export const generateRandomAdmissionResults = (course: CourseType) => {
       score: Math.floor(Math.random() * 10),
     };
     newAdmissionResults.push(admissionResult);
-    admissionResultsIds.push(admissionResult._id as mongoose.Types.ObjectId);
+    admissionResultsIds.push(new mongoose.Types.ObjectId(admissionResult._id));
   }
   return { newAdmissionResults, admissionResultsIds };
 };
@@ -49,7 +49,6 @@ export const generateRandomPostulantCourses = (
   console.log('\x1b[36m', padMessage('⚡️ Adding postulants in Courses'));
   const postulantCourses: PostulantCourseType[] = [];
   let admissionResults: AdmissionResultType[] = [];
-
   for (let c = 0; c < courses.length; c++) {
     const course = courses[c];
     const randomView = registrationForms.find(
@@ -59,10 +58,10 @@ export const generateRandomPostulantCourses = (
       const postulant = postulants[p];
       const { newAdmissionResults, admissionResultsIds } = generateRandomAdmissionResults(course);
       const postulantCourse = randomPostulantCourse(
-        course._id as mongoose.Types.ObjectId,
-        postulant._id as mongoose.Types.ObjectId,
+        new mongoose.Types.ObjectId(course._id),
+        new mongoose.Types.ObjectId(postulant?._id),
         admissionResultsIds,
-        randomView as mongoose.Types.ObjectId,
+        new mongoose.Types.ObjectId(randomView),
       );
       postulantCourses.push(postulantCourse);
       admissionResults = [...admissionResults, ...newAdmissionResults];
