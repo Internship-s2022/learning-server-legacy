@@ -56,6 +56,30 @@ const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
+const studentUser = async (req: Request, _res: Response, next: NextFunction) => {
+  const { courseId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(String(courseId)) || !courseId) {
+    throw new CustomError(401, unauthorizedMessage);
+  }
+
+  const courseDoc = await Course.findOne({ _id: courseId });
+  if (!courseDoc) {
+    throw new CustomError(401, unauthorizedMessage);
+  }
+
+  const user = await User.findOne({ firebaseUid: req.firebaseUid });
+  const courseUser = await CourseUser.findOne({ user: user?._id, course: courseId });
+
+  if (!user?.isActive || courseUser?.role !== 'STUDENT') {
+    throw new CustomError(401, unauthorizedMessage);
+  }
+
+  req.courseUserId = String(courseUser?._id);
+
+  return next();
+};
+
 const accessBasedOnRoleAndType =
   ({ roles = [], types }: { roles?: RoleType[]; types: FirebaseUser['type'][] }) =>
   async (req: Request, _res: Response, next: NextFunction) => {
@@ -90,4 +114,4 @@ const accessBasedOnRoleAndType =
     return next();
   };
 
-export default { superAdmin, normalUser, accessBasedOnRoleAndType };
+export default { superAdmin, normalUser, accessBasedOnRoleAndType, studentUser };
