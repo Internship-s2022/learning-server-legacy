@@ -1895,52 +1895,6 @@
           ]
         },
         {
-          "name": "Create",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "let jsonResponse = pm.response.json();\r",
-                  "\r",
-                  "if(pm.response.code === 201){\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "    pm.collectionVariables.set(\"registrationFormId\", pm.response.json().data._id);\r",
-                  "} else { \r",
-                  "pm.response.to.have.status(400);\r",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"course\": \"{{courseId}}\",\n    \"title\": \"{{$randomWord}}\",\n    \"description\": \"{{$randomWords}}\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        },\n        {\n            \"name\": \"general\"\n        }\n    ],\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/registration-form",
-              "host": ["{{API_URL}}"],
-              "path": ["registration-form"]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Get all",
           "request": {
             "method": "GET",
@@ -2005,31 +1959,6 @@
                 }
               }
             },
-            "url": {
-              "raw": "{{API_URL}}/registration-form/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["registration-form", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{registrationFormId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Logical delete by id",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
             "url": {
               "raw": "{{API_URL}}/registration-form/:id",
               "host": ["{{API_URL}}"],
