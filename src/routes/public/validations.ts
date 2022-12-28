@@ -6,13 +6,6 @@ import { AnswerType, PostulantCourseType } from 'src/models/postulant-course';
 
 const validateCreation = (req: Request, res: Response, next: NextFunction) => {
   const validateCreation = Joi.object<PostulantCourseType>({
-    postulant: Joi.string()
-      .pattern(/^[0-9a-fA-F]{24}$/)
-      .required()
-      .messages({
-        'string.pattern.base': 'Invalid postulant id, ObjectId expected.',
-        'any.required': 'Postulant id is a required field.',
-      }),
     answer: Joi.array()
       .items(
         Joi.object<AnswerType>({

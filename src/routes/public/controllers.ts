@@ -4,12 +4,14 @@ import mongoose from 'mongoose';
 import AdmissionResult from 'src/models/admission-result';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
-import Postulant from 'src/models/postulant';
+import Postulant, { PostulantType } from 'src/models/postulant';
 import PostulantCourse, { AnswerType, PostulantCourseType } from 'src/models/postulant-course';
 import Question from 'src/models/question';
 import RegistrationForm from 'src/models/registration-form';
+import User from 'src/models/user';
 import { filterIncludeArrayOfIds, paginateAndFilter } from 'src/utils/query';
 
+import validation from '../postulant/validations';
 import { getCoursePipeline } from './aggregations';
 
 const getCourses = async (req: Request, res: Response) => {
@@ -106,23 +108,21 @@ const getRegistrationFormByView = async (req: Request, res: Response) => {
   throw new CustomError(404, `Course with id ${req.params.courseId} was not found.`);
 };
 
+export const validateEmail = async (
+  email: string,
+  errorMessage = 'An error has occurred. Please contact us.',
+) => {
+  const postulantWithEmail = await Postulant.findOne({ email: email });
+  const userWithEmail = await User.findOne({ email: email });
+  if (postulantWithEmail || userWithEmail) throw new CustomError(400, errorMessage);
+};
+
 const createPostulation = async (req: Request, res: Response) => {
-  const postulant = await Postulant.findById(req.body.postulant);
   const course = await Course.findById(req.params.courseId);
   const currentDate = new Date();
-  if (postulant && course) {
-    const postulantCourse = await PostulantCourse.find({
-      postulant: req.body.postulant,
-      course: req.params.courseId,
-    });
+  if (course) {
     if (currentDate < course.inscriptionStartDate || currentDate > course.inscriptionEndDate) {
       throw new CustomError(400, 'The postulation must be created between the inscription dates.');
-    }
-    if (postulantCourse.length) {
-      throw new CustomError(
-        400,
-        `The postulant with id: ${req.body.postulant} has been already postulated in this course.`,
-      );
     }
     if (!course.admissionTests.length) {
       throw new CustomError(
@@ -130,10 +130,40 @@ const createPostulation = async (req: Request, res: Response) => {
         `The course with id: ${req.params.courseId} must have admission tests to create the postulation.`,
       );
     }
+    const registrationForm = await RegistrationForm.findOne({
+      course: course._id,
+    });
+
+    if (!registrationForm?.views.some((view) => view._id == req.body.view))
+      throw new CustomError(
+        400,
+        `The view with id: ${req.body.view} does not belong to the registration form of this course.`,
+      );
+
+    const generalQuestions = await Question.find({
+      view: registrationForm?.views.find((view) => view.name === 'General')?._id,
+      key: { $exists: true },
+    });
+
     const answers: AnswerType[] = req.body.answer;
+
+    const isValid = generalQuestions.every((question) =>
+      answers.map((q) => String(q.question)).includes(String(question._id)),
+    );
+
+    if (!isValid) {
+      throw new CustomError(
+        400,
+        'All the questions about the postulant personal information must be answered.',
+      );
+    }
+
     const enteredQuestions = await Question.find(
       filterIncludeArrayOfIds(answers.map((a: AnswerType) => a.question.toString())),
     );
+
+    let postulantInfo: PostulantType | Record<string, unknown> = {};
+
     answers.forEach((a) => {
       const question = enteredQuestions.find((q) => a.question == q._id);
       if (!question?._id)
@@ -174,9 +204,9 @@ const createPostulation = async (req: Request, res: Response) => {
             if (!question.options?.some((op) => a.value?.includes(op.value)))
               throw new CustomError(
                 400,
-                `Answer value must be one of the options: ${question.options?.map(
-                  (op) => op.value,
-                )}.`,
+                `Answer value for the question with id ${
+                  question._id
+                } must be one of the options: ${question.options?.map((op) => op.value)}.`,
               );
             break;
           case 'CHECKBOXES':
@@ -196,30 +226,67 @@ const createPostulation = async (req: Request, res: Response) => {
           default:
             break;
         }
+        if (question?.key)
+          postulantInfo = {
+            ...postulantInfo,
+            [question.key]: Array.isArray(a.value) ? a.value[0] : a.value,
+          };
       }
     });
-    const setAdmissionResults = await AdmissionResult.insertMany(
-      course.admissionTests.map((item) => ({
-        admissionTest: item,
-      })),
-    );
-    const newPostulantCourse = new PostulantCourse<PostulantCourseType>({
-      course: new mongoose.Types.ObjectId(req.params.courseId),
-      postulant: req.body.postulant,
-      admissionResults: setAdmissionResults.map((item) => item._id),
-      answer: req.body.answer,
-      view: req.body.view,
-      isPromoted: false,
-    });
-    await newPostulantCourse.save();
 
-    return res.status(201).json({
-      message: 'Postulant successfully registered.',
-      data: newPostulantCourse,
-      error: false,
-    });
+    validation.postulantValidation({ ...postulantInfo, isActive: true });
+
+    let postulantId;
+    const postulant = await Postulant.findOne({ dni: postulantInfo.dni, isActive: true });
+
+    if (postulant) {
+      const postulantCourse = await PostulantCourse.findOne({
+        course: req.params.courseId,
+        postulant: postulant._id,
+      });
+      if (postulantCourse) {
+        throw new CustomError(
+          400,
+          `Postulant with dni ${postulant.dni} was already postulated on this course.`,
+        );
+      }
+      postulantId = postulant._id;
+    } else {
+      await validateEmail(String(postulantInfo.email));
+      const newPostulant = new Postulant({ ...postulantInfo, isActive: true });
+      await newPostulant.save();
+      postulantId = newPostulant._id;
+    }
+
+    try {
+      const setAdmissionResults = await AdmissionResult.insertMany(
+        course.admissionTests.map((item) => ({
+          admissionTest: item,
+        })),
+      );
+
+      const newPostulantCourse = new PostulantCourse<PostulantCourseType>({
+        course: new mongoose.Types.ObjectId(req.params.courseId),
+        postulant: postulantId,
+        admissionResults: setAdmissionResults.map((item) => item._id),
+        answer: req.body.answer,
+        view: req.body.view,
+        isPromoted: false,
+      });
+      await newPostulantCourse.save();
+
+      return res.status(201).json({
+        message: 'Postulant successfully registered.',
+        data: newPostulantCourse,
+        error: false,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      await Postulant.findByIdAndDelete(postulantId);
+      throw new CustomError(500, err.message, { ...err, type: 'POSTULANT_COURSE_MONGO_ERROR' });
+    }
   } else {
-    throw new CustomError(404, `Postulant with id ${req.body.postulant} was not found.`);
+    throw new CustomError(404, `Course with id ${req.params.course} was not found.`);
   }
 };
 
