@@ -40,6 +40,7 @@ const question = Joi.object<QuestionType>({
       'string.pattern.base': 'Invalid view id, ObjectId expected.',
       'any.required': 'Registration form id is a required field.',
     }),
+  key: Joi.string().optional(),
   title: Joi.string()
     .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(3)
