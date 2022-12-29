@@ -37,7 +37,7 @@ const superAdmin = async (req: Request, res: Response, next: NextFunction) => {
 
   const response = await getTokenDecoded(String(token));
   if (response.userType !== 'SUPER_ADMIN') {
-    throw new CustomError(401, unauthorizedMessage);
+    throw new CustomError(403, unauthorizedMessage);
   }
 
   return next();
@@ -50,7 +50,7 @@ const normalUser = async (req: Request, res: Response, next: NextFunction) => {
   req.firebaseUid = response.uid;
 
   if (response.userType !== 'NORMAL') {
-    throw new CustomError(401, unauthorizedMessage);
+    throw new CustomError(403, unauthorizedMessage);
   }
 
   return next();
@@ -60,19 +60,19 @@ const studentUser = async (req: Request, _res: Response, next: NextFunction) => 
   const { courseId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(String(courseId)) || !courseId) {
-    throw new CustomError(401, unauthorizedMessage);
+    throw new CustomError(403, unauthorizedMessage);
   }
 
   const courseDoc = await Course.findOne({ _id: courseId });
   if (!courseDoc) {
-    throw new CustomError(401, unauthorizedMessage);
+    throw new CustomError(403, unauthorizedMessage);
   }
 
   const user = await User.findOne({ firebaseUid: req.firebaseUid });
   const courseUser = await CourseUser.findOne({ user: user?._id, course: courseId });
 
   if (!user?.isActive || courseUser?.role !== 'STUDENT') {
-    throw new CustomError(401, unauthorizedMessage);
+    throw new CustomError(403, unauthorizedMessage);
   }
 
   req.courseUserId = String(courseUser?._id);
@@ -88,16 +88,16 @@ const accessBasedOnRoleAndType =
     const response = await getTokenDecoded(String(token));
 
     if (!types.includes(response.userType)) {
-      throw new CustomError(401, unauthorizedMessage);
+      throw new CustomError(403, unauthorizedMessage);
     }
 
     if (response.userType === 'NORMAL') {
       if (!mongoose.Types.ObjectId.isValid(String(course)) || !course) {
-        throw new CustomError(401, unauthorizedMessage);
+        throw new CustomError(403, unauthorizedMessage);
       }
       const courseDoc = await Course.findOne({ _id: course });
       if (!courseDoc || (req.params.courseId && req.params.courseId !== course)) {
-        throw new CustomError(401, unauthorizedMessage);
+        throw new CustomError(403, unauthorizedMessage);
       }
 
       const user = await User.findOne({ firebaseUid: response.uid });
@@ -107,7 +107,7 @@ const accessBasedOnRoleAndType =
         !user?.isActive ||
         (courseUser && (!roles.includes(courseUser.role) || !courseUser.isActive))
       ) {
-        throw new CustomError(401, unauthorizedMessage);
+        throw new CustomError(403, unauthorizedMessage);
       }
     }
 
