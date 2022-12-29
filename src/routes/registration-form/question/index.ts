@@ -27,6 +27,14 @@ router.post(
   questionControllers.create,
 );
 router.put(
+  '/view/:viewId',
+  getAccessRoleAndPermission,
+  globalValidations.validateMongoId,
+  validations.courseInscriptionDate,
+  validations.questionValidation('array'),
+  questionControllers.updateListOfQuestions,
+);
+router.put(
   '/:questionId',
   getAccessRoleAndPermission,
   globalValidations.validateMongoId,

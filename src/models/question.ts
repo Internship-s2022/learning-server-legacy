@@ -67,7 +67,7 @@ const questionSchema = new Schema<QuestionType, Model<QuestionType>>(
       required: false,
     },
   },
-  { timestamps: true },
+  { versionKey: false },
 );
 
 questionSchema.plugin(aggregatePaginate);
