@@ -3593,6 +3593,68 @@
           "response": []
         },
         {
+          "name": "Get my reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me/course/:courseId/report?sort[module.name]=1",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me", "course", ":courseId", "report"],
+              "query": [
+                {
+                  "key": "sort[module.name]",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me/course/:courseId/history?sort[module.name]=1",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me", "course", ":courseId", "history"],
+              "query": [
+                {
+                  "key": "sort[module.name]",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login",
           "event": [
             {
@@ -3775,7 +3837,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"agustin.chazaretta@radiumrocket.com\",\n  \"password\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
