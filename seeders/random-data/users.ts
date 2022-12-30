@@ -23,7 +23,7 @@ const randomUser = ({
   postulantId,
 }: Omit<FirebaseUser, 'password' | 'type'> & { postulantId: PostulantType['_id'] }): UserType => {
   return {
-    _id: new mongoose.Types.ObjectId(faker.database.mongodbObjectId()),
+    _id: new mongoose.Types.ObjectId(),
     isInternal: faker.datatype.boolean(),
     isActive: faker.datatype.boolean(),
     postulant: new mongoose.Types.ObjectId(postulantId),

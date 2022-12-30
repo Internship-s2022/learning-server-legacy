@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "3232146b-ed78-4513-8ff1-901334af331d",
+    "_postman_id": "2b4473f1-f3c8-4cdf-bcd8-e9a5d785d9d1",
     "name": "RadiumLearning",
     "description": "This is the api documentation of Radium Learning API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23577717"
+    "_exporter_id": "23577719"
   },
   "item": [
     {
@@ -100,93 +100,9 @@
           "response": []
         },
         {
-          "name": "Update by id",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomFirstName}}.{{$randomLastName}}@radiumrocket.com\",\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Logical delete by id",
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get by id",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/super-admin/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["super-admin", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{superAdminId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete by id",
-          "request": {
-            "method": "DELETE",
             "header": [
               {
                 "key": "token",
@@ -791,58 +707,6 @@
                       "disabled": true
                     }
                   ],
-                  "variable": [
-                    {
-                      "key": "courseId",
-                      "value": "{{courseId}}"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Create",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "if(pm.response.code === 201){\r",
-                      "    pm.response.to.have.status(201);\r",
-                      "    pm.collectionVariables.set(\"postulantCourseId\", pm.response.json().data._id);\r",
-                      "} else { \r",
-                      "pm.response.to.have.status(400);\r",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "token",
-                    "value": "{{token}}",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"postulant\": \"{{postulantId}}\",\n    \"view\": \"{{viewId}}\",\n    \"answer\": [\n        {\n            \"question\": \"{{questionId}}\",\n            \"value\": [\n                \"Option 1\"\n            ]\n        }\n    ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{API_URL}}/course/:courseId/postulation",
-                  "host": ["{{API_URL}}"],
-                  "path": ["course", ":courseId", "postulation"],
                   "variable": [
                     {
                       "key": "courseId",
@@ -1954,6 +1818,49 @@
               "response": []
             },
             {
+              "name": "Update array",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "x-course",
+                    "value": "{{courseId}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"_id\": \"63a5eab093359ab509ee01d1\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"este se mofidificoasoads\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d2\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"sadasdasd asdsadesfas\",\n        \"type\": \"DROPDOWN\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01d3\",\n                \"value\": \"quo\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d4\",\n                \"value\": \"quasi\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d5\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"este amabnoidsaldksadnm\",\n        \"type\": \"MULTIPLE_CHOICES\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01d6\",\n                \"value\": \"laudantium\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d7\",\n                \"value\": \"numquam\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01d8\",\n                \"value\": \"magni\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01d9\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"CHECKANDSADSANLDSANDSLAKDNKS\",\n        \"type\": \"CHECKBOXES\",\n        \"options\": [\n            {\n                \"_id\": \"63a5eab093359ab509ee01da\",\n                \"value\": \"doloribus\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01db\",\n                \"value\": \"dolor\"\n            },\n            {\n                \"_id\": \"63a5eab093359ab509ee01dc\",\n                \"value\": \"magnam\"\n            }\n        ],\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": false\n    },\n    {\n        \"_id\": \"63a5eab093359ab509ee01dd\",\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"Repellendus eaque reiciendis\",\n        \"type\": \"PARAGRAPH\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    },\n    {\n        \"registrationForm\": \"63a5eab093359ab509ee01b9\",\n        \"title\": \"Repellendus sdassadsa reiciendis\",\n        \"type\": \"SHORT_ANSWER\",\n        \"view\": \"63a5eab093359ab509ee01bb\",\n        \"isRequired\": true\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_URL}}/registration-form/:regFormId/question/view/:viewId",
+                  "host": ["{{API_URL}}"],
+                  "path": ["registration-form", ":regFormId", "question", "view", ":viewId"],
+                  "variable": [
+                    {
+                      "key": "regFormId",
+                      "value": "{{registrationFormId}}"
+                    },
+                    {
+                      "key": "viewId",
+                      "value": "{{viewId}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Get by id",
               "request": {
                 "method": "GET",
@@ -2031,52 +1938,6 @@
           ]
         },
         {
-          "name": "Create",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "let jsonResponse = pm.response.json();\r",
-                  "\r",
-                  "if(pm.response.code === 201){\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "    pm.collectionVariables.set(\"registrationFormId\", pm.response.json().data._id);\r",
-                  "} else { \r",
-                  "pm.response.to.have.status(400);\r",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"course\": \"{{courseId}}\",\n    \"title\": \"{{$randomWord}}\",\n    \"description\": \"{{$randomWords}}\",\n    \"views\": [\n        {\n            \"name\": \"general\"\n        },\n        {\n            \"name\": \"general\"\n        }\n    ],\n    \"isActive\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{API_URL}}/registration-form",
-              "host": ["{{API_URL}}"],
-              "path": ["registration-form"]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Get all",
           "request": {
             "method": "GET",
@@ -2141,31 +2002,6 @@
                 }
               }
             },
-            "url": {
-              "raw": "{{API_URL}}/registration-form/:id",
-              "host": ["{{API_URL}}"],
-              "path": ["registration-form", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{registrationFormId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Logical delete by id",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "text"
-              }
-            ],
             "url": {
               "raw": "{{API_URL}}/registration-form/:id",
               "host": ["{{API_URL}}"],
@@ -3520,7 +3356,7 @@
               }
             },
             "url": {
-              "raw": "{{API_URL}}/course-user/by-user/:id",
+              "raw": "{{API_URL}}/course-user/by-user/:id?sort[role]=-1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-user", ":id"],
               "query": [
@@ -3528,6 +3364,10 @@
                   "key": "course._id",
                   "value": "1e063109a88495b45758c000",
                   "disabled": true
+                },
+                {
+                  "key": "sort[role]",
+                  "value": "-1"
                 }
               ],
               "variable": [
@@ -3557,9 +3397,15 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/by-course/:id",
+              "raw": "{{API_URL}}/course-user/by-course/:id?sort[role]=1",
               "host": ["{{API_URL}}"],
               "path": ["course-user", "by-course", ":id"],
+              "query": [
+                {
+                  "key": "sort[role]",
+                  "value": "1"
+                }
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -3727,9 +3573,6 @@
         },
         {
           "name": "Get without group by courseId",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "GET",
             "header": [
@@ -3745,7 +3588,7 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/course-user/:courseId/without-group",
+              "raw": "{{API_URL}}/course-user/:courseId/without-group?modules=637517be650676f3da006f01&modules=637517be650676f3da006f02",
               "host": ["{{API_URL}}"],
               "path": ["course-user", ":courseId", "without-group"],
               "query": [
@@ -3788,6 +3631,68 @@
               "raw": "{{API_URL}}/auth/me",
               "host": ["{{API_URL}}"],
               "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me/course/:courseId/report?sort[module.name]=1",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me", "course", ":courseId", "report"],
+              "query": [
+                {
+                  "key": "sort[module.name]",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/auth/me/course/:courseId/history?sort[module.name]=1",
+              "host": ["{{API_URL}}"],
+              "path": ["auth", "me", "course", ":courseId", "history"],
+              "query": [
+                {
+                  "key": "sort[module.name]",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
             }
           },
           "response": []
@@ -3975,7 +3880,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"{{EMAIL}}\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"returnSecureToken\": true,\n  \"email\": \"agustin.chazaretta@radiumrocket.com\",\n  \"password\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -4055,13 +3960,125 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}",
+              "raw": "{{API_URL}}/admission-result?data.admissionTest={{admissionTestId}}&sort[score]=-1",
               "host": ["{{API_URL}}"],
               "path": ["admission-result"],
               "query": [
                 {
                   "key": "data.admissionTest",
                   "value": "{{admissionTestId}}"
+                },
+                {
+                  "key": "sort[score]",
+                  "value": "-1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Get courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/public/course",
+              "host": ["{{API_URL}}"],
+              "path": ["public", "course"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get course by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/public/course/:courseId",
+              "host": ["{{API_URL}}"],
+              "path": ["public", "course", ":courseId"],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get registration form",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/public/course/:courseId/registration-form?view={{viewId}}",
+              "host": ["{{API_URL}}"],
+              "path": ["public", "course", ":courseId", "registration-form"],
+              "query": [
+                {
+                  "key": "view",
+                  "value": "{{viewId}}"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create postulation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonResponse = pm.response.json();\r",
+                  "\r",
+                  "if(pm.response.code === 201){\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "    pm.collectionVariables.set(\"postulantCourseId\", pm.response.json().data._id);\r",
+                  "} else { \r",
+                  "pm.response.to.have.status(400);\r",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"view\": \"63ac57a33b866ac24e408f55\",\n    \"answer\": [\n        {\n            \"question\": \"63ac57a33b866ac24e408f59\",\n            \"value\": \"Nombre\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f5a\",\n            \"value\": \"Apellido\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f5b\",\n            \"value\": \"newEmail2@gmail.com\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f5c\",\n            \"value\": \"12/31/1998\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f5d\",\n            \"value\": \"345345342\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f5e\",\n            \"value\":[\"Argentina\"]\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f61\",\n            \"value\": \"3453453455\"\n        },\n        {\n            \"question\": \"63ac57a33b866ac24e408f62\",\n            \"value\": [\"Facebook\"]\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/public/course/:courseId/postulation",
+              "host": ["{{API_URL}}"],
+              "path": ["public", "course", ":courseId", "postulation"],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
                 }
               ]
             }
@@ -4127,7 +4144,7 @@
     },
     {
       "key": "userId",
-      "value": ""
+      "value": "507f1f77bcf86cd799400000"
     },
     {
       "key": "registrationFormId",

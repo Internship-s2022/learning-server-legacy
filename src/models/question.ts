@@ -21,6 +21,7 @@ export interface QuestionType {
   options?: Option[];
   view: mongoose.Types.ObjectId;
   isRequired: boolean;
+  key?: string;
 }
 
 interface QuestionDocument extends QuestionType, Document {
@@ -61,8 +62,12 @@ const questionSchema = new Schema<QuestionType, Model<QuestionType>>(
       type: Boolean,
       required: true,
     },
+    key: {
+      type: String,
+      required: false,
+    },
   },
-  { timestamps: true },
+  { versionKey: false },
 );
 
 questionSchema.plugin(aggregatePaginate);

@@ -6,7 +6,7 @@ import { GroupType } from 'src/models/group';
 
 const groupJoiSchema = Joi.object<GroupType>({
   name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
     .min(3)
     .max(50)
     .required()

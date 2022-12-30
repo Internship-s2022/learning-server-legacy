@@ -8,16 +8,17 @@ import { CustomError } from 'src/models/custom-error';
 import User from 'src/models/user';
 import { createDefaultRegistrationForm } from 'src/utils/default-registration-form';
 import {
-  filterByIncludes,
   filterIncludeArrayOfIds,
-  paginateAndFilterByIncludes,
+  formatFilters,
+  formatSort,
+  paginateAndFilter,
 } from 'src/utils/query';
 
 import { getCoursePipeline } from './aggregations';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const courseAggregate = Course.aggregate(getCoursePipeline(query));
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const courseAggregate = Course.aggregate(getCoursePipeline(query, undefined, sort));
   const { docs, ...pagination } = await Course.aggregatePaginate(courseAggregate, {
     page,
     limit,
@@ -177,8 +178,11 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
-  const query = filterByIncludes(req.query);
-  const docs = await Course.aggregate(getCoursePipeline(query, { unwindAdmissionTest: true }));
+  const { sort, ...rest } = req.query;
+  const query = formatFilters(rest);
+  const docs = await Course.aggregate<CourseType>(
+    getCoursePipeline(query, { unwindAdmissionTest: true }, formatSort(sort)),
+  );
   if (docs.length) {
     const csv = await parseAsync(docs, {
       fields: [

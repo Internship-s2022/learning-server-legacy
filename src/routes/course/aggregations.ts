@@ -1,6 +1,12 @@
 import { PipelineStage } from 'mongoose';
 
-export const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: boolean }) => {
+import { SortType } from 'src/interfaces/request';
+
+export const getCoursePipeline = (
+  query: qs.ParsedQs,
+  options?: { [k: string]: boolean },
+  sort?: SortType,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $addFields: {
@@ -47,6 +53,10 @@ export const getCoursePipeline = (query: qs.ParsedQs, options?: { [k: string]: b
 
   if (options?.unwindAdmissionTest) {
     pipeline.push({ $unwind: { path: '$admissionTests' } });
+  }
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
   }
 
   return pipeline;

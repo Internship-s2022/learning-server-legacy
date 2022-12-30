@@ -7,8 +7,14 @@ import { Option, QuestionType } from 'src/models/question';
 import RegistrationForm, { RegistrationFormDocument } from 'src/models/registration-form';
 
 const option = Joi.object<Option>({
+  _id: Joi.string()
+    .optional()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .messages({
+      'string.pattern.base': 'Invalid view id, ObjectId expected.',
+    }),
   value: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(3)
     .max(24)
     .required(),
@@ -21,8 +27,22 @@ const option = Joi.object<Option>({
   });
 
 const question = Joi.object<QuestionType>({
+  _id: Joi.string()
+    .optional()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .messages({
+      'string.pattern.base': 'Invalid view id, ObjectId expected.',
+    }),
+  registrationForm: Joi.string()
+    .required()
+    .pattern(/^[0-9a-fA-F]{24}$/)
+    .messages({
+      'string.pattern.base': 'Invalid view id, ObjectId expected.',
+      'any.required': 'Registration form id is a required field.',
+    }),
+  key: Joi.string().optional(),
   title: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(3)
     .max(50)
     .required()

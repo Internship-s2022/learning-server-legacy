@@ -1,6 +1,9 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
+import { QueryType, SortType } from 'src/interfaces/request';
+import { CustomError } from 'src/models/custom-error';
+
 export const filterExcludeArrayOfIds = (excludeIds: string[] | string) => {
   if (typeof excludeIds === 'string') {
     return { _id: { $ne: new ObjectId(excludeIds) } };
@@ -9,6 +12,7 @@ export const filterExcludeArrayOfIds = (excludeIds: string[] | string) => {
     $and: excludeIds.map((id) => ({ _id: { $ne: new ObjectId(id) } })),
   };
 };
+
 export const filterIncludeArrayOfIds = (includeIds: string[] | string) => {
   if (typeof includeIds === 'string') {
     return { _id: new ObjectId(includeIds) };
@@ -18,9 +22,10 @@ export const filterIncludeArrayOfIds = (includeIds: string[] | string) => {
   };
 };
 
-export const filterByIncludes = (query: qs.ParsedQs) => {
+export const formatFilters = (query: qs.ParsedQs) => {
+  const { sort: _sort, page: _page, limit: _limit, ...rest } = query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return Object.entries(query).reduce<Record<string, any>>((prev = {}, [key, value]) => {
+  return Object.entries(rest).reduce<Record<string, any>>((prev = {}, [key, value]) => {
     if (key.includes('min')) {
       const newKeys = key.split(/\.(?=[^.]+$)/);
       if (key.toLowerCase().includes('date')) {
@@ -90,7 +95,7 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
           [key]: new ObjectId(value),
         };
       }
-      if (!isNaN(Number(value))) {
+      if (!isNaN(Number(value)) && key.includes('age')) {
         return {
           ...prev,
           [key]: Number(value),
@@ -106,11 +111,42 @@ export const filterByIncludes = (query: qs.ParsedQs) => {
   }, {});
 };
 
-export const paginateAndFilterByIncludes = (query: qs.ParsedQs) => {
-  const { limit, page, ...rest } = query;
+export const formatSort = (sort: QueryType | undefined): SortType | undefined => {
+  if (typeof sort === 'object') {
+    if (Array.isArray(sort)) {
+      throw new CustomError(400, 'Sort must have at least one sort key.');
+    }
+    const entries = Object.entries(sort);
+    const hasNaN = entries.some(
+      ([_key, value]) =>
+        isNaN(Number(value)) ||
+        value === '' ||
+        Number(value) > 1 ||
+        Number(value) < -1 ||
+        Number(value) === 0,
+    );
+    if (hasNaN) {
+      throw new CustomError(400, 'Sort keys must be 1 (for ascending) or -1 (for descending).');
+    }
+    return entries.reduce((acum, [key, value]) => {
+      if (value) {
+        return {
+          ...acum,
+          [key]: Number(value),
+        };
+      }
+      return acum;
+    }, {});
+  }
+  return;
+};
+
+export const paginateAndFilter = (query: qs.ParsedQs) => {
+  const { limit, page, sort, ...rest } = query;
   return {
-    query: filterByIncludes(rest),
+    query: formatFilters(rest),
     limit: typeof limit === 'string' && limit ? parseInt(limit, 10) : 100,
     page: typeof page === 'string' && page ? parseInt(page, 10) : 1,
+    sort: formatSort(sort),
   };
 };

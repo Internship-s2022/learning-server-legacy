@@ -4,11 +4,11 @@ import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import firebase from 'src/config/firebase';
 import { CustomError } from 'src/models/custom-error';
 import SuperAdmin, { SuperAdminType } from 'src/models/super-admin';
-import { paginateAndFilterByIncludes } from 'src/utils/query';
+import { paginateAndFilter } from 'src/utils/query';
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const { docs, ...pagination } = await SuperAdmin.paginate(query, { page, limit });
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const { docs, ...pagination } = await SuperAdmin.paginate(query, { page, limit, sort });
   if (docs.length) {
     return res.status(200).json({
       message: 'Showing the list of super admins.',
@@ -18,18 +18,6 @@ const getAll = async (req: Request, res: Response) => {
     });
   }
   throw new CustomError(404, 'Cannot find super admins.');
-};
-
-const getById = async (req: Request, res: Response) => {
-  const superAdmin = await SuperAdmin.findById(req.params.id);
-  if (superAdmin) {
-    return res.status(200).json({
-      message: 'The super admin has been successfully found.',
-      data: superAdmin,
-      error: false,
-    });
-  }
-  throw new CustomError(404, `Could not found the super admin with id ${req.params.id}.`);
 };
 
 const create = async (req: Request, res: Response) => {
@@ -72,55 +60,6 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
-  const superAdmin = await SuperAdmin.findOne({ email: req.body.email, isActive: true });
-  if (superAdmin) {
-    throw new CustomError(400, `Super Admin with email ${req.body.email} already exist.`);
-  }
-  const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (updatedSuperAdmin?.firebaseUid) {
-    await firebase.auth().updateUser(updatedSuperAdmin.firebaseUid, {
-      email: req.body.email,
-      password: req.body.password,
-    });
-  }
-  if (updatedSuperAdmin) {
-    return res.status(200).json({
-      message: 'The super admin has been successfully updated.',
-      data: updatedSuperAdmin,
-      error: false,
-    });
-  }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found.`);
-};
-
-const deleteById = async (req: Request, res: Response) => {
-  const superAdmin = await SuperAdmin.findById(req.params.id);
-  if (superAdmin?.isActive === false) {
-    throw new CustomError(400, 'This super admin has already been disabled.');
-  }
-  const result = await SuperAdmin.findByIdAndUpdate(
-    req.params.id,
-    { isActive: false },
-    {
-      new: true,
-    },
-  );
-  if (result?.firebaseUid) {
-    await firebase.auth().updateUser(result.firebaseUid, { disabled: true });
-  }
-  if (result) {
-    return res.status(200).json({
-      message: 'The super admin has been successfully disabled.',
-      data: result,
-      error: false,
-    });
-  }
-  throw new CustomError(404, `Superadmin with id: ${req.params.id} was not found.`);
-};
-
 const physicalDeleteById = async (req: Request, res: Response) => {
   const result = await SuperAdmin.findByIdAndDelete(req.params.id);
   if (result?.firebaseUid) {
@@ -134,4 +73,4 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   throw new CustomError(404, `Super admin with id ${req.params.id} was not found.`);
 };
 
-export default { getAll, update, deleteById, physicalDeleteById, create, getById };
+export default { getAll, physicalDeleteById, create };

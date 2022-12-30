@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 import { PipelineStage } from 'mongoose';
 
+import { SortType } from 'src/interfaces/request';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
-import { filterByIncludes, paginateAndFilterByIncludes } from 'src/utils/query';
+import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 
-const getPostulantPipeline = (query: qs.ParsedQs) => {
+import { validateEmail } from '../public/controllers';
+
+const getPostulantPipeline = (query: qs.ParsedQs, sort?: SortType) => {
   const pipeline: PipelineStage[] = [
     {
       $addFields: {
@@ -25,12 +28,17 @@ const getPostulantPipeline = (query: qs.ParsedQs) => {
     },
     { $match: query },
   ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
   return pipeline;
 };
 
 const getAll = async (req: Request, res: Response) => {
-  const { page, limit, query } = paginateAndFilterByIncludes(req.query);
-  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query));
+  const { page, limit, query, sort } = paginateAndFilter(req.query);
+  const postulantAggregate = Postulant.aggregate(getPostulantPipeline(query, sort));
   const { docs, ...pagination } = await Postulant.aggregatePaginate(postulantAggregate, {
     page,
     limit,
@@ -63,6 +71,11 @@ const create = async (req: Request, res: Response) => {
   if (postulant) {
     throw new CustomError(400, `Postulant with dni ${req.body.dni} already exist.`);
   }
+  await validateEmail(
+    req.body.email,
+    `Postulant or user with email ${req.body.email} already exist.`,
+  );
+
   const newPostulant = new Postulant<PostulantType>({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -87,6 +100,10 @@ const update = async (req: Request, res: Response) => {
   if (!currentPost?._id) {
     throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
   }
+  await validateEmail(
+    req.body.email,
+    `Postulant or user with email ${req.body.email} already exist.`,
+  );
   if (post?.dni === currentPost?.dni || !post?._id) {
     const updatedPostulant = await Postulant.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -135,8 +152,11 @@ const physicalDeleteById = async (req: Request, res: Response) => {
 };
 
 const exportToCsv = async (req: Request, res: Response) => {
-  const query = filterByIncludes(req.query);
-  const docs = await Postulant.find(query);
+  const { sort, ...rest } = req.query;
+  const query = formatFilters(rest);
+  const docs = await Postulant.aggregate<PostulantType>(
+    getPostulantPipeline(query, formatSort(sort)),
+  );
   if (docs.length) {
     const csv = await parseAsync(docs, {
       fields: [
@@ -145,6 +165,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         'lastName',
         'email',
         'birthDate',
+        'age',
         'phone',
         'location',
         'dni',

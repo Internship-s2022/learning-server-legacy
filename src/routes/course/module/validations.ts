@@ -6,7 +6,7 @@ import { ModuleType } from 'src/models/module';
 
 const moduleJoiSchema = Joi.object<ModuleType>({
   name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
     .min(3)
     .max(50)
     .required()
@@ -17,9 +17,9 @@ const moduleJoiSchema = Joi.object<ModuleType>({
       'any.required': 'Name is a required field.',
     }),
   description: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
     .min(5)
-    .max(50)
+    .max(200)
     .required()
     .messages({
       'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
@@ -31,7 +31,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     'string.valid': 'Invalid status, should be one of the valids status.',
     'any.required': 'Status is a required field.',
   }),
-  type: Joi.string().valid('DEV', 'QA', 'UXUI', 'GENERAL').required().messages({
+  type: Joi.string().valid('DEV', 'QA', 'UIUX', 'GENERAL').required().messages({
     'string.valid': 'Invalid type, should be one of the valids types.',
     'any.required': 'Type is a required field.',
   }),
@@ -51,7 +51,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
   contents: Joi.array()
     .items(
       Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[a-zA-Z0-9\s()-]+$/)
+        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
         .min(3)
         .max(24)
         .required()

@@ -22,14 +22,14 @@ router.get(
 router.post(
   '/',
   firebaseValidations.superAdmin,
-  validations.postulantValidation,
+  validations.postulantValidation(),
   postulantsControllers.create,
 );
 router.put(
   '/:id',
   firebaseValidations.superAdmin,
   globalValidations.validateMongoId,
-  validations.postulantValidation,
+  validations.postulantValidation(),
   postulantsControllers.update,
 );
 router.patch(

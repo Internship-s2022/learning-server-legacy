@@ -26,24 +26,12 @@ router.get(
   globalValidations.validateMongoId,
   registrationFormControllers.getById,
 );
-router.post(
-  '/',
-  firebaseValidations.superAdmin,
-  validations.registrationFormValidation('post'),
-  registrationFormControllers.create,
-);
 router.put(
   '/:id',
   getAccessRoleAndPermission,
   globalValidations.validateMongoId,
   validations.registrationFormValidation('put'),
   registrationFormControllers.updateById,
-);
-router.patch(
-  '/:id',
-  firebaseValidations.superAdmin,
-  globalValidations.validateMongoId,
-  registrationFormControllers.deleteById,
 );
 router.delete(
   '/:id',

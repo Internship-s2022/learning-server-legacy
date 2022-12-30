@@ -1,6 +1,9 @@
 import mongoose, { PipelineStage } from 'mongoose';
 
-export const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]: unknown }) => {
+export const getUserBasedOnCoursePipeline = (
+  query: qs.ParsedQs | { [k: string]: unknown },
+  sort?: Record<string, 1 | -1> | undefined,
+) => {
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
@@ -23,20 +26,33 @@ export const getUserBasedOnCoursePipeline = (query: qs.ParsedQs | { [k: string]:
     { $match: query },
   ];
 
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
   return pipeline;
 };
 
 export const getCourseBasedOnUserPipeline = (
   query: qs.ParsedQs | { [k: string]: mongoose.Types.ObjectId },
-) => [
-  {
-    $lookup: {
-      from: 'courses',
-      localField: 'course',
-      foreignField: '_id',
-      as: 'course',
+  sort?: Record<string, 1 | -1> | undefined,
+) => {
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
+      },
     },
-  },
-  { $unwind: { path: '$course' } },
-  { $match: query },
-];
+    { $unwind: { path: '$course' } },
+    { $match: query },
+  ];
+
+  if (sort) {
+    pipeline.push({ $sort: sort });
+  }
+
+  return pipeline;
+};

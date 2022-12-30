@@ -6,6 +6,7 @@ import authRouter from './auth';
 import courseRouter from './course';
 import courseUserRouter from './course-user';
 import postulantRouter from './postulant';
+import publicRouter from './public';
 import registrationFormRouter from './registration-form';
 import superAdminRouter from './super-admin';
 import userRouter from './user';
@@ -21,5 +22,6 @@ router.use('/postulant', postulantRouter);
 router.use('/registration-form', registrationFormRouter);
 router.use('/super-admin', superAdminRouter);
 router.use('/user', userRouter);
+router.use('/public/course', publicRouter);
 
 export default router;
