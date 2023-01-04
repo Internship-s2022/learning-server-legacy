@@ -18,7 +18,7 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
               'any.required': 'Question id is a required field.',
             }),
           value: [
-            Joi.string().allow(null).max(200).messages({
+            Joi.string().allow('').max(200).messages({
               'string.empty': 'Value is not allowed to be empty.',
               'string.max': 'Answer can not have more than 200 characters.',
             }),
@@ -41,7 +41,7 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
       }),
     view: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/)
-      .required()
+      .optional()
       .messages({
         'string.pattern.base': 'Invalid view id, ObjectId expected.',
         'any.required': 'View id is a required field.',
