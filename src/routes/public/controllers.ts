@@ -74,7 +74,7 @@ const getRegistrationFormByView = async (req: Request, res: Response) => {
         ) {
           viewQuestions = await Question.find({
             registrationForm: registrationForm._id,
-            view: req.query.view,
+            view: req.query.query,
           });
         } else {
           viewQuestions = await Question.find({
@@ -114,7 +114,8 @@ export const validateEmail = async (
 ) => {
   const postulantWithEmail = await Postulant.findOne({ email: email });
   const userWithEmail = await User.findOne({ email: email });
-  if (postulantWithEmail || userWithEmail) throw new CustomError(400, errorMessage);
+  if (postulantWithEmail || userWithEmail)
+    throw new CustomError(400, errorMessage, { type: 'ACCOUNT_ERROR' });
 };
 
 const createPostulation = async (req: Request, res: Response) => {
@@ -130,14 +131,9 @@ const createPostulation = async (req: Request, res: Response) => {
         `The course with id: ${req.params.courseId} must have admission tests to create the postulation.`,
       );
     }
-
     const registrationForm = await RegistrationForm.findOne({
       course: course._id,
     });
-
-    if (req.body.view === undefined) {
-      req.body.view = registrationForm?.views.find((view) => view.name === 'Homepage')?._id;
-    }
 
     if (!registrationForm?.views.some((view) => view._id == req.body.view))
       throw new CustomError(
@@ -201,12 +197,12 @@ const createPostulation = async (req: Request, res: Response) => {
             break;
           case 'MULTIPLE_CHOICES':
           case 'DROPDOWN':
-            if (typeof a.value !== 'string')
+            if (typeof a.value !== 'object' || a.value.length > 1)
               throw new CustomError(
                 400,
                 `For the question with id ${question._id}, answer value must be an array of one string.`,
               );
-            if (!question.options?.some((op) => a.value === op.value))
+            if (!question.options?.some((op) => a.value?.includes(op.value)))
               throw new CustomError(
                 400,
                 `Answer value for the question with id ${
@@ -232,19 +228,10 @@ const createPostulation = async (req: Request, res: Response) => {
             break;
         }
         if (question?.key)
-          if (question?.key === 'birthDate') {
-            const date = new Date(`${a.value}T00:00`);
-            const dateToIso = date.toISOString();
-            postulantInfo = {
-              ...postulantInfo,
-              [question.key]: dateToIso,
-            };
-          } else {
-            postulantInfo = {
-              ...postulantInfo,
-              [question.key]: Array.isArray(a.value) ? a.value[0] : a.value,
-            };
-          }
+          postulantInfo = {
+            ...postulantInfo,
+            [question.key]: Array.isArray(a.value) ? a.value[0] : a.value,
+          };
       }
     });
 
