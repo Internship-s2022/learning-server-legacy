@@ -1,4 +1,4 @@
-export class CustomError {
+export class CustomError extends Error {
   status!: number;
   message!: string;
   data?: undefined | Record<string, unknown>;
@@ -8,6 +8,7 @@ export class CustomError {
     message: string,
     data: undefined | Record<string, unknown> = undefined,
   ) {
+    super();
     this.status = status;
     this.message = message;
     this.data = data;
