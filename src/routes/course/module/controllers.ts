@@ -130,7 +130,7 @@ const updateById = async (req: Request, res: Response) => {
     throw new CustomError(404, `The module name: "${req.body.name}" already exist.`);
   }
 
-  const groupsIdsInBody: string[] = req.body?.groups;
+  const groupsIdsInBody: string[] = req.body?.groups || [];
   const groupsInBody = await Group.find(filterIncludeArrayOfIds(groupsIdsInBody));
 
   if (groupsIdsInBody.length !== groupsInBody.length) {

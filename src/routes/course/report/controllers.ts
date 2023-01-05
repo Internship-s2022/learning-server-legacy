@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 import mongoose from 'mongoose';
 
-import logger from 'src/config/logger';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Group from 'src/models/group';
