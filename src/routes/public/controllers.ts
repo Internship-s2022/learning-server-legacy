@@ -114,7 +114,8 @@ export const validateEmail = async (
 ) => {
   const postulantWithEmail = await Postulant.findOne({ email: email });
   const userWithEmail = await User.findOne({ email: email });
-  if (postulantWithEmail || userWithEmail) throw new CustomError(400, errorMessage);
+  if (postulantWithEmail || userWithEmail)
+    throw new CustomError(400, errorMessage, { type: 'ACCOUNT_ERROR' });
 };
 
 const createPostulation = async (req: Request, res: Response) => {

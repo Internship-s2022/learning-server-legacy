@@ -39,7 +39,6 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .items(
       Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
-        .required()
         .messages({
           'string.pattern.base': 'Invalid group id, ObjectId expected.',
           'any.required': 'Group id is a required field.',

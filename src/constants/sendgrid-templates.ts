@@ -1,3 +1,3 @@
-const sendUserCredentials = 'd-51128c4aebde4632803967e8a255d55c';
+const sendUserCredentials = 'd-36ab2df286d540a3b06df031d59aa4b0';
 
 export default { sendUserCredentials };

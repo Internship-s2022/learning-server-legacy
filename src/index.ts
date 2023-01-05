@@ -16,7 +16,7 @@ const MONGODB_URL = process.env.MONGO_URL || '';
 
 if (process.env.ENV && process.env.SENTRY_DSN) {
   Sentry.init({
-    dsn: process.env.SENTRY_URL,
+    dsn: process.env.SENTRY_DSN,
     environment: process.env.ENV,
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
