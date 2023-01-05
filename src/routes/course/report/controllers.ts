@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { parseAsync } from 'json2csv';
 import mongoose from 'mongoose';
 
+import logger from 'src/config/logger';
 import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Group from 'src/models/group';
@@ -288,15 +289,17 @@ const update = async (req: Request, res: Response) => {
     throw new CustomError(404, 'One or more of the reports do not exist.');
   }
   for (let i = 0; i < reports.length; i++) {
-    if (reports[i].exams.length !== reportsBody[i].exams.length) {
+    const reportIndex = reportsBody.findIndex((report) => report._id == reports[i]._id);
+    if (reports[i].exams.length !== reportsBody[reportIndex].exams.length) {
       throw new CustomError(
         404,
         'One or more of the report exams is not in the report or is missing in body.',
       );
     }
+    reports[i].assistance = reportsBody[reportIndex].assistance;
     for (let j = 0; j < reports[i].exams.length; j++) {
       const index = reports[i].exams.findIndex(
-        (exam) => exam._id?.toString() === reportsBody[i].exams[j]._id,
+        (exam) => exam._id == reportsBody[reportIndex].exams[j]._id,
       );
       if (index === -1) {
         throw new CustomError(
@@ -304,7 +307,7 @@ const update = async (req: Request, res: Response) => {
           'One or more of the report exams id is not in the report or is missing in body.',
         );
       }
-      reports[i].exams[index].grade = reportsBody[i].exams[j].grade;
+      reports[i].exams[index].grade = reportsBody[reportIndex].exams[j].grade;
     }
   }
   const updatedReports: ReportType[] = [];

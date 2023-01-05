@@ -1,12 +1,9 @@
 import cors from 'cors';
 import express, { Express, Response } from 'express';
 
-import errorHandler from './middlewares/error-handler';
 import router from './routes';
 
 const app: Express = express();
-
-router.use(errorHandler);
 
 app.use(cors());
 

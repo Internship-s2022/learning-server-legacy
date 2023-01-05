@@ -34,6 +34,7 @@ jobs:
           FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL}}" \
           SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY}}" \
           SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER}}" \
+          SENTRY_DSN="${{ secrets.SENTRY_DSN}}" \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
