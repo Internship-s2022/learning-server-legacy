@@ -16,34 +16,93 @@ export const getGroupPipeline = (
       },
     },
     {
-      $addFields: {
-        tutor: {
-          $filter: {
-            input: '$courseUsers',
-            as: 'courseUser',
-            cond: { $eq: ['$$courseUser.role', 'TUTOR'] },
-          },
-        },
+      $unwind: {
+        path: '$courseUsers',
       },
     },
     {
       $lookup: {
         from: 'users',
-        localField: 'tutor.user',
+        localField: 'courseUsers.user',
         foreignField: '_id',
-        as: 'tutor.user',
+        as: 'courseUsers.user',
       },
     },
-    { $unwind: { path: '$tutor.user' } },
+    {
+      $unwind: {
+        path: '$courseUsers.user',
+      },
+    },
     {
       $lookup: {
         from: 'postulants',
-        localField: 'tutor.user.postulant',
+        localField: 'courseUsers.user.postulant',
         foreignField: '_id',
-        as: 'tutor.user.postulant',
+        as: 'courseUsers.user.postulant',
       },
     },
-    { $unwind: { path: '$tutor.user.postulant' } },
+    {
+      $unwind: {
+        path: '$courseUsers.user.postulant',
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        courseUsers: {
+          $push: '$courseUsers',
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'groups',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'newField',
+      },
+    },
+    {
+      $unwind: {
+        path: '$newField',
+      },
+    },
+    {
+      $addFields: {
+        'newField.courseUsers': '$courseUsers',
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$newField',
+      },
+    },
+    {
+      $lookup: {
+        from: 'modules',
+        localField: 'modules',
+        foreignField: '_id',
+        as: 'modules',
+      },
+    },
+    {
+      $addFields: {
+        tutor: {
+          $filter: {
+            input: '$courseUsers',
+            as: 'courseUser',
+            cond: {
+              $eq: ['$$courseUser.role', 'TUTOR'],
+            },
+          },
+        },
+      },
+    },
+    {
+      $unwind: {
+        path: '$tutor',
+      },
+    },
     {
       $project: {
         _id: 1,
