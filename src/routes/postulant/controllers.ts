@@ -5,6 +5,7 @@ import { PipelineStage } from 'mongoose';
 import { SortType } from 'src/interfaces/request';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
+import User from 'src/models/user';
 import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 
 import { validateEmail } from '../public/controllers';
@@ -100,10 +101,14 @@ const update = async (req: Request, res: Response) => {
   if (!currentPost?._id) {
     throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
   }
-  await validateEmail(
-    req.body.email,
-    `Postulant or user with email ${req.body.email} already exist.`,
-  );
+
+  if (post?.email !== req.body.email) {
+    await validateEmail(
+      req.body.email,
+      `Postulant or user with email ${req.body.email} already exist.`,
+    );
+  }
+
   if (post?.dni === currentPost?.dni || !post?._id) {
     const updatedPostulant = await Postulant.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
