@@ -8,6 +8,13 @@ const firebaseUsers: FirebaseUser[] = [
     type: 'SUPER_ADMIN',
   },
   {
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN15',
+    email: 'julian.demeglio@radiumrocket.com',
+    password: 'password123',
+    type: 'NORMAL',
+    isNewUser: false,
+  },
+  {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN11',
     email: 'franco.marini@radiumrocket.com',
     password: 'password123',
@@ -19,28 +26,28 @@ const firebaseUsers: FirebaseUser[] = [
     email: 'agustin.chazaretta@radiumrocket.com',
     password: 'password123',
     type: 'NORMAL',
-    isNewUser: true,
+    isNewUser: false,
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN13',
     email: 'guido.cerioni@radiumrocket.com',
     password: 'password123',
     type: 'NORMAL',
-    isNewUser: true,
+    isNewUser: false,
   },
   {
     uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN14',
     email: 'iara.criscenti@radiumrocket.com',
     password: 'password123',
     type: 'NORMAL',
-    isNewUser: true,
+    isNewUser: false,
   },
   {
-    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN15',
-    email: 'julian.demeglio@radiumrocket.com',
+    uid: 'M5MCzG5aCKpf0B7qpNNsi8RyjN16',
+    email: 'facundo.cosentino@radiumrocket.com',
     password: 'password123',
     type: 'NORMAL',
-    isNewUser: true,
+    isNewUser: false,
   },
 ];
 

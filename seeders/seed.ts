@@ -59,7 +59,6 @@ const {
   superAdmins,
   postulants,
   users,
-  courseUsers,
   modules,
   groups,
   ...restData
@@ -96,21 +95,17 @@ const seedDatabase = async (endProcess = true) => {
   });
 
   const { postulants: randomPostulants } = generateRandomPostulants(config.postulants.amountRandom);
-  const allPostulants = [...postulants, ...randomPostulants];
+  const allPostulants = [...randomPostulants, ...postulants];
   const { firebaseUsers: randomFirebaseUsers, users: randomUsers } = generateRandomUsers(
     config.users.amountRandom,
     allPostulants,
   );
   const allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
   const allUsers = [...users, ...randomUsers];
-  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(
-    courses,
-    allUsers,
-    courseUsers,
-  );
+  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
   const { modules: randomModules } = generateRandomModules(config.modules.amountRandom, courses);
   const allModules = [...modules, ...randomModules];
-  const allCourseUsers = [...courseUsers, ...randomCourseUsers];
+  const allCourseUsers = randomCourseUsers;
   const { reports: randomReports } = generateRandomReports(courses, allModules, allCourseUsers);
   const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
   const allGroups = [...groups, ...randomGroups];
@@ -119,7 +114,8 @@ const seedDatabase = async (endProcess = true) => {
     courses,
     allPostulants,
     registrationForms,
-    config.users.amountRandom,
+    allUsers,
+    questions,
   );
 
   const data: Omit<Data, 'firebaseUsers'> = {
