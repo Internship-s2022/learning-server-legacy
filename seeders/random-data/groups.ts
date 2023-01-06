@@ -39,9 +39,9 @@ export const generateRandomGroups = (
   const groups: GroupType[] = [];
 
   for (let c = 0; c < courses.length; c++) {
-    let countGroups = 1;
     const course = courses[c];
     if (today >= course.startDate) {
+      let countGroups = 0;
       const cModules = modules.filter((mod) => mod.course === course._id);
       const cUsers = courseUsers.filter(
         (cUser) => cUser.course.toString() === courses[c]?._id?.toString(),
