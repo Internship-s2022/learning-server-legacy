@@ -5,7 +5,6 @@ import { PipelineStage } from 'mongoose';
 import { SortType } from 'src/interfaces/request';
 import { CustomError } from 'src/models/custom-error';
 import Postulant, { PostulantType } from 'src/models/postulant';
-import User from 'src/models/user';
 import { formatFilters, formatSort, paginateAndFilter } from 'src/utils/query';
 
 import { validateEmail } from '../public/controllers';
