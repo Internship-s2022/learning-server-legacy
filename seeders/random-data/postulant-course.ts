@@ -69,8 +69,6 @@ const randomPostulantCourse = (
   );
 
   const answer = questionsToAnswer.map((question) => randomAnswer(question, postulant));
-  console.log('questionsToAnswer', questionsToAnswer);
-  console.log('answer', answer);
 
   return {
     _id: new mongoose.Types.ObjectId(),
