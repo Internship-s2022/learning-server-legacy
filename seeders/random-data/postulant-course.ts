@@ -33,8 +33,8 @@ const randomAnswer = (question: QuestionType, postulant: PostulantType): AnswerT
   if (question.key === 'birthDate') {
     value = postulant.birthDate;
   }
-  if (question.key === 'location') {
-    value = postulant.location;
+  if (question.key === 'country') {
+    value = postulant.country;
   }
   if (question.key === 'dni') {
     value = postulant.dni;
