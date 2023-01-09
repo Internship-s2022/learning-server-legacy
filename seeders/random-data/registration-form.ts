@@ -90,7 +90,7 @@ const generateGeneralQuestions = (
         },
       ],
       view,
-      key: 'location',
+      key: 'country',
       isRequired: true,
     },
     {

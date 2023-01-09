@@ -79,7 +79,7 @@ const create = async (req: Request, res: Response) => {
   const newPostulant = new Postulant<PostulantType>({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    location: req.body.location,
+    country: req.body.country,
     phone: req.body.phone,
     email: req.body.email,
     dni: req.body.dni,
@@ -171,7 +171,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         'birthDate',
         'age',
         'phone',
-        'location',
+        'country',
         'dni',
         'isActive',
       ],
