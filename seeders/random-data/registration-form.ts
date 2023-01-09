@@ -165,7 +165,7 @@ const generateRandomQuestions = (
     {
       _id: new mongoose.Types.ObjectId(),
       registrationForm,
-      title: faker.lorem.sentence(),
+      title: faker.lorem.word(),
       type: 'SHORT_ANSWER',
       view,
       isRequired: faker.datatype.boolean(),
@@ -173,7 +173,7 @@ const generateRandomQuestions = (
     {
       _id: new mongoose.Types.ObjectId(),
       registrationForm,
-      title: faker.lorem.sentence(),
+      title: faker.lorem.word(),
       type: 'DROPDOWN',
       options: [
         {
@@ -191,7 +191,7 @@ const generateRandomQuestions = (
     {
       _id: new mongoose.Types.ObjectId(),
       registrationForm,
-      title: faker.lorem.sentence(),
+      title: faker.lorem.word(),
       type: 'MULTIPLE_CHOICES',
       options: [
         {
@@ -213,7 +213,7 @@ const generateRandomQuestions = (
     {
       _id: new mongoose.Types.ObjectId(),
       registrationForm,
-      title: faker.lorem.sentence(),
+      title: faker.lorem.word(),
       type: 'CHECKBOXES',
       options: [
         {
@@ -235,7 +235,7 @@ const generateRandomQuestions = (
     {
       _id: new mongoose.Types.ObjectId(),
       registrationForm,
-      title: faker.lorem.sentence(),
+      title: faker.lorem.word(),
       type: 'PARAGRAPH',
       view,
       isRequired: faker.datatype.boolean(),

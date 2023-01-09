@@ -6,7 +6,7 @@ import { padMessage } from '../utils';
 
 const randomPostulant = (): PostulantType => {
   const firstName = faker.name.firstName();
-  const lastName = faker.name.firstName();
+  const lastName = faker.name.lastName();
 
   return {
     _id: new mongoose.Types.ObjectId(),

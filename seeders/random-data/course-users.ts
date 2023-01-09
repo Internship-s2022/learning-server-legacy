@@ -5,8 +5,9 @@ import { CourseUserType, RoleType } from '../../src/models/course-user';
 import { UserType } from '../../src/models/user';
 import { padMessage } from '../utils';
 
-const adminsPerCourse = 5;
-const tutorsPerCourse = parseInt(process.env.RANDOM_TUTORS_PER_COURSE || '15');
+const adminsPerCourse = 1;
+const tutorsPerCourse = parseInt(process.env.RANDOM_TUTORS_PER_COURSE || '5');
+const today = new Date();
 
 const randomCourseUser = (
   courseId: mongoose.Types.ObjectId,
@@ -22,43 +23,35 @@ const randomCourseUser = (
   };
 };
 
-export const generateRandomCourseUsers = (
-  courses: CourseType[],
-  users: UserType[],
-  defaultCourseUsers: CourseUserType[],
-) => {
-  console.log('\x1b[36m', padMessage('⚡️ Adding Users in Courses'));
+export const generateRandomCourseUsers = (courses: CourseType[], users: UserType[]) => {
+  console.log('\x1b[36m', padMessage('⚡️ Generating Users in Courses'));
   const courseUsers: CourseUserType[] = [];
 
   for (let c = 0; c < courses.length; c++) {
     const course = courses[c];
-    let countAdmins = 1;
-    let countTutors = 1;
-    if (course._id?.toString() !== '1e063109a88495b45758c006') {
-      for (let u = 0; u < users.length; u++) {
-        const user = users[u];
-        let courseUser: CourseUserType;
-        if (
-          !defaultCourseUsers.some(
-            (cUser) =>
-              cUser.user.toString() === user._id?.toString() &&
-              cUser.course.toString() === course._id?.toString(),
-          )
-        ) {
-          if ((course.isInternal && user.isInternal) || !course.isInternal) {
-            let role: RoleType = 'STUDENT';
-            if (countAdmins < adminsPerCourse && user.isInternal) role = 'ADMIN';
-            else if (countTutors < tutorsPerCourse && user.isInternal) role = 'TUTOR';
+    let countAdmins = 0;
+    let countTutors = 0;
+    for (let u = 0; u < users.length; u++) {
+      const user = users[u];
 
-            courseUser = randomCourseUser(
-              new mongoose.Types.ObjectId(course._id),
-              new mongoose.Types.ObjectId(user._id),
-              role,
-            );
-            if (courseUser.role === 'ADMIN') countAdmins++;
-            if (courseUser.role === 'TUTOR') countTutors++;
-            courseUsers.push(courseUser);
-          }
+      if ((course.isInternal && user.isInternal) || !course.isInternal) {
+        const courseUser = randomCourseUser(
+          new mongoose.Types.ObjectId(course._id),
+          new mongoose.Types.ObjectId(user._id),
+          'STUDENT',
+        );
+        if (countAdmins < adminsPerCourse && user.isInternal) {
+          courseUser.role = 'ADMIN';
+          countAdmins++;
+          courseUsers.push(courseUser);
+        } else if (countTutors < tutorsPerCourse && user.isInternal) {
+          courseUser.role = 'TUTOR';
+          countTutors++;
+          courseUsers.push(courseUser);
+        }
+
+        if (courseUser.role === 'STUDENT' && today >= course.startDate) {
+          courseUsers.push(courseUser);
         }
       }
     }
