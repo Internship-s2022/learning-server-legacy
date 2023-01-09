@@ -62,7 +62,7 @@ const userManualValidation = (req: Request, res: Response, next: NextFunction) =
         'string.pattern.base': 'Invalid last name, it must contain only letters.',
         'any.required': 'Last Name is a required field.',
       }),
-    location: Joi.string().min(3).max(50).required(),
+    country: Joi.string().min(3).max(50).required(),
     phone: Joi.string()
       .length(10)
       .pattern(/^[0-9]+$/)

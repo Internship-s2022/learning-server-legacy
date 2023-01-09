@@ -92,7 +92,7 @@ export const createDefaultRegistrationForm = async (
           },
         ],
         view: generalViewId,
-        key: 'location',
+        key: 'country',
         isRequired: true,
       },
       {

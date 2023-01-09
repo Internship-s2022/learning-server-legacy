@@ -247,7 +247,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
           'user.postulant.lastName',
           'user.postulant.email',
           'user.postulant.phone',
-          'user.postulant.location',
+          'user.postulant.country',
           'user.postulant.birthDate',
           'user.postulant.dni',
         ],

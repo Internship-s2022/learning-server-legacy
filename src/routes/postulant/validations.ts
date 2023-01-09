@@ -33,7 +33,7 @@ const postulantValidation = (postulantInfo?: Record<string, unknown>) => {
           'string.pattern.base': 'Invalid last name, it must contain only letters.',
           'any.required': 'Last Name is a required field.',
         }),
-      location: Joi.string().min(3).max(50).required(),
+      country: Joi.string().min(3).max(50).required(),
       email: Joi.string()
         .required()
         .pattern(/^[0-9a-zA-Z]+(?:[.\-_!$+=#][0-9a-zA-Z]+)*@[a-z0-9]{2,252}(?:\.[a-z]{2,3})+$/s)

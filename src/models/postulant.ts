@@ -6,7 +6,7 @@ export interface PostulantType {
   firstName: string;
   lastName: string;
   birthDate: string;
-  location: string;
+  country: string;
   dni: string;
   email: string;
   phone: string;
@@ -29,7 +29,7 @@ const postulantSchema = new Schema<PostulantType, Model<PostulantType>>(
       type: String,
       required: true,
     },
-    location: {
+    country: {
       type: String,
       required: true,
     },
