@@ -1,6 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
+import { CourseUserType } from './course-user';
+
 export interface ExamType {
   _id?: mongoose.Types.ObjectId;
   name: string;
@@ -21,6 +23,12 @@ export interface ReportIdType extends ReportType {
 
 export interface ReportDocument extends ReportType, Document {
   _id?: mongoose.Types.ObjectId;
+}
+
+export interface StudentReport {
+  _id?: CourseUserType['_id'];
+  student: CourseUserType;
+  reports: ReportType[];
 }
 
 const reportSchema = new Schema<ReportType, Model<ReportType>>(

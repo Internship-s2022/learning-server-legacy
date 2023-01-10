@@ -891,7 +891,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{API_URL}}/course/:courseId/report/",
+                  "raw": "{{API_URL}}/course/:courseId/report/?limit=10",
                   "host": ["{{API_URL}}"],
                   "path": ["course", ":courseId", "report", ""],
                   "query": [
@@ -899,6 +899,15 @@
                       "key": "title",
                       "value": "",
                       "disabled": true
+                    },
+                    {
+                      "key": "student.isActive",
+                      "value": "true",
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
                     }
                   ],
                   "variable": [
@@ -928,7 +937,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{API_URL}}/course/:courseId/report/export/csv",
+                  "raw": "{{API_URL}}/course/:courseId/report/export/csv?studentIds=63bc286cf63db4908ce6efe7&studentIds=63bc286cf63db4908ce6f027",
                   "host": ["{{API_URL}}"],
                   "path": ["course", ":courseId", "report", "export", "csv"],
                   "query": [
@@ -936,6 +945,14 @@
                       "key": "title",
                       "value": "",
                       "disabled": true
+                    },
+                    {
+                      "key": "studentIds",
+                      "value": "63bc286cf63db4908ce6efe7"
+                    },
+                    {
+                      "key": "studentIds",
+                      "value": "63bc286cf63db4908ce6f027"
                     }
                   ],
                   "variable": [
@@ -982,7 +999,7 @@
                     },
                     {
                       "key": "moduleId",
-                      "value": "637517be650676f3da006f10"
+                      "value": "{{moduleId}}"
                     }
                   ]
                 }
@@ -4131,7 +4148,7 @@
     },
     {
       "key": "courseId",
-      "value": "1e063109a88495b45758c006",
+      "value": "1e063109a88495b45758c003",
       "type": "string"
     },
     {
@@ -4140,7 +4157,7 @@
     },
     {
       "key": "postulantDni",
-      "value": ""
+      "value": "35391653"
     },
     {
       "key": "userId",
@@ -4173,7 +4190,7 @@
     },
     {
       "key": "moduleId",
-      "value": ""
+      "value": "63af0f4b89466617c0e36b93"
     },
     {
       "key": "superAdminId",
