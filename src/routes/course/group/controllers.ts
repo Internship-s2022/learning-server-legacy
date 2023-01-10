@@ -23,7 +23,7 @@ const getAll = async (req: Request, res: Response) => {
   const { page, limit, query, sort } = paginateAndFilter(req.query);
   const groupAggregate = Group.aggregate(
     getGroupPipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }, sort),
-  );
+  ).collation({ locale: 'en_US', numericOrdering: true });
   const { docs, ...pagination } = await Group.aggregatePaginate(groupAggregate, {
     page,
     limit,

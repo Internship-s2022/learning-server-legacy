@@ -52,7 +52,10 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c002'),
     name: 'BaSP 2022',
-    description: `Become a Quality Assurance ${addDays(subMonths(startToday, 1), 1)} edition.`,
+    description: `Become a Quality Assurance ${addDays(
+      subMonths(startToday, 1),
+      1,
+    ).getFullYear()} edition.`,
     admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
@@ -130,7 +133,10 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c012'),
     name: 'BaQA 2022',
-    description: `Become a Quality Assurance ${addDays(subMonths(startToday, 1), 1)} edition.`,
+    description: `Become a Quality Assurance ${addDays(
+      subMonths(startToday, 1),
+      1,
+    ).getFullYear()} edition.`,
     admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
@@ -208,7 +214,10 @@ const courses: CourseType[] = [
   {
     _id: new mongoose.Types.ObjectId('1e063109a88495b45758c022'),
     name: 'BaSD 2022',
-    description: `Become a Quality Assurance ${addDays(subMonths(startToday, 1), 1)} edition.`,
+    description: `Become a Quality Assurance ${addDays(
+      subMonths(startToday, 1),
+      1,
+    ).getFullYear()} edition.`,
     admissionTests: [
       new mongoose.Types.ObjectId('1e063109a88495b45758c000'),
       new mongoose.Types.ObjectId('1e063109a88495b45758c001'),
