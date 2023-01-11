@@ -53,16 +53,7 @@ interface Data {
 
 const env = (process.env.DATABASE_NAME as keyof typeof allData | undefined) || 'develop';
 
-const {
-  courses,
-  firebaseUsers,
-  superAdmins,
-  postulants,
-  users,
-  modules,
-  groups,
-  ...restData
-}: Data = allData[env];
+const { courses, firebaseUsers, superAdmins, postulants, users, ...restData }: Data = allData[env];
 
 const seedDatabase = async (endProcess = true) => {
   console.log('\x1b[36m', padMessage('-----------------------', ' '));
@@ -102,21 +93,22 @@ const seedDatabase = async (endProcess = true) => {
   );
   const allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
   const allUsers = [...users, ...randomUsers];
-  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
-  const { modules: randomModules } = generateRandomModules(config.modules.amountRandom, courses);
-  const allModules = [...modules, ...randomModules];
-  const allCourseUsers = randomCourseUsers;
-  const { reports: randomReports } = generateRandomReports(courses, allModules, allCourseUsers);
-  const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
-  const allGroups = [...groups, ...randomGroups];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
+  const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
   const { postulantCourses, admissionResults } = generateRandomPostulantCourses(
     courses,
     allPostulants,
     registrationForms,
     allUsers,
     questions,
+    randomCourseUsers,
   );
+  const { modules: randomModules } = generateRandomModules(config.modules.amountRandom, courses);
+  const allModules = randomModules;
+  const allCourseUsers = randomCourseUsers;
+  const { reports: randomReports } = generateRandomReports(courses, allModules, allCourseUsers);
+  const { groups: randomGroups } = generateRandomGroups(courses, allModules, allCourseUsers);
+  const allGroups = randomGroups;
 
   const data: Omit<Data, 'firebaseUsers'> = {
     ...restData,

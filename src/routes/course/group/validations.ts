@@ -16,8 +16,8 @@ const groupJoiSchema = Joi.object<GroupType>({
       'string.max': 'Invalid name, it must not contain more than 50 characters.',
       'any.required': 'Name is a required field.',
     }),
-  type: Joi.string().valid('DEV', 'QA', 'UXUI', 'GENERAL').required().messages({
-    'string.valid': 'Invalid type, should be one of the valids types.',
+  type: Joi.string().valid('DEV', 'QA', 'UIUX', 'GENERAL').required().messages({
+    'any.only': 'Invalid type, should be one of the valids types.',
     'any.required': 'Type is a required field.',
   }),
   courseUsers: Joi.array()

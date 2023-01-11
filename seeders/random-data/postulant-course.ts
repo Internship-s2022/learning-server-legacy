@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { faker } from '@faker-js/faker';
 
+import { CourseUserType } from 'src/models/course-user';
 import { QuestionType } from 'src/models/question';
 import { UserType } from 'src/models/user';
 
@@ -59,6 +60,7 @@ const randomPostulantCourse = (
   admissionResults: mongoose.Types.ObjectId[],
   views: mongoose.Types.ObjectId[],
   questions: QuestionType[],
+  isPromoted: boolean,
 ): PostulantCourseType => {
   const [generalView, randomView] = views;
 
@@ -77,7 +79,7 @@ const randomPostulantCourse = (
     admissionResults,
     view: randomView,
     answer,
-    isPromoted: false,
+    isPromoted,
   };
 };
 
@@ -103,6 +105,7 @@ export const generateRandomPostulantCourses = (
   registrationForms: RegistrationFormType[],
   allUsers: UserType[],
   questions: QuestionType[],
+  courseUsers: CourseUserType[],
 ) => {
   console.log('\x1b[36m', padMessage('⚡️ Adding postulants in Courses'));
   const postulantCourses: PostulantCourseType[] = [];
@@ -118,10 +121,10 @@ export const generateRandomPostulantCourses = (
         const randomView =
           regForm?.views[faker.datatype.number({ min: 1, max: regForm.views.length - 1 })]._id;
         const postulant = postulants[p];
-        if (
-          !course.isInternal &&
-          !allUsers.some((user) => user.postulant.toString() === postulant?._id?.toString())
-        ) {
+        if (!course.isInternal) {
+          const user = allUsers.find(
+            (user) => user.postulant.toString() === postulant?._id?.toString(),
+          );
           const { newAdmissionResults, admissionResultsIds } =
             generateRandomAdmissionResults(course);
           const postulantCourse = randomPostulantCourse(
@@ -130,6 +133,7 @@ export const generateRandomPostulantCourses = (
             admissionResultsIds,
             [new mongoose.Types.ObjectId(generalView), new mongoose.Types.ObjectId(randomView)],
             questions,
+            courseUsers.some((cUser) => cUser.user.toString() === user?._id?.toString()),
           );
           postulantCourses.push(postulantCourse);
           admissionResults = [...admissionResults, ...newAdmissionResults];

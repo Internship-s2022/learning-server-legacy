@@ -48,12 +48,12 @@ export const generateRandomGroups = (
       );
       const tutors = cUsers.filter((cUser) => cUser.role === 'TUTOR');
       const students = cUsers.filter((cUser) => cUser.role === 'STUDENT');
-      const chunkedModules = _.chunk(cModules, 3);
+      const chunkedModules = _.chunk(cModules, 5);
 
       for (let mChunked = 0; mChunked < chunkedModules.length; mChunked++) {
         const modules = chunkedModules[mChunked];
         const shuffleStudents = _.shuffle(students);
-        const studentGroups = _.chunk(shuffleStudents, Math.ceil(tutors.length));
+        const studentGroups = _.chunk(shuffleStudents, 10);
 
         for (let sChunked = 0; sChunked < studentGroups.length; sChunked++) {
           const chunkedGroups = [
