@@ -167,7 +167,7 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
   }
   const { page, limit, query, sort } = paginateAndFilter(reqQuery);
   const modulesIncludeGroup = await Module.find({
-    groups: { $in: groupId },
+    groups: group._id,
   });
   if (!modulesIncludeGroup.length) {
     throw new CustomError(
@@ -175,26 +175,30 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
       `Cannot find the list of reports in the group ${groupId}. This group in not assigned to any module.`,
     );
   }
-  const reportAggregate = Report.aggregate(
-    getReportPipeline(
-      {
-        ...query,
-        $or: modulesIncludeGroup.map((module) => ({
-          'module._id': module._id,
-        })),
-      },
-      sort,
-    ),
-  );
-  const response = await Report.aggregatePaginate(reportAggregate, {
+
+  return {
     page,
     limit,
-  });
-  return response;
+    aggregation: Report.aggregate(
+      getReportPipeline(
+        {
+          ...query,
+          $or: modulesIncludeGroup.map((module) => ({
+            'module._id': module._id,
+          })),
+        },
+        sort,
+      ),
+    ),
+  };
 };
 
 const getByGroupId = async (req: Request, res: Response) => {
-  const { docs, ...pagination } = await reportsByGroupId(req.params.groupId, req.query);
+  const { page, limit, aggregation } = await reportsByGroupId(req.params.groupId, req.query);
+  const { docs, ...pagination } = await Report.aggregatePaginate(aggregation, {
+    page,
+    limit,
+  });
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports in the group ${req.params.groupId}.`,
@@ -207,7 +211,11 @@ const getByGroupId = async (req: Request, res: Response) => {
 };
 
 const exportByGroupId = async (req: Request, res: Response) => {
-  const { docs } = await reportsByGroupId(req.params.groupId, req.query);
+  const { page, limit, aggregation } = await reportsByGroupId(req.params.groupId, req.query);
+  const { docs } = await Report.aggregatePaginate(aggregation, {
+    page,
+    limit,
+  });
   await exportReports(docs, res);
 };
 
@@ -281,7 +289,8 @@ export const createReports = async (courseUsers: string[], modules: string[]) =>
 
 export const deleteReportsByGroupId = async (groupId: string) => {
   try {
-    const { docs } = await reportsByGroupId(groupId);
+    const { aggregation } = await reportsByGroupId(groupId);
+    const docs = await aggregation;
     await Report.deleteMany(
       filterIncludeArrayOfIds(docs.map((report) => report._id?.toString() as string)),
     );
