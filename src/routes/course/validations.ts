@@ -15,7 +15,7 @@ const courseUserValidation = Joi.array()
       role: roleValidation,
     }),
   )
-  .min(2)
+  .min(1)
   .max(1000)
   .has(
     Joi.object({
@@ -28,9 +28,9 @@ const courseUserValidation = Joi.array()
   )
   .unique('user')
   .messages({
-    'array.min': 'Must have at least two course users.',
+    'array.min': 'Must have at least one course users.',
     'array.unique': 'There are repeated users, just one user by course.',
-    'array.hasUnknown': 'There must be at least one ADMIN and one TUTOR.',
+    'array.hasUnknown': 'There must be at least one ADMIN.',
     'any.required': 'Course users must be a required field.',
     'string.pattern.base': 'Invalid user id, ObjectId expected.',
   });
