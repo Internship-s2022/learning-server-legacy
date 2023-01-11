@@ -3,6 +3,7 @@ import { parseAsync } from 'json2csv';
 import _ from 'lodash';
 import mongoose from 'mongoose';
 
+import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Group, { GroupIdType, GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
@@ -22,7 +23,7 @@ const getAll = async (req: Request, res: Response) => {
   const { page, limit, query, sort } = paginateAndFilter(req.query);
   const groupAggregate = Group.aggregate(
     getGroupPipeline({ ...query, course: new mongoose.Types.ObjectId(req.params.courseId) }, sort),
-  );
+  ).collation({ locale: 'en_US', numericOrdering: true });
   const { docs, ...pagination } = await Group.aggregatePaginate(groupAggregate, {
     page,
     limit,
@@ -71,9 +72,20 @@ const create = async (req: Request, res: Response) => {
   const courseUsers = await getCourseUsersExcludeByModules(
     new mongoose.Types.ObjectId(req.params.courseId),
     req.body.modules,
-    {},
+    { role: 'STUDENT' },
   );
-  const courseUsersIds = courseUsers.docs.map((doc) => doc._id?.toString());
+
+  const tutors = await CourseUser.find({
+    course: new mongoose.Types.ObjectId(req.params.courseId),
+    isActive: true,
+    role: 'TUTOR',
+  });
+
+  const courseUsersIds = [
+    ...courseUsers.docs.map((doc) => doc._id?.toString()),
+    ...tutors.map((tutor) => tutor._id?.toString()),
+  ];
+
   const availableCourseUsers = req.body.courseUsers.every((id: string) =>
     courseUsersIds.includes(id),
   );

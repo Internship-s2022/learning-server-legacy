@@ -79,7 +79,7 @@ const create = async (req: Request, res: Response) => {
   const newPostulant = new Postulant<PostulantType>({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    location: req.body.location,
+    country: req.body.country,
     phone: req.body.phone,
     email: req.body.email,
     dni: req.body.dni,
@@ -100,10 +100,14 @@ const update = async (req: Request, res: Response) => {
   if (!currentPost?._id) {
     throw new CustomError(404, `Postulant with id ${req.params.id} was not found.`);
   }
-  await validateEmail(
-    req.body.email,
-    `Postulant or user with email ${req.body.email} already exist.`,
-  );
+
+  if (post?.email !== req.body.email) {
+    await validateEmail(
+      req.body.email,
+      `Postulant or user with email ${req.body.email} already exist.`,
+    );
+  }
+
   if (post?.dni === currentPost?.dni || !post?._id) {
     const updatedPostulant = await Postulant.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -167,7 +171,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         'birthDate',
         'age',
         'phone',
-        'location',
+        'country',
         'dni',
         'isActive',
       ],

@@ -15,15 +15,14 @@ const option = Joi.object<Option>({
     }),
   value: Joi.string()
     .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-    .min(3)
     .max(24)
     .required(),
 })
   .required()
   .messages({
     'string.pattern.base': 'Invalid value, it must not start nor end with whitespaces.',
+    'any.required': 'Invalid option value, it must contain at least one character.',
     'string.max': 'Invalid option value, it must not contain more than 24 characters.',
-    'string.min': 'Invalid option value, it must contain more than 3 characters.',
   });
 
 const question = Joi.object<QuestionType>({

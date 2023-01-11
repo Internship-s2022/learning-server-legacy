@@ -9,26 +9,30 @@ import Module from 'src/models/module';
 import Report, { ReportDocument, ReportIdType, ReportType } from 'src/models/report';
 import { filterIncludeArrayOfIds, paginateAndFilter } from 'src/utils/query';
 
-import { getReportPipeline } from './aggregations';
+import {
+  getByStudentIdAndModuleId,
+  getGroupByStudentStages,
+  getReportPipeline,
+} from './aggregations';
 
 const exportReports = async (docs: ReportDocument[], res: Response) => {
-  const reportsWithExams = docs.reduce((prev: Record<string, unknown>[], report, index) => {
-    const exams = report.exams.reduce((prev: Record<string, number>, exam) => {
-      return { ...prev, [exam.name]: exam.grade };
-    }, {});
-    const { _id, module, courseUser, assistance } = report;
-    prev[index] = { _id, module, courseUser, assistance, ...exams };
-    return prev;
-  }, []);
-  const examsHeads = docs.reduce((prev: string[], report: ReportType) => {
-    report.exams.map((exam) => {
-      if (!prev.includes(exam.name)) {
-        prev.push(exam.name);
-      }
-    });
-    return prev;
-  }, []);
   if (docs.length) {
+    const reportsWithExams = docs.reduce((prev: Record<string, unknown>[], report, index) => {
+      const exams = report.exams.reduce((prev: Record<string, number>, exam) => {
+        return { ...prev, [exam.name]: exam.grade };
+      }, {});
+      const { _id, module, courseUser, assistance } = report;
+      prev[index] = { _id, module, courseUser, assistance, ...exams };
+      return prev;
+    }, []);
+    const examsHeads = docs.reduce((prev: string[], report: ReportType) => {
+      report.exams.map((exam) => {
+        if (!prev.includes(exam.name)) {
+          prev.push(exam.name);
+        }
+      });
+      return prev;
+    }, []);
     const csv = await parseAsync(reportsWithExams, {
       fields: [
         { value: '_id', label: 'report._id' },
@@ -53,8 +57,9 @@ const exportReports = async (docs: ReportDocument[], res: Response) => {
   throw new CustomError(404, 'There are no reports to export');
 };
 
-const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) => {
-  const { query, sort } = paginateAndFilter(reqQuery);
+const getByCourseId = async (req: Request, res: Response) => {
+  const courseId = req.params.courseId;
+  const { query, sort, page, limit } = paginateAndFilter(req.query);
   const modulesInCourse = await Module.find({
     course: new mongoose.Types.ObjectId(courseId),
   });
@@ -64,53 +69,60 @@ const reportsByCourseId = async (courseId: string, reqQuery: qs.ParsedQs = {}) =
       `Cannot find the list of reports in the course ${courseId}. There are not any modules on this course.`,
     );
   }
-  const reportAggregate = await Report.aggregate<ReportDocument>(
-    getReportPipeline(
-      {
-        ...query,
-        $or: modulesInCourse.map((module) => ({
-          'module._id': module._id,
-        })),
-      },
-      sort,
-    ),
-  );
-  // TO-DO: Paginate by student
-  // const response = await Report.aggregatePaginate(reportAggregate, {
-  //   page,
-  //   limit,
-  // });
-  return reportAggregate;
-};
 
-const getByCourseId = async (req: Request, res: Response) => {
-  const docs = await reportsByCourseId(req.params.courseId, req.query);
+  const reportAggregate = Report.aggregate(
+    getReportPipeline(query, sort, {
+      populateModules: false,
+      startStages: [],
+      endStages: getGroupByStudentStages(modulesInCourse),
+    }),
+  );
+
+  const { docs, ...pagination } = await Report.aggregatePaginate(reportAggregate, {
+    page,
+    limit,
+  });
+
   if (docs.length) {
     return res.status(200).json({
       message: `Showing the list of reports in the course ${req.params.courseId}.`,
       data: docs,
-      pagination: {
-        totalDocs: docs.length,
-        limit: docs.length,
-        totalPages: 1,
-        page: 1,
-        pagingCounter: 0,
-        hasPrevPage: false,
-        hasNextPage: false,
-        prevPage: null,
-        nextPage: null,
-      },
+      pagination,
       error: false,
     });
   }
   throw new CustomError(
     404,
-    `Cannot find the list of reports in the group ${req.params.courseId}.`,
+    `Cannot find the list of reports in the course ${req.params.courseId}.`,
   );
 };
 
 const exportByCourseId = async (req: Request, res: Response) => {
-  const docs = await reportsByCourseId(req.params.courseId, req.query);
+  const { studentIds, ...rest } = req.query;
+  const courseId = req.params.courseId;
+  const { query, sort } = paginateAndFilter(rest);
+  const modulesInCourse = await Module.find({
+    course: new mongoose.Types.ObjectId(courseId),
+  });
+  if (!modulesInCourse.length) {
+    throw new CustomError(
+      404,
+      `Cannot find the list of reports in the course ${courseId}. There are not any modules on this course.`,
+    );
+  }
+
+  let sIds = studentIds || [];
+  if (typeof studentIds === 'string') {
+    sIds = [sIds.toString()];
+  }
+
+  const docs = await Report.aggregate(
+    getReportPipeline(query, sort, {
+      populateModules: true,
+      startStages: getByStudentIdAndModuleId(Array.isArray(sIds) ? sIds : [], modulesInCourse),
+      endStages: [],
+    }),
+  );
   await exportReports(docs, res);
 };
 
@@ -160,7 +172,7 @@ const reportsByGroupId = async (groupId: string, reqQuery: qs.ParsedQs = {}) => 
   if (!modulesIncludeGroup.length) {
     throw new CustomError(
       404,
-      `Cannot find the list of reports in the grouo ${groupId}. This group in not assigned to any module.`,
+      `Cannot find the list of reports in the group ${groupId}. This group in not assigned to any module.`,
     );
   }
   const reportAggregate = Report.aggregate(

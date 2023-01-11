@@ -85,7 +85,7 @@ const createManual = async (req: Request, res: Response) => {
     const newPostulant = new Postulant<PostulantType>({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      location: req.body.location,
+      country: req.body.country,
       phone: req.body.phone,
       email: req.body.email,
       dni: req.body.dni,
@@ -194,7 +194,7 @@ const exportToCsv = async (req: Request, res: Response) => {
         'postulant.firstName',
         'postulant.lastName',
         'postulant.birthDate',
-        'postulant.location',
+        'postulant.country',
         'postulant.dni',
         'postulant.phone',
       ],

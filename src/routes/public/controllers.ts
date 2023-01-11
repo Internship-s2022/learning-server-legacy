@@ -205,7 +205,7 @@ const createPostulation = async (req: Request, res: Response) => {
             if (typeof a.value !== 'string')
               throw new CustomError(
                 400,
-                `For the question with id ${question._id}, answer value must be an array of one string.`,
+                `For the question with id ${question._id}, answer value must be a string.`,
               );
             if (!question.options?.some((op) => a.value === op.value))
               throw new CustomError(

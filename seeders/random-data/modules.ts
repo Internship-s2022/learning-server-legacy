@@ -40,7 +40,8 @@ export const generateRandomModules = (amount: number, courses: CourseType[]) => 
   const modules: ModuleType[] = [];
 
   for (let c = 0; c < courses.length; c++) {
-    if (courses[c]._id?.toString() !== '1e063109a88495b45758c006') {
+    const course = courses[c];
+    if (today >= course.startDate) {
       for (let m = 0; m < amount; m++) {
         const module = randomModule(courses[c], m);
         modules.push(module);

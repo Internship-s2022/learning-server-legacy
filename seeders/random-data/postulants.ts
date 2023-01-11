@@ -6,12 +6,12 @@ import { padMessage } from '../utils';
 
 const randomPostulant = (): PostulantType => {
   const firstName = faker.name.firstName();
-  const lastName = faker.name.firstName();
+  const lastName = faker.name.lastName();
 
   return {
     _id: new mongoose.Types.ObjectId(),
     birthDate: faker.date.birthdate({ mode: 'age', min: 18, max: 60 }).toISOString(),
-    location: faker.helpers.arrayElement(['Argentina', 'Uruguay']),
+    country: faker.helpers.arrayElement(['Argentina', 'Uruguay']),
     dni: faker.helpers.regexpStyleStringParse('[1-5][1-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     email: faker.internet.email(firstName, lastName, 'getnada.com'),
     phone: faker.phone.number('15########'),

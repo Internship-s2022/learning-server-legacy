@@ -8,6 +8,8 @@ import { ModuleType } from '../../src/models/module';
 import { ReportType } from '../../src/models/report';
 import { padMessage } from '../utils';
 
+const today = new Date();
+
 const randomReport = (module: ModuleType, courseUser: mongoose.Types.ObjectId): ReportType => {
   return {
     _id: new mongoose.Types.ObjectId(),
@@ -41,7 +43,7 @@ export const generateRandomReports = (
     );
     const students = cUsers.filter((cUser) => cUser.role === 'STUDENT');
 
-    if (course.inscriptionStartDate <= new Date()) {
+    if (today >= course.startDate) {
       for (let m = 0; m < cModules.length; m++) {
         const module = cModules[m];
 
