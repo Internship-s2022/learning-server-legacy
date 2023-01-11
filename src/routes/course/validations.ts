@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { descriptionValidation, nameValidation, roleValidation } from 'src/middlewares/validations';
 import Course, { CourseWithUsers } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 
@@ -11,23 +12,11 @@ const courseUserValidation = Joi.array()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required(),
       isActive: Joi.boolean().required(),
-      role: Joi.string().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT').required().messages({
-        'any.required': 'The role must be one of the assigned.',
-        'string.valid': 'Role must be valid.',
-      }),
+      role: roleValidation,
     }),
   )
   .min(2)
   .max(1000)
-  .has(
-    Joi.object({
-      user: Joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .required(),
-      isActive: Joi.boolean().required(),
-      role: Joi.string().valid('TUTOR'),
-    }),
-  )
   .has(
     Joi.object({
       user: Joi.string()
@@ -49,17 +38,7 @@ const courseUserValidation = Joi.array()
 const courseValidation = (requestType: 'post' | 'put') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const courseValidation = Joi.object<CourseWithUsers>({
-      name: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-        .min(3)
-        .max(25)
-        .required()
-        .messages({
-          'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid name, it must not contain more than 3 characters.',
-          'string.max': 'Invalid name, it must not contain more than 25 characters.',
-          'any.required': 'Name is a required field.',
-        }),
+      name: nameValidation,
       admissionTests: Joi.array()
         .max(200)
         .items(
@@ -69,17 +48,7 @@ const courseValidation = (requestType: 'post' | 'put') => {
               'string.pattern.base': 'Invalid admission test id, ObjectId expected.',
             }),
         ),
-      description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-        .min(3)
-        .max(1000)
-        .required()
-        .messages({
-          'string.min': 'Invalid description, it must contain more than 3 characters.',
-          'string.max': 'Invalid description, it must not contain more than 1000 characters.',
-          'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
-          'any.required': 'Description is a required field.',
-        }),
+      description: descriptionValidation,
       inscriptionStartDate: Joi.date().greater('11-1-2017').required().messages({
         'date.greater': 'Invalid inscription date, minimum date allowed is 01/11/2017.',
         'any.required': 'Inscription start date is a required field.',

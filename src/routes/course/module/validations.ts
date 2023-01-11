@@ -1,40 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { contentNameMessages } from 'src/constants/validation-messages';
+import {
+  descriptionValidation,
+  moduleTypeValidation,
+  nameValidation,
+  shortStringValidation,
+} from 'src/middlewares/validations';
 import { CustomError } from 'src/models/custom-error';
 import { ModuleType } from 'src/models/module';
 
 const moduleJoiSchema = Joi.object<ModuleType>({
-  name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-    .min(3)
-    .max(50)
-    .required()
-    .messages({
-      'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid name, it must contain more than 3 characters.',
-      'string.max': 'Invalid name, it must not contain more than 50 characters.',
-      'any.required': 'Name is a required field.',
-    }),
-  description: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-    .min(5)
-    .max(200)
-    .required()
-    .messages({
-      'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid description, it must contain more than 5 characters.',
-      'string.max': 'Invalid description, it must not contain more than 200 characters.',
-      'any.required': 'Description is a required field.',
-    }),
+  name: nameValidation,
+  description: descriptionValidation,
   status: Joi.string().valid('PENDING', 'IN_PROGRESS', 'COMPLETED').required().messages({
-    'string.valid': 'Invalid status, should be one of the valids status.',
+    'string.valid': 'Invalid status, should be one of the valid status.',
     'any.required': 'Status is a required field.',
   }),
-  type: Joi.string().valid('DEV', 'QA', 'UIUX', 'GENERAL').required().messages({
-    'string.valid': 'Invalid type, should be one of the valids types.',
-    'any.required': 'Type is a required field.',
-  }),
+  type: moduleTypeValidation,
   groups: Joi.array()
     .items(
       Joi.string()
@@ -48,20 +32,7 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .max(200)
     .unique(),
   contents: Joi.array()
-    .items(
-      Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-        .min(3)
-        .max(24)
-        .required()
-        .messages({
-          'string.pattern.base':
-            'Invalid content name, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid content name, it must contain more than 3 characters.',
-          'string.max': 'Invalid content name, it must not contain more than 24 characters.',
-          'any.required': 'Name is a required field.',
-        }),
-    )
+    .items(shortStringValidation().messages(contentNameMessages))
     .optional()
     .max(200),
   isActive: Joi.boolean().required().messages({
