@@ -77,3 +77,11 @@ export const phoneMessages: Joi.LanguageMessages = {
   'any.required': 'Phone is a required field.',
   'string.empty': 'Phone is a required field.',
 };
+
+export const optionMessages: Joi.LanguageMessages = {
+  'string.pattern.base': 'Invalid option, it must not start nor end with whitespace.',
+  'string.min': 'Invalid option, it must contain more than 1 character.',
+  'string.max': 'Invalid option, it must not contain more than 50 characters.',
+  'any.required': 'Option is a required field.',
+  'string.empty': 'Option cannot be empty.',
+};

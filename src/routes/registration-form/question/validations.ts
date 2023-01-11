@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-import { titleMessages } from 'src/constants/validation-messages';
-import { shortStringValidation } from 'src/middlewares/validations';
+import { optionMessages, titleMessages } from 'src/constants/validation-messages';
+import {
+  longStringRegex,
+  shortStringRegex,
+  shortStringValidation,
+} from 'src/middlewares/validations';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import { Option, QuestionType } from 'src/models/question';
@@ -15,10 +19,7 @@ const option = Joi.object<Option>({
     .messages({
       'string.pattern.base': 'Invalid view id, ObjectId expected.',
     }),
-  value: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-    .max(24)
-    .required(),
+  value: shortStringValidation(shortStringRegex).messages(optionMessages),
 })
   .required()
   .messages({
@@ -42,7 +43,7 @@ const question = Joi.object<QuestionType>({
       'any.required': 'Registration form id is a required field.',
     }),
   key: Joi.string().optional(),
-  title: shortStringValidation().messages(titleMessages),
+  title: shortStringValidation(longStringRegex).messages(titleMessages),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()

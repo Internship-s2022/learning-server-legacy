@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
-import { nameValidation } from 'src/middlewares/validations';
+import { nameMessages } from 'src/constants/validation-messages';
+import { longStringRegex, shortStringValidation } from 'src/middlewares/validations';
 import { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
 
 export const admissionTestSchema = Joi.object<AdmissionTestType>({
-  name: nameValidation,
+  name: shortStringValidation(longStringRegex).messages(nameMessages),
   isActive: Joi.boolean().required().messages({
     'any.required': 'Is active is a required field.',
   }),
