@@ -23,7 +23,7 @@ const randomGroup = (
     name: `Grupo ${index + 1}`,
     // name: `Grupo ${index + 1} Etapa ${moduleIndex + 1}`,
     modules,
-    type: faker.helpers.arrayElement(['DEV', 'QA', 'UIUX', 'GENERAL']),
+    type: faker.helpers.arrayElement(['DEV', 'QA', 'UX/UI', 'GENERAL']),
     courseUsers,
     isActive: true,
   };

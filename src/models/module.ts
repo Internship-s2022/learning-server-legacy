@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-export type ModuleTypes = 'DEV' | 'QA' | 'UIUX' | 'GENERAL';
+export type ModuleTypes = 'DEV' | 'QA' | 'UX/UI' | 'GENERAL';
 
 export type ModuleStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
 

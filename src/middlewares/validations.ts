@@ -70,7 +70,7 @@ export const emailRegex =
   /^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+\b(?!\.)@[a-zA-Z0-9-]+(\.)[a-zA-Z0-9-]{2,3}$/;
 
 export const moduleTypeValidation = Joi.string()
-  .valid('DEV', 'QA', 'UIUX', 'GENERAL')
+  .valid('DEV', 'QA', 'UX/UI', 'GENERAL')
   .required()
   .messages({
     'any.only': 'Invalid type, should be one of the valids types.',
