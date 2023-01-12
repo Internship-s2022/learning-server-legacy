@@ -35,7 +35,7 @@ export const titleMessages: Joi.LanguageMessages = {
 
 export const contentNameMessages: Joi.LanguageMessages = {
   'string.pattern.base': 'Invalid content name, it must not start nor end with whitespace.',
-  'string.min': 'Invalid content name, it must contain more than 1 character.',
+  'string.min': 'Invalid content name, it must contain more than 2 characters.',
   'string.max': 'Invalid content name, it must not contain more than 50 characters.',
   'any.required': 'Content name is a required field.',
   'string.empty': 'Content name cannot be empty.',

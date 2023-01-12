@@ -3,6 +3,7 @@ import Joi from 'joi';
 
 import { contentNameMessages } from 'src/constants/validation-messages';
 import {
+  containSpecialCharactersRegex,
   descriptionValidation,
   moduleTypeValidation,
   nameValidation,
@@ -32,7 +33,9 @@ const moduleJoiSchema = Joi.object<ModuleType>({
     .max(200)
     .unique(),
   contents: Joi.array()
-    .items(shortStringValidation().messages(contentNameMessages))
+    .items(
+      shortStringValidation(containSpecialCharactersRegex).min(2).messages(contentNameMessages),
+    )
     .optional()
     .max(200),
   isActive: Joi.boolean().required().messages({
