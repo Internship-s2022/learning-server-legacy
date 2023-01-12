@@ -65,7 +65,7 @@ const validateFirebaseUid = (req: Request, res: Response, next: NextFunction) =>
 export const namingRegex = /^[\p{L}\p{M}]+([ \p{L}\p{M}])*$/u;
 export const shortStringRegex = /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/;
 export const containSpecialCharactersRegex =
-  /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-`!@#$%^&*()_+=[\]{};':"\\|,<>/?~]+$/;
+  /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s() -`!@#$%^&*()_+=[\]{};':"\\|,<>/?~]+$/;
 export const longStringRegex =
   /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()!@#$%^&*()_+={};':",.<>/?-]+$/;
 export const emailRegex =
