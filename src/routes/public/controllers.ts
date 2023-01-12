@@ -233,19 +233,10 @@ const createPostulation = async (req: Request, res: Response) => {
             break;
         }
         if (question?.key)
-          if (question?.key === 'birthDate') {
-            const date = new Date(`${a.value}T00:00`);
-            const dateToIso = date.toISOString();
-            postulantInfo = {
-              ...postulantInfo,
-              [question.key]: dateToIso,
-            };
-          } else {
-            postulantInfo = {
-              ...postulantInfo,
-              [question.key]: Array.isArray(a.value) ? a.value[0] : a.value,
-            };
-          }
+          postulantInfo = {
+            ...postulantInfo,
+            [question.key]: Array.isArray(a.value) ? a.value[0] : a.value,
+          };
       }
     });
 
