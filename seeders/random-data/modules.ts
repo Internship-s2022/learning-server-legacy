@@ -27,7 +27,7 @@ const randomModule = (course: CourseType, index: number): ModuleType => {
           ? 'COMPLETED'
           : 'IN_PROGRESS'
         : 'PENDING',
-    type: faker.helpers.arrayElement(['DEV', 'QA', 'UIUX', 'GENERAL']),
+    type: faker.helpers.arrayElement(['DEV', 'QA', 'UX/UI', 'GENERAL']),
     groups: [],
     contents: randomContents(10),
     isActive: true,

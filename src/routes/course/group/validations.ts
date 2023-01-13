@@ -1,25 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { moduleTypeValidation, nameValidation } from 'src/middlewares/validations';
 import { CustomError } from 'src/models/custom-error';
 import { GroupType } from 'src/models/group';
 
 const groupJoiSchema = Joi.object<GroupType>({
-  name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-    .min(3)
-    .max(50)
-    .required()
-    .messages({
-      'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid name, it must contain more than 3 characters.',
-      'string.max': 'Invalid name, it must not contain more than 50 characters.',
-      'any.required': 'Name is a required field.',
-    }),
-  type: Joi.string().valid('DEV', 'QA', 'UIUX', 'GENERAL').required().messages({
-    'any.only': 'Invalid type, should be one of the valids types.',
-    'any.required': 'Type is a required field.',
-  }),
+  name: nameValidation,
+  type: moduleTypeValidation,
   courseUsers: Joi.array()
     .items(
       Joi.string()

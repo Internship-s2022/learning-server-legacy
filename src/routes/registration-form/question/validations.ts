@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { optionMessages, titleMessages } from 'src/constants/validation-messages';
+import {
+  longStringRegex,
+  shortStringRegex,
+  shortStringValidation,
+} from 'src/middlewares/validations';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import { Option, QuestionType } from 'src/models/question';
@@ -13,10 +19,7 @@ const option = Joi.object<Option>({
     .messages({
       'string.pattern.base': 'Invalid view id, ObjectId expected.',
     }),
-  value: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-    .max(24)
-    .required(),
+  value: shortStringValidation(shortStringRegex).messages(optionMessages),
 })
   .required()
   .messages({
@@ -40,17 +43,7 @@ const question = Joi.object<QuestionType>({
       'any.required': 'Registration form id is a required field.',
     }),
   key: Joi.string().optional(),
-  title: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-    .min(3)
-    .max(50)
-    .required()
-    .messages({
-      'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid title, it must contain more than 3 characters.',
-      'string.max': 'Invalid title, it must not contain more than 50 characters.',
-      'any.required': 'Title is a required field.',
-    }),
+  title: shortStringValidation(longStringRegex).messages(titleMessages),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()
