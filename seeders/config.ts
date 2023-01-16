@@ -17,6 +17,7 @@ export default {
   create: true,
   // -- FIREBASE --
   firebaseUsers: {
+    onlySA: false,
     remove: true,
     create: true,
   },
