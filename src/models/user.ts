@@ -10,6 +10,7 @@ export interface UserType {
   isInternal: boolean;
   isActive: boolean;
   isNewUser: boolean;
+  initialPassword?: string;
 }
 
 export interface UserDocument extends UserType, Document {
@@ -45,6 +46,11 @@ const userSchema = new Schema<UserType, Model<UserType>>(
       type: Boolean,
       default: true,
       required: true,
+    },
+    initialPassword: {
+      type: String,
+      default: '',
+      required: false,
     },
   },
   { timestamps: true },

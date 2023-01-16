@@ -8,6 +8,7 @@ import Postulant from 'src/models/postulant';
 import User, { UserDocument, UserType } from 'src/models/user';
 
 import sendEmail from './send-email';
+
 export const generatePassword = (length: number) => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomPassword = '';
@@ -64,6 +65,7 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
             isInternal: promotion ? false : req.body.isInternal,
             isActive: promotion ? true : req.body.isActive,
             isNewUser: true,
+            initialPassword: newPassword,
           });
           await newMongoUser.save();
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +82,7 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
             {
               email: req.body.email,
               password: newPassword,
+              loginPage: `${process.env.APP_BASE_URL}/login`,
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async (err: any) => {
