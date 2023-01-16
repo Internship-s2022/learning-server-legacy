@@ -64,7 +64,7 @@ const seedDatabase = async (endProcess = true) => {
     if (typeof item[1] === 'boolean') {
       console.log(
         '\x1b[36m%s\x1b[1m'.padStart(15),
-        `- ${item[0]}`.padEnd(25) + `\x1b[37m ${item[1]}`,
+        `- ${item[0]}`.padEnd(20) + `\x1b[37m ${item[1] ? '✅' : '🛑'}`,
         '\x1b[0m',
       );
     } else if (typeof item[1] === 'object') {
@@ -73,12 +73,12 @@ const seedDatabase = async (endProcess = true) => {
         .map((subItem) =>
           typeof subItem[1] === 'number'
             ? ` ${subItem[0]}: \x1b[33m${subItem[1]} `
-            : ` ${subItem[0]}`,
+            : ` ${subItem[0]}: \x1b[33m${subItem[1] ? '✅' : '🛑'}\x1b[0m`,
         );
       if (label.length) {
         console.log(
           '\x1b[36m%s\x1b[1m'.padStart(15),
-          `- ${item[0]}`.padEnd(25) + `\x1b[37m${label}`,
+          `- ${item[0]}`.padEnd(20) + `\x1b[37m${label}`,
           '\x1b[0m',
         );
       }
@@ -91,7 +91,10 @@ const seedDatabase = async (endProcess = true) => {
     config.users.amountRandom,
     allPostulants,
   );
-  const allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
+  let allFirebaseUsers = [...firebaseUsers, ...randomFirebaseUsers];
+  if (config.firebaseUsers.onlySA) {
+    allFirebaseUsers = [firebaseUsers[0]];
+  }
   const allUsers = [...users, ...randomUsers];
   const { registrationForms, questions } = generateRegistrationFormPerCourse(courses);
   const { courseUsers: randomCourseUsers } = generateRandomCourseUsers(courses, allUsers);
@@ -185,7 +188,12 @@ const seedDatabase = async (endProcess = true) => {
       }
 
       Object.entries(config).forEach(([key, resource]) => {
-        if (typeof resource === 'object' && 'collection' in resource && key !== 'superAdmins') {
+        if (
+          typeof resource === 'object' &&
+          resource.create &&
+          'collection' in resource &&
+          key !== 'superAdmins'
+        ) {
           addCollection(promises, resource, data[key as keyof Omit<Data, 'firebaseUsers'>]);
         }
       });
