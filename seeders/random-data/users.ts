@@ -30,6 +30,7 @@ const randomUser = ({
     isNewUser: isNewUser || true,
     email: email,
     firebaseUid: uid,
+    initialPassword: 'password123',
   };
 };
 
