@@ -11,6 +11,8 @@ import CourseUser, { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
 import PostulantCourse, { PopulatedPostulantCourseType } from 'src/models/postulant-course';
+import Question from 'src/models/question';
+import RegistrationForm from 'src/models/registration-form';
 import User, { UserDocument } from 'src/models/user';
 import { formatSort, paginateAndFilter } from 'src/utils/query';
 import sendEmail from 'src/utils/send-email';
@@ -23,11 +25,11 @@ const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
   return docs.reduce(
     (prev = [{}], obj, index) => {
       let correctedTests = {};
-      const { _id, course, postulant, view } = obj;
+      const { _id, course, postulant, view, ...rest } = obj;
       obj.admissionResults.forEach((ar) => {
         correctedTests = { ...correctedTests, [ar.admissionTest?.name]: ar.score };
       });
-      prev[index] = { _id, course, postulant, view, ...correctedTests };
+      prev[index] = { _id, course, postulant, view, ...correctedTests, ...rest };
       return prev;
     },
     [{}],
@@ -317,7 +319,8 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
   if (course) {
     const corrected = req.query.corrected ? true : false;
     delete req.query.corrected;
-
+    const registrationForm = await RegistrationForm.findOne({ course: course._id });
+    const questions = await Question.find({ registrationForm: registrationForm?._id });
     const { sort, ...rest } = req.query;
     const { query } = paginateAndFilter(rest);
     const docs = await PostulantCourse.aggregate<PopulatedPostulantCourseType>(
@@ -327,29 +330,47 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
         formatSort(sort),
       ),
     );
-    if (docs.length) {
+
+    // TO-DO: Migrate to aggregation
+    const docsMapped = docs.reduce<unknown[]>((prevDoc, doc) => {
+      const { answer, ...rest } = doc;
+      const answersMapped = answer.reduce((prevAnswer, answer) => {
+        const question = questions.find(
+          (ques) => ques?._id.toString() === answer.question.toString(),
+        );
+        if (question) {
+          return {
+            ...prevAnswer,
+            [question.title]: Array.isArray(answer.value)
+              ? answer.value.sort().join(' | ')
+              : answer.value,
+          };
+        }
+        return prevAnswer;
+      }, {});
+      const view = registrationForm?.views.find(
+        (view) => view._id?.toString() === rest.view.toString(),
+      );
+      const newDoc = {
+        ...rest,
+        ...answersMapped,
+        view: view?.name,
+      };
+      return [...prevDoc, newDoc];
+    }, []);
+    if (docsMapped.length) {
       const tests = course.admissionTests.map((at) => at.name);
-      const docsToExport = getCorrected(docs);
+      const docsToExport = getCorrected(docsMapped as PopulatedPostulantCourseType[]);
       const csv = await parseAsync(docsToExport, {
         fields: [
           '_id',
           'course.name',
-          'course.inscriptionStartDate',
-          'course.inscriptionEndDate',
-          'course.startDate',
-          'course.endDate',
           'course.type',
-          'course.description',
           'course.isInternal',
-          'postulant.firstName',
-          'postulant.lastName',
-          'postulant.email',
-          'postulant.phone',
-          'postulant.country',
-          'postulant.birthDate',
-          'postulant.dni',
           'view',
+          'postulant.age',
           ...tests,
+          ...questions.map((quest) => quest.title),
         ],
       });
       if (csv) {

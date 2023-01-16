@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { titleMessages } from 'src/constants/validation-messages';
+import {
+  descriptionValidation,
+  nameValidation,
+  shortStringValidation,
+} from 'src/middlewares/validations';
 import { CustomError } from 'src/models/custom-error';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
 
@@ -14,38 +20,14 @@ const registrationFormValidation = (requestType: 'post' | 'put') => {
           'string.pattern.base': 'Invalid course id, ObjectId expected.',
           'any.required': 'Course id is a required field.',
         }),
-      title: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-        .min(3)
-        .max(50)
-        .required()
-        .messages({
-          'string.pattern.base': 'Invalid title, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid title, it must contain more than 3 characters.',
-          'string.max': 'Invalid title, it must not contain more than 50 characters.',
-          'any.required': 'Title is a required field.',
-        }),
-      description: Joi.string()
-        .pattern(/^(?!\s)(?![\s\S]*\s$).+$/)
-        .min(8)
-        .max(200)
-        .required()
-        .messages({
-          'string.pattern.base': 'Invalid description, it must not start nor end with whitespaces.',
-          'string.min': 'Invalid description, it must contain more than 8 characters.',
-          'string.max': 'Invalid description, it must not contain more than 150 characters.',
-          'any.required': 'Description is a required field.',
-        }),
+      title: shortStringValidation().messages(titleMessages),
+      description: descriptionValidation,
       views: Joi.array()
         .min(1)
         .max(200)
         .items(
           Joi.object({
-            name: Joi.string()
-              .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-              .min(3)
-              .max(30)
-              .required(),
+            name: nameValidation,
             _id:
               requestType === 'post'
                 ? Joi.string()

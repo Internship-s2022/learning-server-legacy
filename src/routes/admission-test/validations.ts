@@ -1,21 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { nameMessages } from 'src/constants/validation-messages';
+import { longStringRegex, shortStringValidation } from 'src/middlewares/validations';
 import { AdmissionTestType } from 'src/models/admission-test';
 import { CustomError } from 'src/models/custom-error';
 
 export const admissionTestSchema = Joi.object<AdmissionTestType>({
-  name: Joi.string()
-    .pattern(/^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()-]+$/)
-    .min(3)
-    .max(50)
-    .required()
-    .messages({
-      'string.pattern.base': 'Invalid name, it must not start nor end with whitespaces.',
-      'string.min': 'Invalid admission test name, it must contain more than 3 characters.',
-      'string.max': 'Invalid admission test name, it must not contain more than 50 characters.',
-      'any.required': 'Name is a required field.',
-    }),
+  name: shortStringValidation(longStringRegex).messages(nameMessages),
   isActive: Joi.boolean().required().messages({
     'any.required': 'Is active is a required field.',
   }),

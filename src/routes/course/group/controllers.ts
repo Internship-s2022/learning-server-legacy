@@ -7,7 +7,7 @@ import CourseUser from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 import Group, { GroupIdType, GroupType } from 'src/models/group';
 import Module, { ModuleType } from 'src/models/module';
-import { createReports, deleteReportsByGroupId } from 'src/routes/course/report/controllers';
+import { createReports } from 'src/routes/course/report/controllers';
 import {
   filterIncludeArrayOfIds,
   formatFilters,
@@ -257,10 +257,7 @@ const physicalDeleteById = async (req: Request, res: Response) => {
   if (!successDeleteFromModules) {
     throw new CustomError(500, 'There was an error while deleting the group from the modules.');
   }
-  const successDeleteReports = await deleteReportsByGroupId(req.params.groupId);
-  if (!successDeleteReports) {
-    throw new CustomError(500, 'There was an error while deleting the reports of this group.');
-  }
+
   const result = await Group.findByIdAndDelete(req.params.groupId);
   if (result) {
     return res.status(200).json({

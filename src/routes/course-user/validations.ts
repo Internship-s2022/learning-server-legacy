@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
+import { roleValidation } from 'src/middlewares/validations';
 import { CourseUserType } from 'src/models/course-user';
 import { CustomError } from 'src/models/custom-error';
 
@@ -29,10 +30,7 @@ const courseUserValidations = (requestType: 'post' | 'put') => {
               .messages({
                 'string.pattern.base': 'Invalid course id, ObjectId expected',
               }),
-      role: Joi.string().required().valid('ADMIN', 'TUTOR', 'AUXILIARY', 'STUDENT').messages({
-        'any.only': 'The role must be one of: ADMIN, TUTOR, AUXILIARY or STUDENT.',
-        'any.required': 'Role is a required field.',
-      }),
+      role: roleValidation,
       isActive: Joi.boolean().messages({
         'any.required': 'Is active is required',
       }),

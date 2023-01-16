@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-export type GroupTypes = 'DEV' | 'QA' | 'UIUX' | 'GENERAL';
+export type GroupTypes = 'DEV' | 'QA' | 'UX/UI' | 'GENERAL';
 
 export interface GroupType {
   _id?: mongoose.Types.ObjectId;
