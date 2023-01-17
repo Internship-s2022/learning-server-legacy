@@ -67,7 +67,7 @@ export const shortStringRegex = /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\
 export const containSpecialCharactersRegex =
   /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s() -`!@#$%^&*()_+=[\]{};':"\\|,<>/?~]+$/;
 export const longStringRegex =
-  /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()!@#$%^&*()_+={};':",.<>/?-]+$/;
+  /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()!@#$%^&*()_+={};':",.<>/¿?-]+$/;
 export const emailRegex =
   /^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+\b(?!\.)@[a-zA-Z0-9-]+(\.)[a-zA-Z0-9-]{2,3}$/;
 
@@ -83,6 +83,9 @@ export const shortStringValidation = (regex = shortStringRegex) =>
   Joi.string().pattern(regex).required().max(50).empty();
 
 export const nameValidation = () => shortStringValidation().messages(nameMessages);
+
+export const mediumStringValidation = (regex = longStringRegex) =>
+  Joi.string().pattern(regex).required().max(200).empty();
 
 export const longStringValidation = (regex = longStringRegex) =>
   Joi.string().pattern(regex).required().min(3).max(1000).empty();

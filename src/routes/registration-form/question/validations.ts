@@ -4,7 +4,7 @@ import Joi from 'joi';
 import { optionMessages, titleMessages } from 'src/constants/validation-messages';
 import {
   longStringRegex,
-  shortStringRegex,
+  mediumStringValidation,
   shortStringValidation,
 } from 'src/middlewares/validations';
 import Course from 'src/models/course';
@@ -19,13 +19,13 @@ const option = Joi.object<Option>({
     .messages({
       'string.pattern.base': 'Invalid view id, ObjectId expected.',
     }),
-  value: shortStringValidation(shortStringRegex).messages(optionMessages),
+  value: shortStringValidation(longStringRegex).messages(optionMessages),
 })
   .required()
   .messages({
     'string.pattern.base': 'Invalid value, it must not start nor end with whitespaces.',
     'any.required': 'Invalid option value, it must contain at least one character.',
-    'string.max': 'Invalid option value, it must not contain more than 24 characters.',
+    'string.max': 'Invalid option value, it must not contain more than 50 characters.',
   });
 
 const question = Joi.object<QuestionType>({
@@ -43,7 +43,7 @@ const question = Joi.object<QuestionType>({
       'any.required': 'Registration form id is a required field.',
     }),
   key: Joi.string().optional(),
-  title: shortStringValidation(longStringRegex).messages(titleMessages),
+  title: mediumStringValidation().messages(titleMessages),
   type: Joi.string()
     .valid('SHORT_ANSWER', 'PARAGRAPH', 'DROPDOWN', 'CHECKBOXES', 'MULTIPLE_CHOICES')
     .required()
