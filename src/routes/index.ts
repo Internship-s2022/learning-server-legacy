@@ -24,4 +24,8 @@ router.use('/super-admin', superAdminRouter);
 router.use('/user', userRouter);
 router.use('/public/course', publicRouter);
 
+router.get('/', (req, res) => {
+  res.json({ message: 'Hello World, ' });
+});
+
 export default router;
