@@ -14,10 +14,8 @@ jobs:
     secrets: inherit
     with:
       environment: develop
-      domain: dev.
   deploy-test:
     uses: ./.github/workflows/deployment.yaml
     secrets: inherit
     with:
       environment: test
-      domain: test.

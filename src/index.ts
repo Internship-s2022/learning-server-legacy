@@ -11,7 +11,7 @@ import app from './app';
 import logger from './config/logger';
 import errorHandler from './middlewares/error-handler';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const MONGODB_URL = process.env.MONGO_URL || '';
 
 if (process.env.ENV && process.env.SENTRY_DSN) {
