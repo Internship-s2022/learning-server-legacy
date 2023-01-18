@@ -19,15 +19,15 @@ jobs:
       - name: Build
         run: | # ADD ALL ENV VARIABLES HERE
           yarn
-          MONGO_URL="${{ secrets.MONGO_URL}}" \
+          MONGO_URL="${{ secrets.MONGO_URL }}" \
           ENV="${{ secrets.ENV }}" \
-          FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID}}" \
-          FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY}}" \
-          FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL}}" \
-          SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY}}" \
-          SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER}}" \
-          SENTRY_DSN="${{ secrets.SENTRY_DSN}}" \
-          APP_BASE_URL="${{ secrets.APP_BASE_URL}}" \
+          FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" \
+          FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" \
+          FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" \
+          SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}" \
+          SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER }}" \
+          SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
+          APP_BASE_URL="${{ secrets.APP_BASE_URL }}" \
           yarn build
       - name: Generate deployment package
         run: zip deploy.zip -r dist/ node_modules/ package.json yarn.lock Procfile

@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
 
+import { CourseType } from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import Question, { QuestionType } from 'src/models/question';
 import RegistrationForm, { RegistrationFormType } from 'src/models/registration-form';
 
-export const createDefaultRegistrationForm = async (
-  courseId: mongoose.Types.ObjectId | undefined,
-) => {
-  if (!courseId) {
+export const createDefaultRegistrationForm = async (course: CourseType) => {
+  if (!course?._id) {
     throw new CustomError(
       500,
       'There was an error during the creation of the default registration form, missing courseId.',
@@ -16,9 +15,9 @@ export const createDefaultRegistrationForm = async (
   let newRegistrationForm;
   try {
     const defaultRegistrationForm = new RegistrationForm<RegistrationFormType>({
-      course: courseId,
-      title: 'General',
-      description: 'Main registration form',
+      course: course._id,
+      title: `Formulario de inscripción al curso "${course.name}"`,
+      description: 'Completa el formulario con tus datos y envíalos.',
       views: [
         { name: 'General' },
         { name: 'Redes' },
@@ -81,7 +80,7 @@ export const createDefaultRegistrationForm = async (
       },
       {
         registrationForm: newRegistrationForm._id,
-        title: 'Pais:',
+        title: 'País:',
         type: 'DROPDOWN',
         options: [
           {
@@ -104,7 +103,7 @@ export const createDefaultRegistrationForm = async (
       },
       {
         registrationForm: newRegistrationForm._id,
-        title: 'Telefono:',
+        title: 'Teléfono:',
         type: 'SHORT_ANSWER',
         view: generalViewId,
         key: 'phone',

@@ -2,11 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
 import { optionMessages, titleMessages } from 'src/constants/validation-messages';
-import {
-  longStringRegex,
-  mediumStringValidation,
-  shortStringValidation,
-} from 'src/middlewares/validations';
+import { mediumStringValidation } from 'src/middlewares/validations';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
 import { Option, QuestionType } from 'src/models/question';
@@ -19,11 +15,11 @@ const option = Joi.object<Option>({
     .messages({
       'string.pattern.base': 'Invalid view id, ObjectId expected.',
     }),
-  value: shortStringValidation(longStringRegex).messages(optionMessages),
+  value: mediumStringValidation().messages(optionMessages),
 })
   .required()
   .messages({
-    'string.pattern.base': 'Invalid value, it must not start nor end with whitespaces.',
+    'string.pattern.base': 'Invalid value, it must not start nor end with whitespace.',
     'any.required': 'Invalid option value, it must contain at least one character.',
     'string.max': 'Invalid option value, it must not contain more than 50 characters.',
   });

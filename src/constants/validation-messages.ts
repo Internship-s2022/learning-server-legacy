@@ -81,7 +81,7 @@ export const phoneMessages: Joi.LanguageMessages = {
 export const optionMessages: Joi.LanguageMessages = {
   'string.pattern.base': 'Invalid option, it must not start nor end with whitespace.',
   'string.min': 'Invalid option, it must contain more than 1 character.',
-  'string.max': 'Invalid option, it must not contain more than 50 characters.',
+  'string.max': 'Invalid option, it must not contain more than 200 characters.',
   'any.required': 'Option is a required field.',
   'string.empty': 'Option cannot be empty.',
 };
