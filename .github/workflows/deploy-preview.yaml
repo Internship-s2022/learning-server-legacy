@@ -28,6 +28,7 @@ jobs:
           SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}" \
           SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER }}" \
           SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
+          APP_BASE_URL="${{ secrets.APP_BASE_URL }}" \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1

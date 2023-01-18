@@ -75,7 +75,7 @@ const create = async (
     throw new CustomError(500, 'There was an error during the creation of the course.');
   }
 
-  await createDefaultRegistrationForm(newCourse._id);
+  await createDefaultRegistrationForm(newCourse);
 
   const existingUsers = await User.find(
     filterIncludeArrayOfIds(req.body.courseUsers.map((cUser) => cUser.user.toString())),
