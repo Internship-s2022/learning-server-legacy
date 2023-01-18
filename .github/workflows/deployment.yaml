@@ -1,0 +1,43 @@
+name: Deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: | # ADD ALL ENV VARIABLES HERE
+          yarn
+          MONGO_URL="${{ secrets.MONGO_URL }}" \
+          ENV="${{ secrets.ENV }}" \
+          FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}" \
+          FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" \
+          FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" \
+          SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}" \
+          SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER }}" \
+          SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
+          APP_BASE_URL="${{ secrets.APP_BASE_URL }}" \
+          yarn build
+      - name: Generate deployment package
+        run: zip deploy.zip -r dist/ node_modules/ package.json yarn.lock Procfile
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.AWS_EB_APP_NAME }}
+          environment_name: ${{ secrets.AWS_EB_APP_ENVIRONMENT }}
+          version_label: ${{ inputs.environment }}-${{ github.SHA }}
+          region: us-east-1
+          deployment_package: deploy.zip
