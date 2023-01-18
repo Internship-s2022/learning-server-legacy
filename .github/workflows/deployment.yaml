@@ -6,14 +6,6 @@ on:
       environment:
         required: true
         type: string
-      production:
-        required: false
-        type: boolean
-        default: false
-      domain:
-        required: false
-        type: string
-        default: ''
 
 jobs:
   deploy:
@@ -37,15 +29,15 @@ jobs:
           SENTRY_DSN="${{ secrets.SENTRY_DSN}}" \
           APP_BASE_URL="${{ secrets.APP_BASE_URL}}" \
           yarn build
-      - name: Deploy to Vercel Action
-        uses: BetaHuhn/deploy-to-vercel-action@v1
+      - name: Generate deployment package
+        run: zip deploy.zip -r dist/ node_modules/ package.json yarn.lock Procfile
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
         with:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_SCOPE: ${{ secrets.VERCEL_TEAM_NAME }}
-          PRODUCTION: ${{ inputs.production }}
-          ALIAS_DOMAINS: |
-            https://${{ inputs.domain }}${{ secrets.APP_DOMAIN }}
-          DEPLOY_PR_FROM_FORK: true
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.AWS_EB_APP_NAME }}
+          environment_name: ${{ secrets.AWS_EB_APP_ENVIRONMENT }}
+          version_label: ${{ inputs.environment }}-${{ github.SHA }}
+          region: us-east-1
+          deployment_package: deploy.zip

@@ -14,4 +14,3 @@ jobs:
     secrets: inherit
     with:
       environment: uat
-      domain: uat.
