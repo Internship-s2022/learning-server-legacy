@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import firebaseAdmin from 'firebase-admin';
 import { parseAsync } from 'json2csv';
 import { ObjectId } from 'mongodb';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 import sendgridTemplates from 'src/constants/sendgrid-templates';
 import AdmissionResult from 'src/models/admission-result';
@@ -34,6 +34,46 @@ const getCorrected = (docs: PopulatedPostulantCourseType[]) => {
     },
     [{}],
   );
+};
+
+const mapQuestionsWithValues = async (
+  courseId: mongoose.Types.ObjectId,
+  docs: PopulatedPostulantCourseType[],
+) => {
+  const registrationForm = await RegistrationForm.findOne({ course: courseId });
+  const questions = await Question.find({ registrationForm: registrationForm?._id });
+
+  const questionsToShow = questions.map((quest) => quest.title);
+
+  return {
+    docs: docs.reduce<unknown[]>((prevDoc, doc) => {
+      const { answer, ...rest } = doc;
+      const answersMapped = answer.reduce((prevAnswer, answer) => {
+        const question = questions.find(
+          (ques) => ques?._id.toString() === answer.question.toString(),
+        );
+        if (question) {
+          return {
+            ...prevAnswer,
+            [question.title]: Array.isArray(answer.value)
+              ? answer.value.sort().join(' | ')
+              : answer.value,
+          };
+        }
+        return prevAnswer;
+      }, {});
+      const view = registrationForm?.views.find(
+        (view) => view._id?.toString() === rest.view.toString(),
+      );
+      const newDoc = {
+        ...rest,
+        ...answersMapped,
+        view: view?.name,
+      };
+      return [...prevDoc, newDoc];
+    }, []),
+    questionsToShow,
+  };
 };
 
 const getByCourseId = async (req: Request, res: Response) => {
@@ -317,10 +357,9 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
     path: 'admissionTests',
   });
   if (course) {
-    const corrected = req.query.corrected ? true : false;
+    const corrected = req.query.corrected === 'true' ? true : false;
     delete req.query.corrected;
-    const registrationForm = await RegistrationForm.findOne({ course: course._id });
-    const questions = await Question.find({ registrationForm: registrationForm?._id });
+
     const { sort, ...rest } = req.query;
     const { query } = paginateAndFilter(rest);
     const docs = await PostulantCourse.aggregate<PopulatedPostulantCourseType>(
@@ -331,33 +370,11 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
       ),
     );
 
-    // TO-DO: Migrate to aggregation
-    const docsMapped = docs.reduce<unknown[]>((prevDoc, doc) => {
-      const { answer, ...rest } = doc;
-      const answersMapped = answer.reduce((prevAnswer, answer) => {
-        const question = questions.find(
-          (ques) => ques?._id.toString() === answer.question.toString(),
-        );
-        if (question) {
-          return {
-            ...prevAnswer,
-            [question.title]: Array.isArray(answer.value)
-              ? answer.value.sort().join(' | ')
-              : answer.value,
-          };
-        }
-        return prevAnswer;
-      }, {});
-      const view = registrationForm?.views.find(
-        (view) => view._id?.toString() === rest.view.toString(),
-      );
-      const newDoc = {
-        ...rest,
-        ...answersMapped,
-        view: view?.name,
-      };
-      return [...prevDoc, newDoc];
-    }, []);
+    const { docs: docsMapped, questionsToShow } = await mapQuestionsWithValues(
+      new mongoose.Types.ObjectId(req.params.courseId),
+      docs,
+    );
+
     if (docsMapped.length) {
       const tests = course.admissionTests.map((at) => at.name);
       const docsToExport = getCorrected(docsMapped as PopulatedPostulantCourseType[]);
@@ -370,7 +387,7 @@ const exportToCsvByCourseId = async (req: Request, res: Response) => {
           'view',
           'postulant.age',
           ...tests,
-          ...questions.map((quest) => quest.title),
+          ...questionsToShow,
         ],
       });
       if (csv) {
