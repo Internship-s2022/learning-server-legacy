@@ -7,7 +7,7 @@ export const getPostulantBasedOnCoursePipeline = (
   query: qs.ParsedQs | { [k: string]: ObjectId },
   corrected?: boolean,
   sort?: SortType,
-) => {
+): PipelineStage[] => {
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
