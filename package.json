@@ -17,6 +17,9 @@
     "prepare": "husky install",
     "seed": "ts-node -r tsconfig-paths/register ./seeders/index.ts"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
