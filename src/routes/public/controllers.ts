@@ -187,10 +187,10 @@ const createPostulation = async (req: Request, res: Response) => {
                 400,
                 `For the question with id ${question._id}, answer value must be a string.`,
               );
-            if (a.value.length > 50)
+            if (a.value.length > 200)
               throw new CustomError(
                 400,
-                `For the question with id ${question._id}, answer can't have more than 50 characters.`,
+                `For the question with id ${question._id}, answer can't have more than 200 characters.`,
               );
             break;
           case 'PARAGRAPH':

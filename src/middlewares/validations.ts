@@ -80,7 +80,7 @@ export const moduleTypeValidation = Joi.string()
   });
 
 export const shortStringValidation = (regex = shortStringRegex) =>
-  Joi.string().pattern(regex).required().max(50).empty();
+  Joi.string().pattern(regex).required().max(200).empty();
 
 export const nameValidation = () => shortStringValidation().messages(nameMessages);
 

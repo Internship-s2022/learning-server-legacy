@@ -21,7 +21,7 @@ const option = Joi.object<Option>({
   .messages({
     'string.pattern.base': 'Invalid value, it must not start nor end with whitespace.',
     'any.required': 'Invalid option value, it must contain at least one character.',
-    'string.max': 'Invalid option value, it must not contain more than 50 characters.',
+    'string.max': 'Invalid option value, it must not contain more than 200 characters.',
   });
 
 const question = Joi.object<QuestionType>({
