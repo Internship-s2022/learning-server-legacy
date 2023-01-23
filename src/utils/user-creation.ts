@@ -2,6 +2,7 @@ import { Request } from 'express';
 import mongoose from 'mongoose';
 
 import firebase from 'src/config/firebase';
+import logger from 'src/config/logger';
 import sendgridTemplates from 'src/constants/sendgrid-templates';
 import { CustomError } from 'src/models/custom-error';
 import Postulant from 'src/models/postulant';
@@ -42,6 +43,12 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
           await firebase
             .auth()
             .setCustomUserClaims(newFirebaseUser.uid, { userType: 'NORMAL', isNewUser: true });
+          logger.log({
+            level: 'info',
+            message: 'New user created on firebase.',
+            label: 'user',
+            firebaseUid,
+          });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
@@ -68,6 +75,13 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
             initialPassword: newPassword,
           });
           await newMongoUser.save();
+          logger.log({
+            level: 'info',
+            message: 'New user created on mongo.',
+            label: 'user',
+            firebaseUid,
+            userId: newMongoUser?._id,
+          });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           if (!req.body.postulant && !promotion) await Postulant.findByIdAndDelete(postulantId);
@@ -96,6 +110,14 @@ const userCreation = async (req: Request, postulantId: string, promotion = false
               }
             },
           );
+        logger.log({
+          level: 'info',
+          message: 'The email with credentials was sent.',
+          label: 'user',
+          firebaseUid,
+          userId: newMongoUser?._id,
+          email: newMongoUser.email,
+        });
         resolve({ newMongoUser, credentials: { email, newPassword, firebaseUid } });
         return;
       }, timeout),
