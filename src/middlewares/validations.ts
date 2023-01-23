@@ -69,7 +69,7 @@ export const containSpecialCharactersRegex =
 export const longStringRegex =
   /^(?!\s)(?![\s\S]*\s$)[A-Za-zÀ-ÖØ-öø-ÿ0-9\s()!@#$%^&*()_+={};':",.<>/¿?-]+$/;
 export const emailRegex =
-  /^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+\b(?!\.)@[a-zA-Z0-9-]+(\.)[a-zA-Z0-9-]{2,3}$/;
+  /^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 export const moduleTypeValidation = Joi.string()
   .valid('DEV', 'QA', 'UX/UI', 'GENERAL')
@@ -107,7 +107,7 @@ export const dniValidation = Joi.string()
 
 export const phoneValidation = Joi.string()
   .pattern(/^[0-9]+$/)
-  .min(10)
+  .min(8)
   .max(11)
   .required()
   .messages(phoneMessages);

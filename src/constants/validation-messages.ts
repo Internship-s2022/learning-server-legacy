@@ -71,8 +71,8 @@ export const dniMessages: Joi.LanguageMessages = {
 };
 
 export const phoneMessages: Joi.LanguageMessages = {
-  'string.min': 'Invalid phone, it must contain 10 or 11 numbers.',
-  'string.max': 'Invalid phone, it must contain 10 or 11 numbers.',
+  'string.min': 'Invalid phone, it must contain more than 8 numbers.',
+  'string.max': 'Invalid phone, it must not contain more than 11 numbers.',
   'string.pattern.base': 'Invalid phone, it must contain only numbers.',
   'any.required': 'Phone is a required field.',
   'string.empty': 'Phone is a required field.',
