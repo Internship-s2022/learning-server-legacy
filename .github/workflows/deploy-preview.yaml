@@ -29,6 +29,10 @@ jobs:
           SENDGRID_EMAIL_SENDER="${{ secrets.SENDGRID_EMAIL_SENDER }}" \
           SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
           APP_BASE_URL="${{ secrets.APP_BASE_URL }}" \
+          PRE_INSCRIPTION_FORM_HOMEPAGE_URL="${{ vars.PRE_INSCRIPTION_FORM_HOMEPAGE_URL }} \
+          PRE_INSCRIPTION_FORM_KNOWNS_URL="${{ vars.PRE_INSCRIPTION_FORM_KNOWNS_URL }} \
+          PRE_INSCRIPTION_FORM_UNIVERSITY_URL="$PRE_INSCRIPTION_FORM_UNIVERSITY_URL" \
+          PRE_INSCRIPTION_FORM_SOCIAL_MEDIA_URL="$PRE_INSCRIPTION_FORM_SOCIAL_MEDIA_URL" \
           yarn build
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1

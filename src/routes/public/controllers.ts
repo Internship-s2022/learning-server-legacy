@@ -49,17 +49,6 @@ const getRegistrationFormByView = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.courseId);
   const today = new Date();
   if (course) {
-    if (isAfter(today, course.inscriptionStartDate) && isAfter(today, course.inscriptionEndDate)) {
-      throw new CustomError(400, 'The inscription process of this course has end.', {
-        type: 'INSCRIPTION_PROCESS_END',
-      });
-    }
-    if (isBefore(today, course.inscriptionStartDate)) {
-      throw new CustomError(400, 'The inscription process of this course has not started yet.', {
-        type: 'COURSE_NOT_STARTED',
-        inscriptionStartDate: !course.isInternal ? course.inscriptionStartDate : undefined,
-      });
-    }
     const registrationForm = await RegistrationForm.findOne({
       course: course._id,
     });
@@ -73,6 +62,41 @@ const getRegistrationFormByView = async (req: Request, res: Response) => {
           throw new CustomError(400, `Mongo id: ${req.query.view}  is not valid.`);
         viewBelongs = registrationForm.views.some((view) => view._id == req.query.view);
       }
+
+      if (
+        isAfter(today, course.inscriptionStartDate) &&
+        isAfter(today, course.inscriptionEndDate)
+      ) {
+        const viewToSend = registrationForm.views.find(
+          (view) => view._id?.toString() === req.query.view?.toString() ?? defaultView?.toString(),
+        );
+        let preInscriptionFormUrl = '';
+        switch (viewToSend?.name) {
+          case 'Conocidos':
+            preInscriptionFormUrl = process.env.PRE_INSCRIPTION_FORM_KNOWNS_URL || '';
+            break;
+          case 'Facultad':
+            preInscriptionFormUrl = process.env.PRE_INSCRIPTION_FORM_UNIVERSITY_URL || '';
+            break;
+          case 'Redes':
+            preInscriptionFormUrl = process.env.PRE_INSCRIPTION_FORM_SOCIAL_MEDIA_URL || '';
+            break;
+          default:
+            preInscriptionFormUrl = process.env.PRE_INSCRIPTION_FORM_HOMEPAGE_URL || '';
+            break;
+        }
+        throw new CustomError(400, 'The inscription process of this course has end.', {
+          type: 'INSCRIPTION_PROCESS_END',
+          preInscriptionFormUrl,
+        });
+      }
+      if (isBefore(today, course.inscriptionStartDate)) {
+        throw new CustomError(400, 'The inscription process of this course has not started yet.', {
+          type: 'COURSE_NOT_STARTED',
+          inscriptionStartDate: course.isInternal ? undefined : course.inscriptionStartDate,
+        });
+      }
+
       if (viewBelongs) {
         const questions = await Question.find({
           registrationForm: registrationForm._id,
