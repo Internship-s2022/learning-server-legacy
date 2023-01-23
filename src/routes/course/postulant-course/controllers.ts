@@ -185,7 +185,7 @@ const promoteOne = async (
   failedPostulants: FailedType[],
   successfulPostulants: SuccessfulType[],
 ): Promise<string> => {
-  let postulantId = '';
+  let postulantId = undefined;
   try {
     let timeout = 0;
     for (let i = 0; i < req.body.length; i++) {
