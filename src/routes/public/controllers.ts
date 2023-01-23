@@ -1,6 +1,8 @@
+import { isAfter, isBefore } from 'date-fns';
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
+import logger from 'src/config/logger';
 import AdmissionResult from 'src/models/admission-result';
 import Course from 'src/models/course';
 import { CustomError } from 'src/models/custom-error';
@@ -45,7 +47,19 @@ const getCourseById = async (req: Request, res: Response) => {
 
 const getRegistrationFormByView = async (req: Request, res: Response) => {
   const course = await Course.findById(req.params.courseId);
+  const today = new Date();
   if (course) {
+    if (isAfter(today, course.inscriptionStartDate) && isAfter(today, course.inscriptionEndDate)) {
+      throw new CustomError(400, 'The inscription process of this course has end.', {
+        type: 'INSCRIPTION_PROCESS_END',
+      });
+    }
+    if (isBefore(today, course.inscriptionStartDate)) {
+      throw new CustomError(400, 'The inscription process of this course has not started yet.', {
+        type: 'COURSE_NOT_STARTED',
+        inscriptionStartDate: !course.isInternal ? course.inscriptionStartDate : undefined,
+      });
+    }
     const registrationForm = await RegistrationForm.findOne({
       course: course._id,
     });
@@ -257,11 +271,23 @@ const createPostulation = async (req: Request, res: Response) => {
         );
       }
       postulantId = postulant._id;
+      logger.log({
+        level: 'info',
+        message: 'Postulant existed.',
+        label: 'public-postulant-course',
+        postulantId,
+      });
     } else {
       await validateEmail(String(postulantInfo.email));
       const newPostulant = new Postulant({ ...postulantInfo, isActive: true });
       await newPostulant.save();
       postulantId = newPostulant._id;
+      logger.log({
+        level: 'info',
+        message: 'Postulant created.',
+        label: 'public-postulant-course',
+        postulantId,
+      });
     }
 
     try {
@@ -280,6 +306,14 @@ const createPostulation = async (req: Request, res: Response) => {
         isPromoted: false,
       });
       await newPostulantCourse.save();
+
+      logger.log({
+        level: 'info',
+        message: 'Postulation created with the admission test results.',
+        label: 'public-postulant-course',
+        postulantId: newPostulantCourse?._id,
+        admissionResults: setAdmissionResults,
+      });
 
       return res.status(201).json({
         message: 'Postulant successfully registered.',

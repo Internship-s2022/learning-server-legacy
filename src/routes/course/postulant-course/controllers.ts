@@ -4,6 +4,7 @@ import { parseAsync } from 'json2csv';
 import { ObjectId } from 'mongodb';
 import mongoose, { Types } from 'mongoose';
 
+import logger from 'src/config/logger';
 import sendgridTemplates from 'src/constants/sendgrid-templates';
 import AdmissionResult from 'src/models/admission-result';
 import Course, { PopulatedCourseType } from 'src/models/course';
@@ -184,7 +185,7 @@ const promoteOne = async (
   failedPostulants: FailedType[],
   successfulPostulants: SuccessfulType[],
 ): Promise<string> => {
-  let postulantId;
+  let postulantId = '';
   try {
     let timeout = 0;
     for (let i = 0; i < req.body.length; i++) {
@@ -214,6 +215,13 @@ const promoteOne = async (
         newMongoUser = user;
       }
 
+      logger.log({
+        level: 'info',
+        message: 'User founded.',
+        label: 'postulant-course',
+        userId: newMongoUser?._id,
+      });
+
       const courseUser = await CourseUser.find({
         user: newMongoUser._id,
         course: req.params.courseId,
@@ -231,6 +239,13 @@ const promoteOne = async (
           new: true,
         },
       );
+      logger.log({
+        level: 'info',
+        message: 'Update postulation to isPromoted.',
+        label: 'postulant-course',
+        userId: newMongoUser?._id,
+        postulantId,
+      });
       try {
         if (newMongoUser._id) {
           const NewCourseUser = new CourseUser<CourseUserType>({
@@ -241,6 +256,13 @@ const promoteOne = async (
           });
           await NewCourseUser.save();
           successfulPostulants.push({ postulantId, user: newMongoUser, credentials });
+          logger.log({
+            level: 'info',
+            message: 'User added on the course.',
+            label: 'postulant-course',
+            userId: newMongoUser._id,
+            courseId: NewCourseUser?.course,
+          });
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
@@ -250,7 +272,7 @@ const promoteOne = async (
     return 'Postulants promoted successfully.';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    failedPostulants.push({ postulantId, error: err.message });
+    failedPostulants.push({ postulantId: postulantId, error: err.message });
     throw err;
   }
 };
