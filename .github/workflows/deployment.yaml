@@ -1,6 +1,16 @@
 name: Deployment
 
 on:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Commit Ref (Optional)
+        required: false
+      environment:
+        description: Environment
+        required: true
+        default: develop
+        type: environment
   workflow_call:
     inputs:
       environment:
@@ -14,8 +24,14 @@ jobs:
     environment: ${{ inputs.environment }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
-      - name: Checkout
+      - name: Clone Repository (Last commit)
         uses: actions/checkout@v3
+        if: github.event.inputs.git-ref == ''
+      - name: Clone Repository (Custom commit)
+        uses: actions/checkout@v3
+        if: github.event.inputs.git-ref != ''
+        with:
+          ref: ${{ github.event.inputs.git-ref }}
       - name: Build
         run: | # ADD ALL ENV VARIABLES HERE
           yarn
