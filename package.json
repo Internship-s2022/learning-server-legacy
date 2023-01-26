@@ -1,6 +1,6 @@
 {
-  "name": "typescript-server-template",
-  "version": "0.1.0",
+  "name": "radium-learning-server",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
