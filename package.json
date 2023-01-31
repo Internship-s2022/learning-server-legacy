@@ -1,13 +1,13 @@
 {
   "name": "radium-learning-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc && yarn babel",
     "babel": "babel dist -d ./dist/",
-    "start:build": "ts-node --files -r tsconfig-paths/register ./dist/index.js",
-    "start": "nodemon",
+    "start:build": "ts-node --files -r tsconfig-paths/register ./dist/src/index.js",
+    "start": "PACKAGE_VERSION=$(npm pkg get version) nodemon",
     "test": "IS_TEST=true jest",
     "type-check": "tsc --noEmit",
     "lint": "eslint \"./**/*.{ts,test.ts}\"",

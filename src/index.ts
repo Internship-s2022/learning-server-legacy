@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import app from './app';
 import logger from './config/logger';
 import errorHandler from './middlewares/error-handler';
+import { CustomError } from './models/custom-error';
 
 const port = process.env.PORT || 8080;
 const MONGODB_URL = process.env.MONGO_URL || '';
@@ -18,6 +19,7 @@ if (process.env.ENV && process.env.SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.ENV,
+    release: `radium-learning-server@${process.env.PACKAGE_VERSION?.replace(/"/g, '')}`,
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
       new Tracing.Integrations.Express({ app }),
@@ -29,9 +31,13 @@ if (process.env.ENV && process.env.SENTRY_DSN) {
   app.use(Sentry.Handlers.tracingHandler());
   app.use(
     Sentry.Handlers.errorHandler({
-      shouldHandleError(error) {
+      shouldHandleError(error: CustomError) {
         return (
-          !error?.status || error.status === 500 || error.status === 401 || error.status === 403
+          !error?.status ||
+          error.status === 500 ||
+          error.status === 401 ||
+          error.status === 403 ||
+          error?.data?.label === 'public-postulant-course'
         );
       },
     }),

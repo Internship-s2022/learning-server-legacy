@@ -153,7 +153,10 @@ export const validateEmail = async (
   const postulantWithEmail = await Postulant.findOne({ email: email });
   const userWithEmail = await User.findOne({ email: email });
   if (postulantWithEmail || userWithEmail)
-    throw new CustomError(400, errorMessage, { type: 'ACCOUNT_ERROR' });
+    throw new CustomError(400, errorMessage, {
+      type: 'ACCOUNT_ERROR',
+      label: 'public-postulant-course',
+    });
 };
 
 const createPostulation = async (req: Request, res: Response) => {
@@ -161,12 +164,15 @@ const createPostulation = async (req: Request, res: Response) => {
   const currentDate = new Date();
   if (course) {
     if (currentDate < course.inscriptionStartDate || currentDate > course.inscriptionEndDate) {
-      throw new CustomError(400, 'The postulation must be created between the inscription dates.');
+      throw new CustomError(400, 'The postulation must be created between the inscription dates.', {
+        label: 'public-postulant-course',
+      });
     }
     if (!course.admissionTests.length) {
       throw new CustomError(
         400,
         `The course with id: ${req.params.courseId} must have admission tests to create the postulation.`,
+        { label: 'public-postulant-course' },
       );
     }
 
@@ -182,6 +188,7 @@ const createPostulation = async (req: Request, res: Response) => {
       throw new CustomError(
         400,
         `The view with id: ${req.body.view} does not belong to the registration form of this course.`,
+        { label: 'public-postulant-course' },
       );
 
     const generalQuestions = await Question.find({
@@ -199,6 +206,7 @@ const createPostulation = async (req: Request, res: Response) => {
       throw new CustomError(
         400,
         'All the questions about the postulant personal information must be answered.',
+        { label: 'public-postulant-course' },
       );
     }
 
@@ -211,11 +219,14 @@ const createPostulation = async (req: Request, res: Response) => {
     answers.forEach((a) => {
       const question = enteredQuestions.find((q) => a.question == q._id);
       if (!question?._id)
-        throw new CustomError(404, `The question with id ${a.question} was not found.`);
+        throw new CustomError(404, `The question with id ${a.question} was not found.`, {
+          label: 'public-postulant-course',
+        });
       if (question.isRequired && !a.value)
         throw new CustomError(
           400,
           `The question with id ${question._id} is required and must be answered.`,
+          { label: 'public-postulant-course' },
         );
       if (a.value) {
         switch (question?.type) {
@@ -224,11 +235,13 @@ const createPostulation = async (req: Request, res: Response) => {
               throw new CustomError(
                 400,
                 `For the question with id ${question._id}, answer value must be a string.`,
+                { label: 'public-postulant-course' },
               );
             if (a.value.length > 200)
               throw new CustomError(
                 400,
                 `For the question with id ${question._id}, answer can't have more than 200 characters.`,
+                { label: 'public-postulant-course' },
               );
             break;
           case 'PARAGRAPH':
@@ -236,6 +249,7 @@ const createPostulation = async (req: Request, res: Response) => {
               throw new CustomError(
                 400,
                 `For the question with id ${question._id}, answer value must be a string.`,
+                { label: 'public-postulant-course' },
               );
             break;
           case 'MULTIPLE_CHOICES':
@@ -244,6 +258,7 @@ const createPostulation = async (req: Request, res: Response) => {
               throw new CustomError(
                 400,
                 `For the question with id ${question._id}, answer value must be a string.`,
+                { label: 'public-postulant-course' },
               );
             if (!question.options?.some((op) => a.value === op.value))
               throw new CustomError(
@@ -251,6 +266,7 @@ const createPostulation = async (req: Request, res: Response) => {
                 `Answer value for the question with id ${
                   question._id
                 } must be one of the options: ${question.options?.map((op) => op.value)}.`,
+                { label: 'public-postulant-course' },
               );
             break;
           case 'CHECKBOXES':
@@ -258,6 +274,7 @@ const createPostulation = async (req: Request, res: Response) => {
               throw new CustomError(
                 400,
                 `For this question with id ${question._id}, answer value must be an array one or many strings.`,
+                { label: 'public-postulant-course' },
               );
             if (!question.options?.some((op) => a.value?.includes(op.value)))
               throw new CustomError(
@@ -265,6 +282,7 @@ const createPostulation = async (req: Request, res: Response) => {
                 `Answer value must be one of the options: ${question.options?.map(
                   (op) => op.value,
                 )}.`,
+                { label: 'public-postulant-course' },
               );
             break;
           default:
@@ -292,6 +310,7 @@ const createPostulation = async (req: Request, res: Response) => {
         throw new CustomError(
           400,
           `Postulant with dni ${postulant.dni} was already postulated on this course.`,
+          { label: 'public-postulant-course' },
         );
       }
       postulantId = postulant._id;
@@ -347,10 +366,16 @@ const createPostulation = async (req: Request, res: Response) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       await Postulant.findByIdAndDelete(postulantId);
-      throw new CustomError(500, err.message, { ...err, type: 'POSTULANT_COURSE_MONGO_ERROR' });
+      throw new CustomError(500, err.message, {
+        ...err,
+        type: 'POSTULANT_COURSE_MONGO_ERROR',
+        label: 'public-postulant-course',
+      });
     }
   } else {
-    throw new CustomError(404, `Course with id ${req.params.course} was not found.`);
+    throw new CustomError(404, `Course with id ${req.params.course} was not found.`, {
+      label: 'public-postulant-course',
+    });
   }
 };
 
