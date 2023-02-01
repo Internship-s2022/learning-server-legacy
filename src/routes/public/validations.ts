@@ -18,9 +18,9 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
               'any.required': 'Question id is a required field.',
             }),
           value: [
-            Joi.string().allow('').max(200).messages({
+            Joi.string().allow('').max(1000).messages({
               'string.empty': 'Value is not allowed to be empty.',
-              'string.max': 'Answer can not have more than 200 characters.',
+              'string.max': 'Answer can not have more than 1000 characters.',
             }),
             Joi.array().items(Joi.string()).messages({
               'string.base': 'Invalid value array. It must contain only elements of type string.',
@@ -51,7 +51,9 @@ const validateCreation = (req: Request, res: Response, next: NextFunction) => {
   const validation = validateCreation.validate(req.body);
 
   if (validation.error) {
-    throw new CustomError(400, validation.error.details[0].message);
+    throw new CustomError(400, validation.error.details[0].message, {
+      label: 'public-postulant-course',
+    });
   }
   return next();
 };
